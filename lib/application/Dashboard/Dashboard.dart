@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tenisleague100/application/Dashboard/Settings/settings.dart';
+import 'package:tenisleague100/constants/GlobalValues.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key key}) : super(key: key);
@@ -54,7 +55,7 @@ class _DashboardState extends State<Dashboard> {
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.amber[800],
+        selectedItemColor: Color(GlobalValues.mainGreen),
         unselectedItemColor: Colors.grey[300],
         onTap: _onItemTapped,
       ),
