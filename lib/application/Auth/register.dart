@@ -38,7 +38,6 @@ class Register extends ConsumerWidget {
 
 class RegisterPage extends StatefulWidget {
   final SignInViewModel viewModel;
-
   const RegisterPage({Key key, this.viewModel}) : super(key: key);
 
   @override
@@ -46,23 +45,31 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterState extends State<RegisterPage> {
-  TextEditingController userController = new TextEditingController();
+  TextEditingController mailFieldController = new TextEditingController();
   TextEditingController passwordController = new TextEditingController();
+  TextEditingController nameController = new TextEditingController();
   bool hidePassword;
   FocusNode _focusPass = new FocusNode();
-  FocusNode _focusUser = new FocusNode();
+  FocusNode _focusEmail = new FocusNode();
+  FocusNode _focusUserName = new FocusNode();
   bool _hasFocusPass = false;
-  bool _hasFocusUser = false;
-  final formKeyUser = GlobalKey<FormState>();
+  bool _hasFocusUserEmail = false;
+  bool _hasFocusUserName = false;
+  final formKeyEmail = GlobalKey<FormState>();
   final formKeyPassword = GlobalKey<FormState>();
+  final formKeyUserName = GlobalKey<FormState>();
   bool clickedSignInOnce = false;
+
+  static const int FIELD_NAME = 0;
+  static const int FIELD_EMAIL = 1;
+  static const int FIELD_PASSWORD = 2;
 
   @override
   void initState() {
     super.initState();
     hidePassword = true;
     _focusPass.addListener(_onFocusChange);
-    _focusUser.addListener(_onFocusChange);
+    _focusEmail.addListener(_onFocusChange);
   }
 
   @override
@@ -86,9 +93,7 @@ class _RegisterState extends State<RegisterPage> {
         children: [
           Column(
             children: [
-              SizedBox(
-                height: 100.0,
-              ),
+              SizedBox(height: 50.0),
               Text(
                 "Register",
                 style: GoogleFonts.raleway(fontWeight: FontWeight.bold, fontSize: 24),
@@ -96,11 +101,40 @@ class _RegisterState extends State<RegisterPage> {
               SizedBox(
                 height: 50.0,
               ),
-              _buildUserWidget(),
+              _customField(
+                  "Nombre completo",
+                  ImageIcon(
+                    AssetImage("assets/images/ic_person.png"),
+                  ),
+                  SizedBox.shrink(),
+                  formKeyUserName,
+                  _focusUserName,
+                  FIELD_NAME,
+                  nameController,
+                  "Nombre completo",
+                  _hasFocusUserName),
               SizedBox(
                 height: 20.0,
               ),
-              _buildPasswordWidget(),
+              _customField("Email", Icon(Icons.attach_email), SizedBox.shrink(), formKeyEmail, _focusEmail, FIELD_EMAIL, mailFieldController, "Email",
+                  _hasFocusUserEmail),
+              SizedBox(
+                height: 20.0,
+              ),
+              _customField(
+                  "Contraseña",
+                  ImageIcon(
+                    AssetImage("assets/images/ic_key.png"),
+                  ),
+                  ImageIcon(
+                    AssetImage("assets/images/ic_eye.png"),
+                  ),
+                  formKeyPassword,
+                  _focusPass,
+                  FIELD_PASSWORD,
+                  passwordController,
+                  "Contraseña",
+                  _hasFocusPass),
               SizedBox(
                 height: 25.0,
               ),
@@ -115,12 +149,13 @@ class _RegisterState extends State<RegisterPage> {
     );
   }
 
-  Widget _buildUserWidget() {
+  Widget _customField(String header, Widget leftIcon, Widget rightIcon, Key formKey, FocusNode focus, int valueForValidation,
+      TextEditingController controller, String hint, bool hasFocusBool) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          "Usuario",
+          header,
           style: GoogleFonts.raleway(fontWeight: FontWeight.bold, fontSize: 14),
         ),
         SizedBox(
@@ -130,78 +165,38 @@ class _RegisterState extends State<RegisterPage> {
           width: 310,
           height: 40,
           alignment: Alignment.center,
-          decoration: getDecorationWithSelectedOption(false),
+          decoration: getDecorationWithSelectedOption(hasFocusBool),
           child: ListTile(
             leading: Container(
               padding: EdgeInsets.only(bottom: 20),
-              child: ImageIcon(
-                AssetImage("assets/images/ic_person.png"),
-              ),
+              child: leftIcon,
             ),
             title: Row(
               children: [
                 Expanded(
                   child: Form(
-                    autovalidateMode: clickedSignInOnce ? AutovalidateMode.onUserInteraction : null,
-                    key: formKeyUser,
+                    key: formKey,
                     child: TextFormField(
-                      focusNode: _focusUser,
+                      focusNode: focus,
                       validator: (val) {
-                        return val.isEmpty || !validateEmailAddress(val) ? "Provide a valid email" : null;
+                        switch (valueForValidation) {
+                          case FIELD_NAME:
+                            return val.isEmpty || val.length < 3 ? "Escribe una nombre completo" : null;
+                            break;
+                          case FIELD_EMAIL:
+                            return val.isEmpty || !validateEmailAddress(val) ? "Por favor escribe un correo válido" : null;
+                            break;
+                          case FIELD_PASSWORD:
+                            return val.isEmpty || val.length < 3 ? "Escribe una contraseña válida" : null;
+                            break;
+                        }
+                        return "";
                       },
-                      controller: userController,
-                      keyboardType: TextInputType.emailAddress,
+                      obscureText: valueForValidation == FIELD_PASSWORD ? hidePassword : false,
+                      controller: controller,
+                      keyboardType: valueForValidation == FIELD_EMAIL ? TextInputType.emailAddress : TextInputType.text,
                       style: GoogleFonts.raleway(color: Color(GlobalValues.blackText), fontWeight: FontWeight.normal, fontSize: 14),
-                      decoration: inputDecoration("Email"),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        )
-      ],
-    );
-  }
-
-  Widget _buildPasswordWidget() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(
-          "Password",
-          style: GoogleFonts.raleway(fontWeight: FontWeight.bold, fontSize: 14),
-        ),
-        SizedBox(
-          height: 10,
-        ),
-        Container(
-          width: 310,
-          height: 40,
-          alignment: Alignment.center,
-          decoration: getDecorationWithSelectedOption(false),
-          child: ListTile(
-            leading: Container(
-              padding: EdgeInsets.only(bottom: 20),
-              child: ImageIcon(
-                AssetImage("assets/images/ic_key.png"),
-              ),
-            ),
-            title: Row(
-              children: [
-                Expanded(
-                  child: Form(
-                    key: formKeyPassword,
-                    child: TextFormField(
-                      focusNode: _focusPass,
-                      validator: (val) {
-                        return val.isEmpty || val.length < 3 ? "Provide a valid password" : null;
-                      },
-                      obscureText: hidePassword,
-                      controller: passwordController,
-                      keyboardType: TextInputType.emailAddress,
-                      style: GoogleFonts.raleway(color: Color(GlobalValues.blackText), fontWeight: FontWeight.normal, fontSize: 14),
-                      decoration: inputDecoration("Password"),
+                      decoration: inputDecoration(hint),
                     ),
                   ),
                 ),
@@ -211,13 +206,11 @@ class _RegisterState extends State<RegisterPage> {
               onTap: showHidePassword,
               child: Container(
                 padding: EdgeInsets.only(bottom: 20),
-                child: ImageIcon(
-                  AssetImage("assets/images/ic_eye.png"),
-                ),
+                child: rightIcon,
               ),
             ),
           ),
-        )
+        ),
       ],
     );
   }
@@ -242,8 +235,8 @@ class _RegisterState extends State<RegisterPage> {
 
   void register() {
     clickedSignInOnce = true;
-    if (formKeyPassword.currentState.validate() && formKeyUser.currentState.validate()) {
-      widget.viewModel.register(this.userController.text, this.passwordController.text);
+    if (formKeyPassword.currentState.validate() && formKeyEmail.currentState.validate()) {
+      widget.viewModel.register(this.mailFieldController.text, this.passwordController.text);
     }
   }
 
@@ -256,7 +249,8 @@ class _RegisterState extends State<RegisterPage> {
   void _onFocusChange() {
     setState(() {
       _hasFocusPass = _focusPass.hasFocus;
-      _hasFocusUser = _focusUser.hasFocus;
+      _hasFocusUserEmail = _focusEmail.hasFocus;
+      _hasFocusUserName = _focusUserName.hasFocus;
     });
   }
 }

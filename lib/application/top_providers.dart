@@ -4,8 +4,7 @@ import 'package:logger/logger.dart';
 import 'package:riverpod/riverpod.dart';
 import 'package:tenisleague100/services/database.dart';
 
-final firebaseAuthProvider =
-Provider<FirebaseAuth>((ref) => FirebaseAuth.instance);
+final firebaseAuthProvider = Provider<FirebaseAuth>((ref) => FirebaseAuth.instance);
 
 final authStateChangesProvider = StreamProvider<User>(
         (ref) => ref.watch(firebaseAuthProvider).authStateChanges());

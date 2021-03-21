@@ -26,7 +26,11 @@ class _DashboardState extends State<Dashboard> {
       'Index 2: School',
       style: optionStyle,
     ),
-    SettingsPage()
+    SettingsPage(),
+    Text(
+      'Messages:',
+      style: optionStyle,
+    ),
   ];
 
   @override
@@ -52,6 +56,10 @@ class _DashboardState extends State<Dashboard> {
           BottomNavigationBarItem(
             icon: Icon(Icons.settings),
             label: 'Settings',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.message),
+            label: 'Messages',
           ),
         ],
         currentIndex: _selectedIndex,

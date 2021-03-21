@@ -1,19 +1,23 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:tenisleague100/models/ModelUserLeague.dart';
+import 'package:tenisleague100/services/FirestorePaths.dart';
+
+import 'firestore_service.dart';
 
 class Database {
   Database({@required this.uid});
   final String uid;
 
-  final _service = FirebaseFirestore.instance;
+  final _service = FirestoreService.instance;
 
-
-/*  Future<void> setJob(Job job) => _service.setData(
-    path: FirestorePath.job(uid, job.id),
-    data: job.toMap(),
+  Future<void> registerUser(ModelUserLeague userLeague) => _service.setData(
+    path: FirestorePath.createUser(uid),
+    data: userLeague.toMap()
   );
 
+/*
   Future<void> deleteJob(Job job) async {
     // delete where entry.jobId == job.jobId
     final allEntries = await entriesStream(job: job).first;

@@ -8,6 +8,7 @@ import 'package:tenisleague100/services/shared_preferences_service.dart';
 import 'application/Auth/signIn.dart';
 import 'application/Dashboard/Dashboard.dart';
 import 'application/top_providers.dart';
+//flutter packages pub run build_runner build --delete-conflicting-outputs
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

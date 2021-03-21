@@ -50,7 +50,4 @@ class SignInViewModel with ChangeNotifier {
     }
   }
 
-/*  Future<void> signOut()async{
-    await auth.signOut();
-  }*/
 }
