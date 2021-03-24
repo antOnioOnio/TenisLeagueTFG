@@ -8,6 +8,10 @@ import 'package:tenisleague100/application/widgets/helpDecorations.dart';
 import 'package:tenisleague100/application/widgets/helpWidgets.dart';
 import 'package:tenisleague100/application/widgets/showAlertDialog.dart';
 import 'package:tenisleague100/constants/GlobalValues.dart';
+import 'package:tenisleague100/models/ModelUserLeague.dart';
+import 'package:tenisleague100/services/database.dart';
+
+import '../top_providers.dart';
 
 class Register extends ConsumerWidget {
   @override
@@ -48,21 +52,28 @@ class _RegisterState extends State<RegisterPage> {
   TextEditingController mailFieldController = new TextEditingController();
   TextEditingController passwordController = new TextEditingController();
   TextEditingController nameController = new TextEditingController();
+  TextEditingController levelController = new TextEditingController();
   bool hidePassword;
   FocusNode _focusPass = new FocusNode();
   FocusNode _focusEmail = new FocusNode();
   FocusNode _focusUserName = new FocusNode();
+  FocusNode _focusLevel = new FocusNode();
   bool _hasFocusPass = false;
   bool _hasFocusUserEmail = false;
   bool _hasFocusUserName = false;
+  bool _hasFocusUserLevel = false;
   final formKeyEmail = GlobalKey<FormState>();
   final formKeyPassword = GlobalKey<FormState>();
   final formKeyUserName = GlobalKey<FormState>();
+  final formKeyUserLevel = GlobalKey<FormState>();
   bool clickedSignInOnce = false;
+  String dropdownValue = "Principiante";
+  List<String> _options = ["Principiante", "Medio", "Avanzado"];
 
   static const int FIELD_NAME = 0;
   static const int FIELD_EMAIL = 1;
   static const int FIELD_PASSWORD = 2;
+  static const int FIELD_LEVEL = 3;
 
   @override
   void initState() {
@@ -70,6 +81,7 @@ class _RegisterState extends State<RegisterPage> {
     hidePassword = true;
     _focusPass.addListener(_onFocusChange);
     _focusEmail.addListener(_onFocusChange);
+    _focusLevel.addListener(_onFocusChange);
   }
 
   @override
@@ -138,6 +150,10 @@ class _RegisterState extends State<RegisterPage> {
               SizedBox(
                 height: 25.0,
               ),
+              _customDropDown(),
+              SizedBox(
+                height: 25.0,
+              ),
               _buildRegisterBtn(),
               SizedBox(
                 height: 25.0,
@@ -145,6 +161,76 @@ class _RegisterState extends State<RegisterPage> {
             ],
           )
         ],
+      ),
+    );
+  }
+
+  Widget _customDropDown() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          "Nivel",
+          style: GoogleFonts.raleway(fontWeight: FontWeight.bold, fontSize: 14),
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        Container(
+          width: 310,
+          height: 40,
+          alignment: Alignment.center,
+          decoration: getDecorationWithSelectedOption(_hasFocusUserLevel),
+          child: ListTile(
+            leading: SizedBox(
+              width: 30,
+            ),
+            /*     title: Container(
+              padding: EdgeInsets.only(bottom: 20),
+              child: Text(
+                dropdownValue,
+                style: GoogleFonts.raleway(color: Color(GlobalValues.blackText), fontWeight: FontWeight.normal, fontSize: 14),
+              ),
+            ),*/
+            title: Container(
+              padding: EdgeInsets.only(bottom: 20),
+              child: dropDown(),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget dropDown() {
+    return new Theme(
+      data: Theme.of(context).copyWith(
+        canvasColor: Color(GlobalValues.mainGreen),
+      ),
+      child: DropdownButton<String>(
+        focusNode: _focusLevel,
+        value: dropdownValue,
+        iconSize: 25,
+        elevation: 16,
+        style: GoogleFonts.raleway(color: Color(GlobalValues.blackText), fontWeight: FontWeight.normal, fontSize: 14),
+        underline: Container(
+          height: 0,
+        ),
+        onChanged: (String newValue) {
+          setState(() {
+            dropdownValue = newValue;
+            _focusLevel.requestFocus();
+          });
+        },
+        items: _options.map<DropdownMenuItem<String>>((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Text(
+              value,
+              style: GoogleFonts.raleway(color: Color(GlobalValues.blackText), fontWeight: FontWeight.normal, fontSize: 14),
+            ),
+          );
+        }).toList(),
       ),
     );
   }
@@ -176,28 +262,30 @@ class _RegisterState extends State<RegisterPage> {
                 Expanded(
                   child: Form(
                     key: formKey,
-                    child: TextFormField(
-                      focusNode: focus,
-                      validator: (val) {
-                        switch (valueForValidation) {
-                          case FIELD_NAME:
-                            return val.isEmpty || val.length < 3 ? "Escribe una nombre completo" : null;
-                            break;
-                          case FIELD_EMAIL:
-                            return val.isEmpty || !validateEmailAddress(val) ? "Por favor escribe un correo válido" : null;
-                            break;
-                          case FIELD_PASSWORD:
-                            return val.isEmpty || val.length < 3 ? "Escribe una contraseña válida" : null;
-                            break;
-                        }
-                        return "";
-                      },
-                      obscureText: valueForValidation == FIELD_PASSWORD ? hidePassword : false,
-                      controller: controller,
-                      keyboardType: valueForValidation == FIELD_EMAIL ? TextInputType.emailAddress : TextInputType.text,
-                      style: GoogleFonts.raleway(color: Color(GlobalValues.blackText), fontWeight: FontWeight.normal, fontSize: 14),
-                      decoration: inputDecoration(hint),
-                    ),
+                    child: valueForValidation == FIELD_LEVEL
+                        ? SizedBox.shrink()
+                        : TextFormField(
+                            focusNode: focus,
+                            validator: (val) {
+                              switch (valueForValidation) {
+                                case FIELD_NAME:
+                                  return val.isEmpty || val.length < 3 ? "Escribe una nombre completo" : null;
+                                  break;
+                                case FIELD_EMAIL:
+                                  return val.isEmpty || !validateEmailAddress(val) ? "Por favor escribe un correo válido" : null;
+                                  break;
+                                case FIELD_PASSWORD:
+                                  return val.isEmpty || val.length < 3 ? "Escribe una contraseña válida" : null;
+                                  break;
+                              }
+                              return "";
+                            },
+                            obscureText: valueForValidation == FIELD_PASSWORD ? hidePassword : false,
+                            controller: controller,
+                            keyboardType: valueForValidation == FIELD_EMAIL ? TextInputType.emailAddress : TextInputType.text,
+                            style: GoogleFonts.raleway(color: Color(GlobalValues.blackText), fontWeight: FontWeight.normal, fontSize: 14),
+                            decoration: inputDecoration(hint),
+                          ),
                   ),
                 ),
               ],
@@ -220,23 +308,29 @@ class _RegisterState extends State<RegisterPage> {
       width: 310,
       height: 40,
       child: FlatButton(
-        onPressed: () => {register()},
+        onPressed: () => {
+          register(),
+        },
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
         ),
         color: Color(GlobalValues.redTextbg),
         child: Text(
-          "Register",
+          "Registro",
           style: GoogleFonts.raleway(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
         ),
       ),
     );
   }
 
-  void register() {
+  void register() async {
     clickedSignInOnce = true;
     if (formKeyPassword.currentState.validate() && formKeyEmail.currentState.validate()) {
-      widget.viewModel.register(this.mailFieldController.text, this.passwordController.text);
+      await widget.viewModel.register(this.mailFieldController.text, this.passwordController.text);
+      final database = context.read<Database>(databaseProvider);
+      await database.registerUser(
+        new ModelUserLeague(fullName: this.nameController.text, email: this.mailFieldController.text, level: dropdownValue),
+      );
     }
   }
 
@@ -251,6 +345,7 @@ class _RegisterState extends State<RegisterPage> {
       _hasFocusPass = _focusPass.hasFocus;
       _hasFocusUserEmail = _focusEmail.hasFocus;
       _hasFocusUserName = _focusUserName.hasFocus;
+      _hasFocusUserLevel = _focusLevel.hasFocus;
     });
   }
 }

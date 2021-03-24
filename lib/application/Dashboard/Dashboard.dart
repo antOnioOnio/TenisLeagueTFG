@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tenisleague100/application/Dashboard/Messages/chats_list.dart';
 import 'package:tenisleague100/application/Dashboard/Settings/settings.dart';
 import 'package:tenisleague100/constants/GlobalValues.dart';
 
@@ -27,10 +28,7 @@ class _DashboardState extends State<Dashboard> {
       style: optionStyle,
     ),
     SettingsPage(),
-    Text(
-      'Messages:',
-      style: optionStyle,
-    ),
+    Chats()
   ];
 
   @override

@@ -1,11 +1,12 @@
 import 'package:json_annotation/json_annotation.dart';
 
 part 'ModelUserLeague.g.dart';
+
 @JsonSerializable(explicitToJson: true)
 class ModelUserLeague {
-  final String id;
-  final String fullName;
-  final String email;
+  String id;
+  String fullName;
+  String email;
   String level;
   int currentScore;
 
