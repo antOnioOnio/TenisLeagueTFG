@@ -9,6 +9,7 @@ import 'package:tenisleague100/application/widgets/helpDecorations.dart';
 import 'package:tenisleague100/application/widgets/helpWidgets.dart';
 import 'package:tenisleague100/application/widgets/showAlertDialog.dart';
 import 'package:tenisleague100/constants/GlobalValues.dart';
+import 'package:tenisleague100/services/shared_preferences_service.dart';
 
 import '../top_providers.dart';
 
@@ -261,10 +262,11 @@ class _SignInPageState extends State<SignInPage> {
     );
   }
 
-  void signIn() {
+  void signIn() async{
     clickedSignInOnce = true;
     if (formKeyUser.currentState.validate() && formKeyPassword.currentState.validate()) {
-      widget.viewModel.signIn(this.userController.text, this.passwordController.text);
+      await  widget.viewModel.signIn(this.userController.text, this.passwordController.text, context);
+
     }
   }
 

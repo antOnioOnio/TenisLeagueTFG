@@ -1,6 +1,11 @@
+import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:tenisleague100/application/Auth/signIn.dart';
 import 'package:tenisleague100/application/Auth/sign_in_view_model.dart';
 import 'package:tenisleague100/application/Auth/validators.dart';
@@ -10,6 +15,7 @@ import 'package:tenisleague100/application/widgets/showAlertDialog.dart';
 import 'package:tenisleague100/constants/GlobalValues.dart';
 import 'package:tenisleague100/models/ModelUserLeague.dart';
 import 'package:tenisleague100/services/database.dart';
+import 'package:tenisleague100/services/shared_preferences_service.dart';
 
 import '../top_providers.dart';
 
@@ -69,6 +75,9 @@ class _RegisterState extends State<RegisterPage> {
   bool clickedSignInOnce = false;
   String dropdownValue = "Principiante";
   List<String> _options = ["Principiante", "Medio", "Avanzado"];
+  File _image;
+  String _mimeType = '';
+  String _base64Image;
 
   static const int FIELD_NAME = 0;
   static const int FIELD_EMAIL = 1;
@@ -109,6 +118,31 @@ class _RegisterState extends State<RegisterPage> {
               Text(
                 "Register",
                 style: GoogleFonts.raleway(fontWeight: FontWeight.bold, fontSize: 24),
+              ),
+              SizedBox(height: 25.0),
+              Container(
+                margin: EdgeInsets.only(right: 12),
+                child: CircleAvatar(
+                  backgroundColor: Color(GlobalValues.mainTextColorHint),
+                  radius: 50,
+                  child: _image != null
+                      ? ClipRRect(
+                          borderRadius: BorderRadius.circular(50),
+                          child: Image.file(
+                            _image,
+                            width: 300,
+                            height: 170,
+                            fit: BoxFit.fill,
+                          ),
+                        )
+                      : GestureDetector(
+                          onTap: () => onClickFromCamera(),
+                          child: Icon(
+                            Icons.camera_alt,
+                            color: Colors.grey[200],
+                          ),
+                        ),
+                ),
               ),
               SizedBox(
                 height: 50.0,
@@ -326,11 +360,23 @@ class _RegisterState extends State<RegisterPage> {
   void register() async {
     clickedSignInOnce = true;
     if (formKeyPassword.currentState.validate() && formKeyEmail.currentState.validate()) {
-      await widget.viewModel.register(this.mailFieldController.text, this.passwordController.text);
-      final database = context.read<Database>(databaseProvider);
-      await database.registerUser(
-        new ModelUserLeague(fullName: this.nameController.text, email: this.mailFieldController.text, level: dropdownValue),
-      );
+      if (_base64Image != null) {
+        await widget.viewModel.register(this.mailFieldController.text, this.passwordController.text, context);
+        final database = context.read<Database>(databaseProvider);
+        String userId = widget.viewModel.currentId;
+        await database.registerUser(
+          new ModelUserLeague(
+              fullName: this.nameController.text, email: this.mailFieldController.text, level: dropdownValue, image: this._base64Image, id: userId),
+        );
+      } else {
+        showAlertDialog(
+          context: context,
+          title: 'Foto sin rellenar',
+          content: "Hazte un selfie..",
+          defaultActionText: 'OK',
+          requiredCallback: false,
+        );
+      }
     }
   }
 
@@ -346,6 +392,21 @@ class _RegisterState extends State<RegisterPage> {
       _hasFocusUserEmail = _focusEmail.hasFocus;
       _hasFocusUserName = _focusUserName.hasFocus;
       _hasFocusUserLevel = _focusLevel.hasFocus;
+    });
+  }
+
+  void onClickFromCamera() async {
+    File image = await ImagePicker.pickImage(source: ImageSource.camera, imageQuality: 50);
+
+    if (image != null) print('Picture saved to ${image.path}');
+    Uint8List value = await image.readAsBytes();
+    String base64Image = base64Encode(value);
+
+    //storePicture(addDataTypeToBase64(base64Image, mimeType), addDataTypeToType(mimeType));
+
+    setState(() {
+      _image = image;
+      _base64Image = base64Image;
     });
   }
 }

@@ -1,10 +1,15 @@
 library firestore_service;
 
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:tenisleague100/models/ModelMessages.dart';
+import 'package:tenisleague100/services/FirestorePaths.dart';
 
 class FirestoreService {
   FirestoreService._();
+
   static final instance = FirestoreService._();
 
   Future<void> setData({
@@ -15,6 +20,16 @@ class FirestoreService {
     final reference = FirebaseFirestore.instance.doc(path);
     print('$path: $data');
     await reference.set(data, SetOptions(merge: merge));
+  }
+
+  Future<void> addData({
+    @required String path,
+    @required Map<String, dynamic> data,
+    bool merge = false,
+  }) async {
+    final reference = FirebaseFirestore.instance.collection(path);
+    print('$path: $data');
+    await reference.add(data);
   }
 
   Future<void> deleteData({@required String path}) async {
@@ -35,7 +50,8 @@ class FirestoreService {
     }
     final Stream<QuerySnapshot> snapshots = query.snapshots();
     return snapshots.map((snapshot) {
-      final result = snapshot.docs.map((snapshot) => builder(snapshot.data(), snapshot.id)).where((value) => value != null).toList();
+      final result = snapshot.docs.map((snapshot) => builder(snapshot.data(), snapshot.id))
+          .where((value) => value != null).toList();
       if (sort != null) {
         result.sort(sort);
       }
@@ -51,4 +67,5 @@ class FirestoreService {
     final Stream<DocumentSnapshot> snapshots = reference.snapshots();
     return snapshots.map((snapshot) => builder(snapshot.data(), snapshot.id));
   }
+
 }

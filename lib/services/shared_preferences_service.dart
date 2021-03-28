@@ -9,6 +9,7 @@ class SharedPreferencesService {
   final SharedPreferences sharedPreferences;
 
   static const onboardingCompleteKey = 'onboardingComplete';
+  static const CURRENT_USER = 'currentUser';
 
   Future<void> setOnboardingComplete() async {
     await sharedPreferences.setBool(onboardingCompleteKey, true);
@@ -16,4 +17,12 @@ class SharedPreferencesService {
 
   bool isOnboardingComplete() =>
       sharedPreferences.getBool(onboardingCompleteKey) ?? false;
+
+
+  Future<void> setCurrentUserId(String userId)async{
+    await sharedPreferences.setString(CURRENT_USER, userId);
+  }
+
+  String getCurrentUSerId() =>
+      sharedPreferences.getString(CURRENT_USER) ?? "";
 }

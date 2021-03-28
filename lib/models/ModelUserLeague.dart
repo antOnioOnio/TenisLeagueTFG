@@ -8,9 +8,10 @@ class ModelUserLeague {
   String fullName;
   String email;
   String level;
+  String image;
   int currentScore;
 
-  ModelUserLeague({this.id, this.fullName, this.email, this.level, this.currentScore});
+  ModelUserLeague({this.id, this.fullName, this.email, this.level, this.currentScore, this.image});
 
   factory ModelUserLeague.fromJson(Map<String, dynamic> json) => _$ModelUserLeagueFromJson(json);
 
@@ -18,6 +19,6 @@ class ModelUserLeague {
 
   @override
   String toString() {
-    return 'ModelUserLeague{id: $id, fullName: $fullName, email: $email, level: $level, currentScore: $currentScore}';
+    return 'ModelUserLeague{id: $id, fullName: $fullName, email: $email, level: $level, image: $image, currentScore: $currentScore}';
   }
 }

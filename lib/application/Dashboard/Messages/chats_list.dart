@@ -1,16 +1,20 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tenisleague100/application/widgets/helpDecorations.dart';
 import 'package:tenisleague100/application/widgets/helpWidgets.dart';
-import 'package:tenisleague100/application/widgets/showAlertDialog.dart';
 import 'package:tenisleague100/constants/GlobalValues.dart';
 import 'package:tenisleague100/models/ModelUserLeague.dart';
 import 'package:tenisleague100/services/database.dart';
+import 'package:tenisleague100/services/shared_preferences_service.dart';
 
 import '../../top_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'chat.dart';
+import 'Chat/MainChat.dart';
 
 // https://github.com/JohannesMilke/firebase_chat_example
 class Chats extends StatefulWidget {
@@ -31,22 +35,8 @@ class _ChatsState extends State<Chats> {
     getUsers();
   }
 
-  void getUsers() async {
-    final database = context.read<Database>(databaseProvider);
-    setState(() {
-      _isLoading = true;
-    });
-    _everyUser = await database.getUserCollection();
-    _filteredUsers = _everyUser;
-    setState(() {
-      _isLoading = false;
-    });
-    print("filteredUsers size===> " + _filteredUsers.length.toString());
-  }
-
   @override
   Widget build(BuildContext context) {
-    final database = context.read<Database>(databaseProvider);
     return Scaffold(
       resizeToAvoidBottomPadding: false,
       body: Stack(
@@ -55,15 +45,16 @@ class _ChatsState extends State<Chats> {
           SingleChildScrollView(
             physics: AlwaysScrollableScrollPhysics(),
             child: SafeArea(
-                child: Column(
-              children: [
-                SizedBox(
-                  height: 10,
-                ),
-                customSearchField(),
-                mainListUsers(),
-              ],
-            )),
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 10,
+                  ),
+                  customSearchField(),
+                  mainListUsers(),
+                ],
+              ),
+            ),
           )
         ],
       ),
@@ -74,34 +65,41 @@ class _ChatsState extends State<Chats> {
     return _isLoading
         ? circularLoadingBar()
         : Container(
+            padding: EdgeInsets.all(10),
             constraints: BoxConstraints(maxHeight: 400),
             child: ListView.builder(
               physics: BouncingScrollPhysics(),
               itemCount: _filteredUsers.length,
               itemBuilder: (context, index) {
                 final user = _filteredUsers[index];
-                return Container(
-                  height: 75,
-                  width: 100,
-                  color: Color(GlobalValues.mainGreen),
-                  child: ListTile(
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => Chat(modelUserLeague: user),
-                        ),
-                      );
-                    },
-                    /*       leading: CircleAvatar(
-                radius: 25,
-                backgroundImage: NetworkImage(user.urlAvatar),
-              ),*/
-                    title: Text(user.fullName),
-                  ),
-                );
+                return userRow(user);
               },
             ),
           );
+  }
+
+  Widget userRow(ModelUserLeague user) {
+    Uint8List bytes = base64Decode(user.image);
+    return Container(
+      height: 60,
+      decoration: containerChatSelection(),
+      margin: EdgeInsets.only(bottom: 5),
+      child: ListTile(
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => MainChat(modelUserLeague: user),
+            ),
+          );
+        },
+        leading: CircleAvatar(
+          backgroundColor: Color(GlobalValues.mainGreen),
+          radius: 20,
+          child: customAvatar(bytes),
+        ),
+        title: Text(user.fullName),
+      ),
+    );
   }
 
   Widget customSearchField() {
@@ -151,5 +149,27 @@ class _ChatsState extends State<Chats> {
         ),
       ],
     );
+  }
+
+  void getUsers() async {
+    print("geUsers called");
+    final database = context.read<Database>(databaseProvider);
+    setState(() {
+      _isLoading = true;
+    });
+    final sp = context.read<SharedPreferencesService>(sharedPreferencesServiceProvider);
+    String currentUserId = sp.getCurrentUSerId();
+    _everyUser = await database.getUserCollection();
+    ModelUserLeague mySelfToDelete;
+    for (var obj in _everyUser) {
+      if (obj.id == currentUserId) {
+        mySelfToDelete = obj;
+      }
+    }
+    _everyUser.remove(mySelfToDelete);
+    _filteredUsers = _everyUser;
+    setState(() {
+      _isLoading = false;
+    });
   }
 }
