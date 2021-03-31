@@ -9,7 +9,6 @@ import 'package:tenisleague100/application/widgets/helpDecorations.dart';
 import 'package:tenisleague100/application/widgets/helpWidgets.dart';
 import 'package:tenisleague100/application/widgets/showAlertDialog.dart';
 import 'package:tenisleague100/constants/GlobalValues.dart';
-import 'package:tenisleague100/services/shared_preferences_service.dart';
 
 import '../top_providers.dart';
 
@@ -68,6 +67,7 @@ class _SignInPageState extends State<SignInPage> {
     _focusPass.addListener(_onFocusChange);
     _focusUser.addListener(_onFocusChange);
   }
+
 
   @override
   Widget build(BuildContext context) {

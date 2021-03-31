@@ -9,7 +9,7 @@ import 'firestore_service.dart';
 class Database {
   Database({@required this.uid});
   final String uid;
-  ModelUserLeague currentUser;
+  ModelUserLeague _currentUser;
   final _service = FirestoreService.instance;
 
   Future<void> registerUser(ModelUserLeague userLeague) {
@@ -22,7 +22,7 @@ class Database {
       );
 
   Future<ModelUserLeague> getCurrentUser() async {
-    if (currentUser == null) {
+    if (_currentUser == null) {
       CollectionReference _collectionRef = FirebaseFirestore.instance.collection(FirestorePath.users);
       // Get docs from collection reference
       QuerySnapshot querySnapshot = await _collectionRef.get();
@@ -33,11 +33,11 @@ class Database {
       for (var obj in allData) {
         ModelUserLeague user = new ModelUserLeague.fromJson(obj);
         if (user.id == this.uid) {
-          currentUser = user;
+          _currentUser = user;
         }
       }
     }
-    return currentUser;
+    return _currentUser;
   }
 
   Future<List<ModelUserLeague>> getUserCollection() async {

@@ -39,12 +39,12 @@ Widget customAvatar(Uint8List bytes) {
     backgroundColor: Color(GlobalValues.mainGreen),
     radius: 20,
     child: ClipRRect(
-      borderRadius: BorderRadius.circular(30),
+      borderRadius: BorderRadius.circular(33),
       child: new Image.memory(
         bytes,
         fit: BoxFit.fill,
-        height: 35.0,
-        width: 35.0,
+        height: 37.0,
+        width: 37.0,
       ),
     ),
   );

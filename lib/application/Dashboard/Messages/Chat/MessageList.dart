@@ -17,7 +17,7 @@ class MessageList extends StatefulWidget {
   final String currentUserId;
   final ModelUserLeague userChat;
 
-  const MessageList({Key key, @required this.currentUserId,@required this.userChat}) : super(key: key);
+  const MessageList({Key key, @required this.currentUserId, @required this.userChat}) : super(key: key);
 
   @override
   _MessageListState createState() => _MessageListState();
@@ -60,23 +60,23 @@ class _MessageListState extends State<MessageList> {
           msgToShow.add(obj);
         }
       }
+      Timer(
+        Duration(milliseconds: 100),
+        () => _controller.jumpTo(_controller.position.minScrollExtent),
+      );
     }
-    Timer(
-      Duration(milliseconds: 100),
-          () => _controller.jumpTo(_controller.position.minScrollExtent),
-    );
 
     return msgToShow.isEmpty
         ? Center(child: Text("Esta conversación esta vacía.."))
         : ListView.builder(
-      physics: BouncingScrollPhysics(),
-      reverse: true,
-      controller: _controller,
-      itemCount: msgToShow.length,
-      itemBuilder: (context, index) {
-        return message(msgToShow[index]);
-      },
-    );
+            physics: BouncingScrollPhysics(),
+            reverse: true,
+            controller: _controller,
+            itemCount: msgToShow.length,
+            itemBuilder: (context, index) {
+              return message(msgToShow[index]);
+            },
+          );
   }
 
   Widget message(ModelMessage message) {

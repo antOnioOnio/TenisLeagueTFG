@@ -3,6 +3,8 @@ import 'package:tenisleague100/application/Dashboard/Messages/chats_list.dart';
 import 'package:tenisleague100/application/Dashboard/Settings/settings.dart';
 import 'package:tenisleague100/constants/GlobalValues.dart';
 
+import 'Forum/MainForum.dart';
+
 class Dashboard extends StatefulWidget {
   const Dashboard({Key key}) : super(key: key);
 
@@ -15,10 +17,7 @@ class _DashboardState extends State<Dashboard> {
   int _selectedIndex = 0;
   static const TextStyle optionStyle = TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static List<Widget> _widgetOptions = <Widget>[
-    Text(
-      'Index 0: Home',
-      style: optionStyle,
-    ),
+    MainForum(),
     Text(
       'Index 1: Business',
       style: optionStyle,

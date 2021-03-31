@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 
@@ -27,12 +26,20 @@ class MainChat extends StatefulWidget {
 class _MainChatState extends State<MainChat> {
   TextEditingController _messageController = new TextEditingController();
   String currentUserId;
-
+  FocusNode _focusMsg = new FocusNode();
+  bool _hasFocus = false;
   @override
   void initState() {
     super.initState();
     final sp = context.read<SharedPreferencesService>(sharedPreferencesServiceProvider);
     currentUserId = sp.getCurrentUSerId();
+    _focusMsg.addListener(_onFocusChange);
+  }
+
+  void _onFocusChange() {
+    setState(() {
+      _hasFocus = _focusMsg.hasFocus;
+    });
   }
 
   @override
@@ -49,7 +56,7 @@ class _MainChatState extends State<MainChat> {
                   child: Container(
                     width: MediaQuery.of(context).size.width,
                     padding: EdgeInsets.all(10),
-                    decoration: chatBgDecoration(),
+                    decoration: chatBgDecoration(0.5),
                     child: MessageList(currentUserId: currentUserId, userChat: widget.modelUserLeague),
                   ),
                 ),
@@ -99,41 +106,36 @@ class _MainChatState extends State<MainChat> {
 
   Widget typingContainer() {
     return Container(
-      /*color: Colors.white,*/
-      padding: EdgeInsets.all(8),
-      child: Row(
-        children: <Widget>[
-          Expanded(
-            child: TextField(
-              controller: _messageController,
-              textCapitalization: TextCapitalization.sentences,
-              autocorrect: true,
-              enableSuggestions: true,
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: Colors.white,
-                labelText: 'Escribe algo..',
-                border: OutlineInputBorder(
-                  borderSide: BorderSide(width: 0, color: Colors.redAccent),
-                  gapPadding: 10,
-                  borderRadius: BorderRadius.circular(25),
-                ),
+      margin: EdgeInsets.only(top: 10, bottom: 10),
+      width: 350,
+      height: 40,
+      alignment: Alignment.center,
+      decoration: getDecorationWithSelectedOption(_hasFocus),
+      child: ListTile(
+        title: Row(
+          children: [
+            Expanded(
+              child: TextFormField(
+                focusNode: _focusMsg,
+                controller: _messageController,
+                keyboardType: TextInputType.text,
+                style: GoogleFonts.raleway(color: Color(GlobalValues.blackText), fontWeight: FontWeight.normal, fontSize: 14),
+                decoration: inputDecoration("Escribe algo"),
               ),
             ),
-          ),
-          SizedBox(width: 20),
-          GestureDetector(
-            onTap: sendMessage,
-            child: Container(
-              padding: EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Color(GlobalValues.mainGreen),
-              ),
-              child: Icon(Icons.send, color: Colors.white),
+          ],
+        ),
+        trailing: GestureDetector(
+          onTap: sendMessage,
+          child: Container(
+            padding: EdgeInsets.only(bottom: 20),
+            child: Icon(
+              Icons.send,
+              color: Color(GlobalValues.mainGreen),
+              size: 25,
             ),
           ),
-        ],
+        ),
       ),
     );
   }

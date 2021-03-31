@@ -15,7 +15,6 @@ import 'package:tenisleague100/application/widgets/showAlertDialog.dart';
 import 'package:tenisleague100/constants/GlobalValues.dart';
 import 'package:tenisleague100/models/ModelUserLeague.dart';
 import 'package:tenisleague100/services/database.dart';
-import 'package:tenisleague100/services/shared_preferences_service.dart';
 
 import '../top_providers.dart';
 

@@ -27,7 +27,7 @@ BoxDecoration getDecorationWithSelectedOption(bool selected) {
     borderRadius: BorderRadius.circular(12),
     border: Border.all(
       width: 1,
-      color: selected ? Colors.redAccent[400] : Color(GlobalValues.mainTextColorHint),
+      color: selected ? Color(GlobalValues.mainGreen) : Color(GlobalValues.mainTextColorHint),
     ),
   );
 }
@@ -65,16 +65,27 @@ BoxDecoration messageDecoration(bool isMe) {
   );
 }
 
-BoxDecoration chatBgDecoration() {
+BoxDecoration chatBgDecoration(double width) {
   return BoxDecoration(
     color: Colors.white,
     border: Border.all(
-      width: 2,
+      width: width,
       color: Color(GlobalValues.mainGreen),
     ),
     borderRadius: BorderRadius.only(
       topLeft: Radius.circular(30),
       topRight: Radius.circular(30),
+    ),
+  );
+}
+
+BoxDecoration decorationModule8() {
+  return BoxDecoration(
+    border: Border(
+      top: BorderSide(
+        width: 0.5,
+        color: Color(GlobalValues.mainGreen),
+      ),
     ),
   );
 }
