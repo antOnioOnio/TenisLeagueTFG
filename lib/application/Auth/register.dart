@@ -218,13 +218,6 @@ class _RegisterState extends State<RegisterPage> {
             leading: SizedBox(
               width: 30,
             ),
-            /*     title: Container(
-              padding: EdgeInsets.only(bottom: 20),
-              child: Text(
-                dropdownValue,
-                style: GoogleFonts.raleway(color: Color(GlobalValues.blackText), fontWeight: FontWeight.normal, fontSize: 14),
-              ),
-            ),*/
             title: Container(
               padding: EdgeInsets.only(bottom: 20),
               child: dropDown(),

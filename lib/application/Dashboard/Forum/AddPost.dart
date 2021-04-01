@@ -69,7 +69,7 @@ class AddPost extends StatelessWidget {
                             ),
                             GestureDetector(
                               onTap: () => {
-                                openLinkDevicesDialog(context),
+                                openDialogForProMatch(context, viewModel),
                               },
                               child: Text(
                                 "Propuesta partido",
@@ -111,11 +111,13 @@ class AddPost extends StatelessWidget {
     );
   }
 
-  void openLinkDevicesDialog(BuildContext context) {
+  void openDialogForProMatch(BuildContext context, ForumViewModel viewModel) {
     showDialog(
         context: context,
         builder: (_) {
-          return AddProPartidoDialog();
+          return AddProPartidoDialog(
+            viewModel: viewModel,
+          );
         });
   }
 }

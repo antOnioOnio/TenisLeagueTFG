@@ -85,3 +85,59 @@ BoxDecoration decorationTopBorder() {
     ),
   );
 }
+
+BoxDecoration decorationDialogAdd() {
+  return BoxDecoration(
+      shape: BoxShape.rectangle,
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(10),
+      boxShadow: [BoxShadow(color: Colors.lightGreen, offset: Offset(0, 5), blurRadius: 5)]);
+}
+
+final inputGreyBorderDecorationStyle = InputDecoration(
+  contentPadding: EdgeInsets.all(5.0),
+  focusedBorder: OutlineInputBorder(
+    borderSide: BorderSide(
+      width: 1,
+      color: Color(GlobalValues.mainTextColorHint),
+    ),
+    borderRadius: BorderRadius.circular(12),
+  ),
+  enabledBorder: OutlineInputBorder(
+    borderSide: BorderSide(
+      width: 1,
+      color: Color(GlobalValues.mainTextColorHint),
+    ),
+    borderRadius: BorderRadius.circular(12),
+  ),
+  errorBorder: OutlineInputBorder(
+    borderSide: BorderSide(
+      width: 1,
+      color: Color(GlobalValues.redTextbg),
+    ),
+    borderRadius: BorderRadius.circular(12),
+  ),
+  focusedErrorBorder: new OutlineInputBorder(
+    borderSide: BorderSide(
+      width: 1,
+      color: Color(GlobalValues.redTextbg),
+    ),
+    borderRadius: BorderRadius.circular(12),
+  ),
+  disabledBorder: OutlineInputBorder(
+    borderSide: BorderSide(
+      width: 1,
+      color: Colors.grey,
+    ),
+    borderRadius: BorderRadius.circular(12),
+  ),
+);
+
+
+final boxCreateObjects = BoxDecoration(
+  borderRadius: BorderRadius.circular(12),
+  border: new Border.all(
+    color: Color(GlobalValues.mainTextColorHint),
+    width: 1.0,
+  ),
+);
