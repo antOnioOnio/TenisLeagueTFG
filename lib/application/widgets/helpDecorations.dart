@@ -58,10 +58,6 @@ BoxDecoration messageDecoration(bool isMe) {
     borderRadius: isMe
         ? BorderRadius.only(topLeft: Radius.circular(10), bottomLeft: Radius.circular(10), topRight: Radius.circular(10))
         : BorderRadius.only(topLeft: Radius.circular(10), bottomRight: Radius.circular(10), topRight: Radius.circular(10)),
-/*      border: Border.all(
-        width: 1,
-        color: Color(GlobalValues.mainTextColorHint),
-      )*/
   );
 }
 
@@ -79,7 +75,7 @@ BoxDecoration chatBgDecoration(double width) {
   );
 }
 
-BoxDecoration decorationModule8() {
+BoxDecoration decorationTopBorder() {
   return BoxDecoration(
     border: Border(
       top: BorderSide(

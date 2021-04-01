@@ -13,7 +13,6 @@ import 'application/top_providers.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  Stetho.initialize();
   await Firebase.initializeApp();
   final sharedPreferences = await SharedPreferences.getInstance();
   runApp(

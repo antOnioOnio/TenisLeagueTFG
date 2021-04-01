@@ -1,7 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
 
-part 'ModelUserLeague.g.dart';
-
 @JsonSerializable(explicitToJson: true)
 class ModelUserLeague {
   String id;
@@ -13,9 +11,22 @@ class ModelUserLeague {
 
   ModelUserLeague({this.id, this.fullName, this.email, this.level, this.currentScore, this.image});
 
-  factory ModelUserLeague.fromJson(Map<String, dynamic> json) => _$ModelUserLeagueFromJson(json);
-
-  Map<String, dynamic> toMap() => _$ModelUserLeagueToJson(this);
+  factory ModelUserLeague.fromJson(Map<String, dynamic> json) => ModelUserLeague(
+        id: json['id'] as String,
+        fullName: json['fullName'] as String,
+        email: json['email'] as String,
+        level: json['level'] as String,
+        currentScore: json['currentScore'] as int,
+        image: json['image'] as String,
+      );
+  Map<String, dynamic> toMap() => <String, dynamic>{
+        'id': this.id,
+        'fullName': this.fullName,
+        'email': this.email,
+        'level': this.level,
+        'image': this.image,
+        'currentScore': this.currentScore,
+      };
 
   @override
   String toString() {

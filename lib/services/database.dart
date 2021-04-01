@@ -12,6 +12,10 @@ class Database {
   ModelUserLeague _currentUser;
   final _service = FirestoreService.instance;
 
+  void method() {
+    print("method called");
+  }
+
   Future<void> registerUser(ModelUserLeague userLeague) {
     _service.setData(path: FirestorePath.createUser(uid), data: userLeague.toMap());
   }

@@ -401,8 +401,6 @@ class _RegisterState extends State<RegisterPage> {
     Uint8List value = await image.readAsBytes();
     String base64Image = base64Encode(value);
 
-    //storePicture(addDataTypeToBase64(base64Image, mimeType), addDataTypeToType(mimeType));
-
     setState(() {
       _image = image;
       _base64Image = base64Image;

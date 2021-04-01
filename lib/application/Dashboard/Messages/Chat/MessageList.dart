@@ -26,6 +26,13 @@ class MessageList extends StatefulWidget {
 class _MessageListState extends State<MessageList> {
   final _controller = ScrollController();
   @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _controller.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final database = context.read<Database>(databaseProvider);
     return StreamBuilder<List<ModelMessage>>(
