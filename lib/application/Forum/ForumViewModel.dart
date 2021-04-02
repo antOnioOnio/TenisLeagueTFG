@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:tenisleague100/models/ModelPost.dart';
 import 'package:tenisleague100/models/ModelUserLeague.dart';
 import 'package:tenisleague100/services/database.dart';
 
@@ -20,9 +21,15 @@ class ForumViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  void callMethod() {
-    database.method();
+  Future<void> sendPost(ModelPost post) async {
+    await database.sendPost(post);
   }
+
+  Future<void> deletePost(String postId) async {
+    await database.deletePost(postId);
+  }
+
+  Stream<List<ModelPost>> postStream() => database.postStream();
 
   bool get loading => isLoading;
   ModelUserLeague get user => _currentUser;

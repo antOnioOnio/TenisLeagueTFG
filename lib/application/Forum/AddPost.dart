@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:tenisleague100/application/Dashboard/Forum/ForumViewModel.dart';
 import 'package:tenisleague100/application/widgets/helpDecorations.dart';
 import 'package:tenisleague100/application/widgets/helpWidgets.dart';
 import 'package:tenisleague100/constants/GlobalValues.dart';
 
 import 'AddProPartidoDialog.dart';
+import 'ForumViewModel.dart';
 
 class AddPost extends StatelessWidget {
   final ForumViewModel viewModel;

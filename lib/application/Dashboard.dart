@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tenisleague100/application/Dashboard/Messages/chats_list.dart';
-import 'package:tenisleague100/application/Dashboard/Settings/settings.dart';
+import 'package:tenisleague100/application/Messages/chats_list.dart';
+import 'package:tenisleague100/application/Settings/settings.dart';
 import 'package:tenisleague100/constants/GlobalValues.dart';
 
 import 'Forum/MainForum.dart';

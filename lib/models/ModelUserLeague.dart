@@ -1,7 +1,7 @@
-import 'package:json_annotation/json_annotation.dart';
+import 'package:equatable/equatable.dart';
 
-@JsonSerializable(explicitToJson: true)
-class ModelUserLeague {
+// ignore: must_be_immutable
+class ModelUserLeague extends Equatable {
   String id;
   String fullName;
   String email;
@@ -19,6 +19,7 @@ class ModelUserLeague {
         currentScore: json['currentScore'] as int,
         image: json['image'] as String,
       );
+
   Map<String, dynamic> toMap() => <String, dynamic>{
         'id': this.id,
         'fullName': this.fullName,
@@ -28,8 +29,12 @@ class ModelUserLeague {
         'currentScore': this.currentScore,
       };
 
+
   @override
   String toString() {
     return 'ModelUserLeague{id: $id, fullName: $fullName, email: $email, level: $level, image: $image, currentScore: $currentScore}';
   }
+
+  @override
+  List<Object> get props => [id, fullName, email, level, image, currentScore];
 }

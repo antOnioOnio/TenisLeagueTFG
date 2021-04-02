@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:tenisleague100/application/top_providers.dart';
 import 'package:tenisleague100/application/widgets/helpDecorations.dart';
 import 'package:tenisleague100/application/widgets/helpWidgets.dart';
 import 'package:tenisleague100/application/widgets/showAlertDialog.dart';
@@ -10,7 +11,6 @@ import 'package:tenisleague100/models/ModelMessages.dart';
 import 'package:tenisleague100/models/ModelUserLeague.dart';
 import 'package:tenisleague100/services/database.dart';
 
-import '../../../top_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class MessageList extends StatefulWidget {

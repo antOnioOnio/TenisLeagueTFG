@@ -1,19 +1,18 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_stetho/flutter_stetho.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tenisleague100/application/authentication.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tenisleague100/services/shared_preferences_service.dart';
 
 import 'application/Auth/signIn.dart';
-import 'application/Dashboard/Dashboard.dart';
-import 'application/top_providers.dart';
+import 'application/Dashboard.dart';
 //flutter packages pub run build_runner build --delete-conflicting-outputs
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
   final sharedPreferences = await SharedPreferences.getInstance();
   runApp(
     ProviderScope(

@@ -25,22 +25,19 @@ dependencies:
     sdk: flutter
   firebase_auth:
   cloud_firestore:
-  firebase_core:
+  firebase_core: 0.7.0
   flutter_riverpod:
   intl:
   shared_preferences:
   logger:
   google_fonts: ^1.1.1
   dartz: ^0.9.0-dev.6
-  json_annotation: ^3.1.0
+  json_annotation:
   image_picker: ^0.6.7+22
   path: ^1.7.0
   mime: ^0.9.7
-  flutter_stetho:
-    git:
-      url: git://github.com/jasonlewicki/flutter_stetho.git
-      ref: master
-
+  uuid: ^2.2.2
+  equatable: 1.2.6
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -51,7 +48,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   build_runner:
-  json_serializable: ^3.3.0
+  json_serializable:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

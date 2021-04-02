@@ -4,8 +4,6 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:tenisleague100/models/ModelMessages.dart';
-import 'package:tenisleague100/services/FirestorePaths.dart';
 
 class FirestoreService {
   FirestoreService._();

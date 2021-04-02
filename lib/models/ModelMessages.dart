@@ -1,7 +1,7 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:json_annotation/json_annotation.dart';
 
-class ModelMessage {
+class ModelMessage extends Equatable{
   final String idUser;
   final String idUserSendTo;
   final String image;
@@ -16,6 +16,7 @@ class ModelMessage {
       @required this.userName,
       @required this.message,
       @required this.createdAt});
+
 
 
   factory ModelMessage.fromJson(Map<String, dynamic> json) => ModelMessage(
@@ -33,6 +34,9 @@ class ModelMessage {
         'image': this.image,
         'userName': this.userName,
         'message': this.message,
-        'createdAt': this.createdAt,
+        'createdAt': this.createdAt?.toIso8601String(),
       };
+
+  @override
+  List<Object> get props => [idUser, idUserSendTo, image, userName, message, createdAt];
 }

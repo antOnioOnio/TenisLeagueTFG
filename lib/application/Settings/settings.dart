@@ -2,10 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tenisleague100/application/top_providers.dart';
 import 'package:tenisleague100/application/widgets/helpWidgets.dart';
 import 'package:tenisleague100/application/widgets/showAlertDialog.dart';
 import 'package:tenisleague100/constants/GlobalValues.dart';
-import '../../top_providers.dart';
 
 class SettingsPage extends StatefulWidget {
   @override

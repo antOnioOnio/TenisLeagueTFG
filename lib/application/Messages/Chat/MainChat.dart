@@ -3,7 +3,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:tenisleague100/application/Dashboard/Messages/Chat/MessageList.dart';
+import 'package:tenisleague100/application/Messages/Chat/MessageList.dart';
 import 'package:tenisleague100/application/widgets/helpDecorations.dart';
 import 'package:tenisleague100/application/widgets/helpWidgets.dart';
 import 'package:tenisleague100/application/widgets/showAlertDialog.dart';
@@ -12,8 +12,9 @@ import 'package:tenisleague100/models/ModelUserLeague.dart';
 import 'package:tenisleague100/services/database.dart';
 import 'package:tenisleague100/services/shared_preferences_service.dart';
 
-import '../../../top_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../top_providers.dart';
 
 class MainChat extends StatefulWidget {
   final ModelUserLeague modelUserLeague;

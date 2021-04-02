@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:tenisleague100/application/Dashboard/Forum/ForumViewModel.dart';
 import 'package:tenisleague100/application/widgets/helpDecorations.dart';
 import 'package:tenisleague100/application/widgets/helpWidgets.dart';
 import 'package:tenisleague100/constants/GlobalValues.dart';
+import 'package:tenisleague100/models/ModelPost.dart';
+import 'package:tenisleague100/services/GlobalMethods.dart';
+
+import 'ForumViewModel.dart';
 
 class AddProPartidoDialog extends StatefulWidget {
   final ForumViewModel viewModel;
+  final ModelPost post;
 
-  const AddProPartidoDialog({Key key, @required this.viewModel}) : super(key: key);
+  const AddProPartidoDialog({Key key, @required this.viewModel, this.post}) : super(key: key);
   @override
   _AddProPartidoDialogState createState() => _AddProPartidoDialogState();
 }
@@ -28,6 +32,7 @@ class _AddProPartidoDialogState extends State<AddProPartidoDialog> {
     _selectedDateIndate = DateTime(now.year, now.month, now.day);
     _selectedTime = TimeOfDay(hour: now.hour, minute: now.minute);
     _time = "00:00";
+
   }
 
   @override
@@ -46,7 +51,6 @@ class _AddProPartidoDialogState extends State<AddProPartidoDialog> {
     return Stack(
       children: <Widget>[
         Container(
-          /*height: 350,*/
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
           margin: EdgeInsets.only(top: 20),
           decoration: decorationDialogAdd(),
@@ -97,7 +101,7 @@ class _AddProPartidoDialogState extends State<AddProPartidoDialog> {
                   ),
                   TextButton(
                     onPressed: () {
-                      Navigator.of(context).pop();
+                      addMatch();
                     },
                     child: Text(
                       "Guardar",
@@ -215,5 +219,23 @@ class _AddProPartidoDialogState extends State<AddProPartidoDialog> {
         _time = dateFormatTime.format(_completeDate);
       });
     }
+  }
+
+  Future<void> addMatch() async {
+    String contentToPost = "Partido abierto el " + DateFormat("dd.MM.yyyy").format(_selectedDateIndate);
+    contentToPost += " a las  " + _time + " en " + this.dropdownValue;
+
+    ModelPost modelPost = new ModelPost(
+        id: generateUuid(),
+        idUser: widget.viewModel.user.id,
+        nameOfUser: widget.viewModel.user.fullName,
+        content: contentToPost,
+        imageUser: widget.viewModel.user.image,
+        postType: ModelPost.typeProPMatch,
+        createdAt: DateTime.now());
+
+    await widget.viewModel.sendPost(modelPost);
+
+    Navigator.of(context).pop();
   }
 }

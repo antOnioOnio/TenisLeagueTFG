@@ -3,6 +3,9 @@ class FirestorePath {
   static String createUser(String uid) => 'users/$uid';
   static String users = 'users/';
   static String chats(String idUser) => 'chats/$idUser/messages';
+  static String posts(String idPost) => 'posts/$idPost';
+  static String postsCollection() => 'posts';
+  static String deletePost(String idPost) => 'posts/$idPost';
 
   //static String entry(String uid, String entryId) =>
   //    'users/$uid/entries/$entryId';

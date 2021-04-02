@@ -75,7 +75,6 @@ class _RegisterState extends State<RegisterPage> {
   String dropdownValue = "Principiante";
   List<String> _options = ["Principiante", "Medio", "Avanzado"];
   File _image;
-  String _mimeType = '';
   String _base64Image;
 
   static const int FIELD_NAME = 0;

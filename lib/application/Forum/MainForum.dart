@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:tenisleague100/application/Dashboard/Forum/AddPost.dart';
-import 'package:tenisleague100/application/Dashboard/Forum/ForumViewModel.dart';
+import 'package:tenisleague100/application/Forum/PostList.dart';
 import 'package:tenisleague100/application/widgets/helpDecorations.dart';
 import 'package:tenisleague100/application/widgets/helpWidgets.dart';
-import 'package:tenisleague100/constants/GlobalValues.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../top_providers.dart';
+
+import '../top_providers.dart';
+import 'AddPost.dart';
+import 'ForumViewModel.dart';
 
 final forumModelProvider = ChangeNotifierProvider<ForumViewModel>((ref) {
   final database = ref.watch(databaseProvider);
@@ -59,7 +59,22 @@ class _MainForumState extends State<MainForum> {
           SafeArea(
             child: widget.viewModel.isLoading
                 ? circularLoadingBar()
-                : AddPost(viewModel: widget.viewModel,),
+                : Column(
+                    children: [
+                      AddPost(
+                        viewModel: widget.viewModel,
+                      ),
+                      Expanded(
+                        child: Container(
+                          width: MediaQuery.of(context).size.width,
+                          padding: EdgeInsets.all(10),
+                          child: PostList(
+                            modelView: widget.viewModel,
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
           ),
         ],
       ),

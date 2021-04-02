@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:tenisleague100/models/ModelMessages.dart';
+import 'package:tenisleague100/models/ModelPost.dart';
 import 'package:tenisleague100/models/ModelUserLeague.dart';
 import 'package:tenisleague100/services/FirestorePaths.dart';
 
@@ -12,9 +13,6 @@ class Database {
   ModelUserLeague _currentUser;
   final _service = FirestoreService.instance;
 
-  void method() {
-    print("method called");
-  }
 
   Future<void> registerUser(ModelUserLeague userLeague) {
     _service.setData(path: FirestorePath.createUser(uid), data: userLeague.toMap());
@@ -78,4 +76,22 @@ class Database {
     await _service.addData(path: FirestorePath.chats(idUser), data: newMessage.toMap());
     await _service.addData(path: FirestorePath.chats(currentUser.id), data: newMessage.toMap());
   }
+
+  Future<void> sendPost(ModelPost post) {
+    _service.setData(
+      path: FirestorePath.posts(post.id),
+      data: post.toMap(),
+    );
+  }
+
+  Stream<List<ModelPost>> postStream() => _service.collectionStream(
+        path: FirestorePath.postsCollection(),
+        builder: (data, documentId) => ModelPost.fromJson(data),
+        sort: (msg1, msg2) => msg2.createdAt.compareTo(msg1.createdAt),
+      );
+
+  Future<void>deletePost(String id){
+    _service.deleteData(path: FirestorePath.deletePost(id));
+  }
+
 }

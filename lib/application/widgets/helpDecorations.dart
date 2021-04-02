@@ -46,8 +46,8 @@ BoxDecoration containerChatSelection() {
     color: Colors.white,
     borderRadius: BorderRadius.circular(12),
     border: Border.all(
-      width: 1,
-      color: Color(GlobalValues.mainTextColorHint),
+      width: 0.5,
+      color: Color(GlobalValues.mainGreen),
     ),
   );
 }
@@ -132,7 +132,6 @@ final inputGreyBorderDecorationStyle = InputDecoration(
     borderRadius: BorderRadius.circular(12),
   ),
 );
-
 
 final boxCreateObjects = BoxDecoration(
   borderRadius: BorderRadius.circular(12),
