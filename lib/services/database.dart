@@ -90,6 +90,7 @@ class Database {
         sort: (msg1, msg2) => msg2.createdAt.compareTo(msg1.createdAt),
       );
 
+
   Future<void>deletePost(String id){
     _service.deleteData(path: FirestorePath.deletePost(id));
   }

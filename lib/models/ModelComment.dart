@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 
 class ModelComment extends Equatable {
   final String id;
@@ -6,7 +7,7 @@ class ModelComment extends Equatable {
   final String comment;
   final DateTime createdAt;
   final String userImage;
-  ModelComment({this.userImage, this.id, this.comment, this.createdAt, this.userId});
+  ModelComment({ @required this.userImage, @required this.id, @required this.comment, @required this.createdAt, @required this.userId});
 
   factory ModelComment.fromJson(Map<String, dynamic> json) => ModelComment(
         id: json['id'] as String,

@@ -1,4 +1,3 @@
-/*import 'package:equatable/equatable.dart';*/
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -21,6 +20,7 @@ class ModelPost extends Equatable {
   static const String typeProPMatch = "propMatch";
   static const String typePicture = "picture";
   static const String typeEvent = "event";
+  static const String matchResult = "matchResult";
 
   ModelPost(
       {@required this.id,
@@ -31,7 +31,21 @@ class ModelPost extends Equatable {
       this.image,
       @required this.postType,
       @required this.createdAt,
-      this.comments});
+      this.comments})
+      : assert(postType != typeProPMatch || postType != typePicture || postType != typeEvent || postType != matchResult);
+
+  ModelPost copyWith(List<ModelComment> comments) {
+    return ModelPost(
+        id: this.id,
+        idUser: this.idUser,
+        nameOfUser: this.nameOfUser,
+        content: this.content,
+        imageUser: this.imageUser,
+        image: this.image,
+        postType: this.postType,
+        createdAt: this.createdAt,
+        comments: comments);
+  }
 
   factory ModelPost.fromJson(Map<String, dynamic> json) => _$ModelPostFromJson(json);
 
@@ -39,7 +53,9 @@ class ModelPost extends Equatable {
 
   @override
   String toString() {
-    return 'ModelPost{id: $id, idUser: $idUser, nameOfUser: $nameOfUser, content: $content, imageUser: $imageUser, image: $image, postType: $postType, createdAt: $createdAt, comments: $comments}';
+    return 'ModelPost{id: $id, idUser: $idUser, nameOfUser: $nameOfUser, content: $content, imageUser: $imageUser, image: $image, postType: ' +
+        postType.toString() +
+        ', createdAt: $createdAt, comments: $comments}';
   }
 
   @override

@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tenisleague100/application/Forum/Dialogs/AddPictureDialog.dart';
 import 'package:tenisleague100/application/widgets/helpDecorations.dart';
 import 'package:tenisleague100/application/widgets/helpWidgets.dart';
 import 'package:tenisleague100/constants/GlobalValues.dart';
 
-import 'AddProPartidoDialog.dart';
+import 'Dialogs/AddProPartidoDialog.dart';
 import 'ForumViewModel.dart';
 
-class AddPost extends StatelessWidget {
+class AddPostHeader extends StatelessWidget {
   final ForumViewModel viewModel;
 
-  const AddPost({Key key, @required this.viewModel}) : super(key: key);
+  const AddPostHeader({Key key, @required this.viewModel}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -81,9 +82,14 @@ class AddPost extends StatelessWidget {
                       ),
                       Expanded(
                         flex: 3,
-                        child: Icon(
-                          Icons.camera_enhance,
-                          color: Color(GlobalValues.mainGreen),
+                        child: GestureDetector(
+                          onTap: () => {
+                            openDialogForCamera(context, viewModel),
+                          },
+                          child: Icon(
+                            Icons.camera_enhance,
+                            color: Color(GlobalValues.mainGreen),
+                          ),
                         ),
                       ),
                       Expanded(
@@ -109,6 +115,16 @@ class AddPost extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  void openDialogForCamera(BuildContext context, ForumViewModel viewModel) {
+    showDialog(
+        context: context,
+        builder: (_) {
+          return AddPictureDialog(
+            viewModel: viewModel,
+          );
+        });
   }
 
   void openDialogForProMatch(BuildContext context, ForumViewModel viewModel) {

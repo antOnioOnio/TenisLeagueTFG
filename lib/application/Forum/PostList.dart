@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tenisleague100/application/Forum/ForumViewModel.dart';
+import 'package:tenisleague100/application/Forum/TypesPostWidgets/PictureWidget.dart';
 import 'package:tenisleague100/application/Forum/TypesPostWidgets/PropMatchWidget.dart';
 import 'package:tenisleague100/application/widgets/helpWidgets.dart';
 import 'package:tenisleague100/application/widgets/showAlertDialog.dart';
@@ -50,21 +51,24 @@ class _PostListState extends State<PostList> {
   }
 
   Widget post(ModelPost modelPost) {
-    switch (modelPost.postType) {
-      case ModelPost.typeProPMatch:
-        return Hero(
-          tag: modelPost.id,
-          child: PropMatch(
-            modelView: widget.modelView,
-            modelPost: modelPost,
-            showComments: false,
-          ),
-        );
-        break;
-      case ModelPost.typeEvent:
-        break;
-      case ModelPost.typePicture:
-        break;
+    if (modelPost.postType == ModelPost.typeProPMatch) {
+      return Hero(
+        tag: modelPost.id,
+        child: PropMatchWidget(
+          modelView: widget.modelView,
+          modelPost: modelPost,
+          showComments: false,
+        ),
+      );
+    } else if (modelPost.postType == ModelPost.typePicture) {
+      return Hero(
+        tag: modelPost.id,
+        child: PictureWidget(
+          modelView: widget.modelView,
+          modelPost: modelPost,
+          showComments: false,
+        ),
+      );
     }
   }
 }

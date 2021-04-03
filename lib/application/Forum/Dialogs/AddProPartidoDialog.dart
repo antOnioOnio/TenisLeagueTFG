@@ -7,7 +7,7 @@ import 'package:tenisleague100/constants/GlobalValues.dart';
 import 'package:tenisleague100/models/ModelPost.dart';
 import 'package:tenisleague100/services/GlobalMethods.dart';
 
-import 'ForumViewModel.dart';
+import '../ForumViewModel.dart';
 
 class AddProPartidoDialog extends StatefulWidget {
   final ForumViewModel viewModel;
@@ -32,7 +32,6 @@ class _AddProPartidoDialogState extends State<AddProPartidoDialog> {
     _selectedDateIndate = DateTime(now.year, now.month, now.day);
     _selectedTime = TimeOfDay(hour: now.hour, minute: now.minute);
     _time = "00:00";
-
   }
 
   @override
@@ -119,7 +118,11 @@ class _AddProPartidoDialogState extends State<AddProPartidoDialog> {
           child: CircleAvatar(
             backgroundColor: Colors.transparent,
             radius: 20,
-            child: ClipRRect(borderRadius: BorderRadius.all(Radius.circular(20)), child: customAvatar(widget.viewModel.imageUser)),
+            child: ClipRRect(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(20),
+                ),
+                child: customAvatar(widget.viewModel.imageUser)),
           ),
         ),
       ],

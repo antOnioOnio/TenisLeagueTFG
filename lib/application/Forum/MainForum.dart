@@ -5,7 +5,7 @@ import 'package:tenisleague100/application/widgets/helpWidgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../top_providers.dart';
-import 'AddPost.dart';
+import 'AddPostHeader.dart';
 import 'ForumViewModel.dart';
 
 final forumModelProvider = ChangeNotifierProvider<ForumViewModel>((ref) {
@@ -53,6 +53,7 @@ class _MainForumState extends State<MainForum> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
           basicScreenColorChatBg(),
@@ -61,7 +62,7 @@ class _MainForumState extends State<MainForum> {
                 ? circularLoadingBar()
                 : Column(
                     children: [
-                      AddPost(
+                      AddPostHeader(
                         viewModel: widget.viewModel,
                       ),
                       Expanded(
@@ -80,4 +81,6 @@ class _MainForumState extends State<MainForum> {
       ),
     );
   }
+
+
 }
