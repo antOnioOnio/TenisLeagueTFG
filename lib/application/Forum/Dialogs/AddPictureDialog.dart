@@ -173,14 +173,15 @@ class _AddPictureDialogState extends State<AddPictureDialog> {
       String contentToPost = _messageController.text;
 
       ModelPost modelPost = new ModelPost(
-          id: generateUuid(),
-          idUser: widget.viewModel.user.id,
-          nameOfUser: widget.viewModel.user.fullName,
-          content: contentToPost,
-          imageUser: widget.viewModel.user.image,
-          image: this._base64Image,
-          postType: ModelPost.typePicture,
-          createdAt: DateTime.now());
+        id: generateUuid(),
+        idUser: widget.viewModel.user.id,
+        nameOfUser: widget.viewModel.user.fullName,
+        content: contentToPost,
+        imageUser: widget.viewModel.user.image,
+        image: this._base64Image,
+        postType: ModelPost.typePicture,
+        createdAt: DateTime.now(),
+      );
 
       await widget.viewModel.sendPost(modelPost);
 

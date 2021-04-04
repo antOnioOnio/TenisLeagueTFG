@@ -25,13 +25,8 @@ class _PostListState extends State<PostList> {
             return circularLoadingBar();
           default:
             if (snapshot.hasError) {
-              return showAlertDialog(
-                context: context,
-                title: 'Error',
-                content: "Intentalo de nuevo más tarde",
-                defaultActionText: 'OK',
-                requiredCallback: false,
-              );
+              print("there is an error");
+              return circularLoadingBar();
             } else {
               final posts = snapshot.data;
               return posts.isEmpty
@@ -57,7 +52,7 @@ class _PostListState extends State<PostList> {
         child: PropMatchWidget(
           modelView: widget.modelView,
           modelPost: modelPost,
-          showComments: false,
+          comingFromIndependent: false,
         ),
       );
     } else if (modelPost.postType == ModelPost.typePicture) {
@@ -66,7 +61,7 @@ class _PostListState extends State<PostList> {
         child: PictureWidget(
           modelView: widget.modelView,
           modelPost: modelPost,
-          showComments: false,
+          comingFromIndependent: false,
         ),
       );
     }

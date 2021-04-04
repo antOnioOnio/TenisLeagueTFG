@@ -16,9 +16,9 @@ import '../ForumViewModel.dart';
 class PictureWidget extends StatefulWidget {
   final ForumViewModel modelView;
   final ModelPost modelPost;
-  final bool showComments;
+  final bool comingFromIndependent;
 
-  const PictureWidget({Key key, @required this.modelView, @required this.modelPost, this.showComments}) : super(key: key);
+  const PictureWidget({Key key, @required this.modelView, @required this.modelPost, this.comingFromIndependent}) : super(key: key);
   @override
   _PictureWidgetState createState() => _PictureWidgetState();
 }
@@ -75,37 +75,9 @@ class _PictureWidgetState extends State<PictureWidget> {
           SizedBox(
             height: 5,
           ),
-          rowCommentsAndDelete(widget.modelView, context, widget.modelPost, widget.showComments)
+          rowCommentsAndDelete(widget.modelView, context, widget.modelPost, widget.comingFromIndependent),
         ],
       ),
-    );
-  }
-
-  Widget listComments() {
-    return widget.modelPost.comments == null || widget.modelPost.comments.isEmpty
-        ? Center(
-            child: Text(
-            "No hay comentarios aún",
-            style: GoogleFonts.raleway(color: Color(GlobalValues.blackText), fontWeight: FontWeight.normal, fontSize: 14),
-          ))
-        : ListView.builder(
-            physics: BouncingScrollPhysics(),
-            reverse: false,
-            itemCount: widget.modelPost.comments.length,
-            itemBuilder: (context, index) {
-              return comment(widget.modelPost.comments[index]);
-            },
-          );
-  }
-
-  Widget comment(ModelComment comment) {
-    return Row(
-      children: [
-        Text(
-          comment.comment,
-          style: GoogleFonts.raleway(fontWeight: FontWeight.bold, fontSize: 14),
-        )
-      ],
     );
   }
 }

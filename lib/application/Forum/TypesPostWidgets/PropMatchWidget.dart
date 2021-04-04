@@ -14,21 +14,18 @@ import '../ForumViewModel.dart';
 class PropMatchWidget extends StatefulWidget {
   final ForumViewModel modelView;
   final ModelPost modelPost;
-  final bool showComments;
+  final bool comingFromIndependent;
 
-  const PropMatchWidget({Key key, @required this.modelView, @required this.modelPost, this.showComments}) : super(key: key);
+  const PropMatchWidget({Key key, @required this.modelView, @required this.modelPost, this.comingFromIndependent}) : super(key: key);
   @override
   _PropMatchWidgetState createState() => _PropMatchWidgetState();
 }
 
 class _PropMatchWidgetState extends State<PropMatchWidget> {
-
-  double _heightContainer;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _heightContainer = widget.showComments ? 500 : 110;
   }
 
   @override
@@ -37,7 +34,7 @@ class _PropMatchWidgetState extends State<PropMatchWidget> {
     return Container(
       decoration: containerChatSelection(),
       margin: EdgeInsets.only(bottom: 10),
-      height: _heightContainer,
+      height: 115,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -89,7 +86,7 @@ class _PropMatchWidgetState extends State<PropMatchWidget> {
           SizedBox(
             height: 10,
           ),
-          rowCommentsAndDelete(widget.modelView, context, widget.modelPost, widget.showComments),
+          rowCommentsAndDelete(widget.modelView, context, widget.modelPost, widget.comingFromIndependent),
         ],
       ),
     );

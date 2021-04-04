@@ -25,6 +25,7 @@ class _AddProPartidoDialogState extends State<AddProPartidoDialog> {
   TimeOfDay _selectedTime;
   DateFormat dateFormatTime = DateFormat("HH:mm");
   String _time;
+  bool showAddPlace = false;
   @override
   void initState() {
     super.initState();
@@ -47,82 +48,129 @@ class _AddProPartidoDialogState extends State<AddProPartidoDialog> {
   }
 
   Widget mainContent(context) {
-    return Stack(
-      children: <Widget>[
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-          margin: EdgeInsets.only(top: 20),
-          decoration: decorationDialogAdd(),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              SizedBox(
-                height: 30,
-              ),
-              Text(
-                "¿Dónde quieres jugar?",
-                style: GoogleFonts.raleway(fontWeight: FontWeight.bold, fontSize: 20),
-              ),
-              dropDownPlaces(),
-              Text(
-                "¿Qué día quieres jugar?",
-                style: GoogleFonts.raleway(fontWeight: FontWeight.bold, fontSize: 20),
-              ),
-              SizedBox(
-                height: 15,
-              ),
-              buildDatePicker(),
-              SizedBox(
-                height: 15,
-              ),
-              Text(
-                "¿A qué hora?",
-                style: GoogleFonts.raleway(fontWeight: FontWeight.bold, fontSize: 20),
-              ),
-              SizedBox(
-                height: 15,
-              ),
-              buildTimePicker(),
-              SizedBox(
-                height: 30,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: Text(
-                      "Cancelar",
-                      style: GoogleFonts.raleway(fontWeight: FontWeight.bold, fontSize: 18),
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      addMatch();
-                    },
-                    child: Text(
-                      "Guardar",
-                      style: GoogleFonts.raleway(fontWeight: FontWeight.bold, fontSize: 18),
-                    ),
-                  )
-                ],
-              ),
-            ],
-          ),
-        ),
-        Positioned(
-          left: 10,
-          right: 10,
-          child: CircleAvatar(
-            backgroundColor: Colors.transparent,
-            radius: 20,
-            child: ClipRRect(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(20),
+    return SingleChildScrollView(
+      physics: NeverScrollableScrollPhysics(),
+      child: Stack(
+        children: <Widget>[
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+            margin: EdgeInsets.only(top: 20),
+            decoration: decorationDialogAdd(),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                SizedBox(
+                  height: 30,
                 ),
-                child: customAvatar(widget.viewModel.imageUser)),
+                Text(
+                  "¿Dónde quieres jugar?",
+                  style: GoogleFonts.raleway(fontWeight: FontWeight.bold, fontSize: 20),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    dropDownPlaces(),
+                    IconButton(
+                      onPressed: () => {
+                        setState(() {
+                          showAddPlace = true;
+                        })
+                      },
+                      icon: Icon(
+                        Icons.add_circle,
+                        color: Color(GlobalValues.mainGreen),
+                      ),
+                    )
+                  ],
+                ),
+                showAddPlace ? rowAddPlace() : SizedBox.shrink(),
+                SizedBox(
+                  height: 15,
+                ),
+                Text(
+                  "¿Qué día quieres jugar?",
+                  style: GoogleFonts.raleway(fontWeight: FontWeight.bold, fontSize: 20),
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                buildDatePicker(),
+                SizedBox(
+                  height: 15,
+                ),
+                Text(
+                  "¿A qué hora?",
+                  style: GoogleFonts.raleway(fontWeight: FontWeight.bold, fontSize: 20),
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                buildTimePicker(),
+                SizedBox(
+                  height: 30,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text(
+                        "Cancelar",
+                        style: GoogleFonts.raleway(fontWeight: FontWeight.bold, fontSize: 18),
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        addMatch();
+                      },
+                      child: Text(
+                        "Guardar",
+                        style: GoogleFonts.raleway(fontWeight: FontWeight.bold, fontSize: 18),
+                      ),
+                    )
+                  ],
+                ),
+              ],
+            ),
+          ),
+          Positioned(
+            left: 10,
+            right: 10,
+            child: CircleAvatar(
+              backgroundColor: Colors.transparent,
+              radius: 20,
+              child: ClipRRect(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(20),
+                  ),
+                  child: customAvatar(widget.viewModel.imageUser)),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Row rowAddPlace() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          width: 250,
+          child: TextField(
+            decoration: InputDecoration(
+              hintText: 'Escribe el nombre del sitio',
+              suffixIcon: IconButton(
+                onPressed: () => {
+                  setState(() {
+                    showAddPlace = false;
+                  })
+                },
+                icon: Icon(Icons.check),
+              ),
+            ),
           ),
         ),
       ],

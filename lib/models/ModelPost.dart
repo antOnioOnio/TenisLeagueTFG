@@ -15,7 +15,6 @@ class ModelPost extends Equatable {
   final String image;
   final String postType;
   final DateTime createdAt;
-  final List<ModelComment> comments;
 
   static const String typeProPMatch = "propMatch";
   static const String typePicture = "picture";
@@ -30,22 +29,8 @@ class ModelPost extends Equatable {
       @required this.imageUser,
       this.image,
       @required this.postType,
-      @required this.createdAt,
-      this.comments})
+      @required this.createdAt,})
       : assert(postType != typeProPMatch || postType != typePicture || postType != typeEvent || postType != matchResult);
-
-  ModelPost copyWith(List<ModelComment> comments) {
-    return ModelPost(
-        id: this.id,
-        idUser: this.idUser,
-        nameOfUser: this.nameOfUser,
-        content: this.content,
-        imageUser: this.imageUser,
-        image: this.image,
-        postType: this.postType,
-        createdAt: this.createdAt,
-        comments: comments);
-  }
 
   factory ModelPost.fromJson(Map<String, dynamic> json) => _$ModelPostFromJson(json);
 
@@ -55,9 +40,9 @@ class ModelPost extends Equatable {
   String toString() {
     return 'ModelPost{id: $id, idUser: $idUser, nameOfUser: $nameOfUser, content: $content, imageUser: $imageUser, image: $image, postType: ' +
         postType.toString() +
-        ', createdAt: $createdAt, comments: $comments}';
+        ', createdAt: $createdAt}';
   }
 
   @override
-  List<Object> get props => [id, idUser, nameOfUser, content, imageUser, image, postType, createdAt, comments];
+  List<Object> get props => [id, idUser, nameOfUser, content, imageUser, image, postType, createdAt];
 }

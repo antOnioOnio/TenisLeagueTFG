@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:tenisleague100/models/ModelComment.dart';
 import 'package:tenisleague100/models/ModelMessages.dart';
 import 'package:tenisleague100/models/ModelPost.dart';
 import 'package:tenisleague100/models/ModelUserLeague.dart';
@@ -12,7 +13,6 @@ class Database {
   final String uid;
   ModelUserLeague _currentUser;
   final _service = FirestoreService.instance;
-
 
   Future<void> registerUser(ModelUserLeague userLeague) {
     _service.setData(path: FirestorePath.createUser(uid), data: userLeague.toMap());
@@ -90,9 +90,26 @@ class Database {
         sort: (msg1, msg2) => msg2.createdAt.compareTo(msg1.createdAt),
       );
 
-
-  Future<void>deletePost(String id){
-    _service.deleteData(path: FirestorePath.deletePost(id));
+  Future<void> deletePost(String id) {
+    _service.deleteData(
+      path: FirestorePath.posts(id),
+    );
   }
 
+  Stream<List<ModelComment>> commentStream(String idPost) => _service.collectionStream(
+        path: FirestorePath.commentCollection(idPost),
+        builder: (data, documentId) => ModelComment.fromJson(data),
+        sort: (msg1, msg2) => msg2.createdAt.compareTo(msg1.createdAt),
+      );
+
+  Future<void> sendComment(ModelComment comment, String postId) {
+    _service.setData(
+      path: FirestorePath.commentDoc(postId, comment.id),
+      data: comment.toJson(),
+    );
+  }
+
+  Future<void> deleteComment(String idPost, String commentId) {
+    _service.deleteData(path: FirestorePath.commentDoc(idPost, commentId));
+  }
 }

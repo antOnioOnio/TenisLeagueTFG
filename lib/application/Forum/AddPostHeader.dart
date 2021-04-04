@@ -74,7 +74,7 @@ class AddPostHeader extends StatelessWidget {
                               },
                               child: Text(
                                 "Propuesta partido",
-                                style: GoogleFonts.raleway(color: Color(GlobalValues.mainTextColorHint), fontWeight: FontWeight.normal, fontSize: 12),
+                                style: GoogleFonts.raleway(color: Color(GlobalValues.mainGreen), fontWeight: FontWeight.bold, fontSize: 12),
                               ),
                             ),
                           ],
@@ -101,8 +101,8 @@ class AddPostHeader extends StatelessWidget {
                             ),
                             Text(
                               "Evento",
-                              style: GoogleFonts.raleway(color: Color(GlobalValues.mainTextColorHint), fontWeight: FontWeight.normal, fontSize: 12),
-                            ),
+                              style: GoogleFonts.raleway(color: Color(GlobalValues.mainGreen), fontWeight: FontWeight.bold, fontSize: 12),
+                             ),
                           ],
                         ),
                       ),
