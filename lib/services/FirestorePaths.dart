@@ -7,6 +7,8 @@ class FirestorePath {
   static String commentCollection(String idPost) => 'posts/$idPost/comments';
   static String commentDoc(String idPost, String commentId) => 'posts/$idPost/comments/$commentId';
   static String postsCollection() => 'posts';
+  static String places(String idPlace) => 'places/$idPlace';
+  static String placesCollection() => 'places/';
 
   //static String entry(String uid, String entryId) =>
   //    'users/$uid/entries/$entryId';

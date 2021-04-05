@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:tenisleague100/application/widgets/helpDecorations.dart';
 import 'package:tenisleague100/application/widgets/helpWidgets.dart';
 import 'package:tenisleague100/constants/GlobalValues.dart';
+import 'package:tenisleague100/models/ModelPlace.dart';
 import 'package:tenisleague100/models/ModelPost.dart';
-import 'package:tenisleague100/services/GlobalMethods.dart';
 
 import '../ForumViewModel.dart';
 
@@ -19,13 +20,17 @@ class AddProPartidoDialog extends StatefulWidget {
 }
 
 class _AddProPartidoDialogState extends State<AddProPartidoDialog> {
-  String dropdownValue = "Garros";
-  List<String> _options = ["Garros", "Pts", "Albolote", "Serrallo", "Chana"];
+  String _dropdownValue = "";
+  /*  List<String> _options = ["Garros", "Pts", "Albolote", "Serrallo", "Chana"];*/
+  TextEditingController mailFieldController = new TextEditingController();
   DateTime _selectedDateIndate, _completeDate;
   TimeOfDay _selectedTime;
-  DateFormat dateFormatTime = DateFormat("HH:mm");
+  DateFormat _dateFormatTime = DateFormat("HH:mm");
   String _time;
-  bool showAddPlace = false;
+  bool _showAddPlace = false;
+  bool _isLoading;
+  List<ModelPlace> _places = [];
+
   @override
   void initState() {
     super.initState();
@@ -33,6 +38,22 @@ class _AddProPartidoDialogState extends State<AddProPartidoDialog> {
     _selectedDateIndate = DateTime(now.year, now.month, now.day);
     _selectedTime = TimeOfDay(hour: now.hour, minute: now.minute);
     _time = "00:00";
+    getPlaces();
+  }
+
+  Future<void> getPlaces() async {
+    setState(() {
+      _isLoading = true;
+    });
+    _places = await widget.viewModel.getPlacesCollection();
+    if (_places.isEmpty) {
+      ModelPlace tempPlace = new ModelPlace(id: "", name: "AÑADE UN SITIO");
+      _places.add(tempPlace);
+    }
+    _dropdownValue = _places[0].name;
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   @override
@@ -43,7 +64,7 @@ class _AddProPartidoDialogState extends State<AddProPartidoDialog> {
       ),
       elevation: 0,
       backgroundColor: Colors.transparent,
-      child: mainContent(context),
+      child: _isLoading ? circularLoadingBar() : mainContent(context),
     );
   }
 
@@ -73,7 +94,7 @@ class _AddProPartidoDialogState extends State<AddProPartidoDialog> {
                     IconButton(
                       onPressed: () => {
                         setState(() {
-                          showAddPlace = true;
+                          _showAddPlace = true;
                         })
                       },
                       icon: Icon(
@@ -83,7 +104,7 @@ class _AddProPartidoDialogState extends State<AddProPartidoDialog> {
                     )
                   ],
                 ),
-                showAddPlace ? rowAddPlace() : SizedBox.shrink(),
+                _showAddPlace ? rowAddPlace() : SizedBox.shrink(),
                 SizedBox(
                   height: 15,
                 ),
@@ -160,14 +181,11 @@ class _AddProPartidoDialogState extends State<AddProPartidoDialog> {
         Container(
           width: 250,
           child: TextField(
+            controller: mailFieldController,
             decoration: InputDecoration(
               hintText: 'Escribe el nombre del sitio',
               suffixIcon: IconButton(
-                onPressed: () => {
-                  setState(() {
-                    showAddPlace = false;
-                  })
-                },
+                onPressed: () => {sendPlace()},
                 icon: Icon(Icons.check),
               ),
             ),
@@ -177,13 +195,48 @@ class _AddProPartidoDialogState extends State<AddProPartidoDialog> {
     );
   }
 
+  Future<void> sendPlace() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    if (mailFieldController.text != null && mailFieldController.text.isNotEmpty) {
+      if (listContainsPlaceName(mailFieldController.text)) {
+        Fluttertoast.showToast(
+            msg: "Sitio ya añadido",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.CENTER,
+            backgroundColor: Color(GlobalValues.mainGreen),
+            textColor: Colors.white,
+            fontSize: 16.0);
+      } else {
+        await widget.viewModel.sendNewPlace(mailFieldController.text);
+        setState(() {
+          _showAddPlace = false;
+          mailFieldController.clear();
+        });
+        await getPlaces();
+      }
+    }
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  bool listContainsPlaceName(String name) {
+    for (var place in _places) {
+      if (place.name == name) return true;
+    }
+    return false;
+  }
+
   Widget dropDownPlaces() {
     return new Theme(
       data: Theme.of(context).copyWith(
         canvasColor: Color(GlobalValues.mainGreen),
       ),
       child: DropdownButton<String>(
-        value: dropdownValue,
+        value: _dropdownValue,
         iconSize: 25,
         elevation: 16,
         style: GoogleFonts.raleway(color: Color(GlobalValues.blackText), fontWeight: FontWeight.normal, fontSize: 14),
@@ -192,14 +245,14 @@ class _AddProPartidoDialogState extends State<AddProPartidoDialog> {
         ),
         onChanged: (String newValue) {
           setState(() {
-            dropdownValue = newValue;
+            _dropdownValue = newValue;
           });
         },
-        items: _options.map<DropdownMenuItem<String>>((String value) {
+        items: _places.map<DropdownMenuItem<String>>((ModelPlace value) {
           return DropdownMenuItem<String>(
-            value: value,
+            value: value.name,
             child: Text(
-              value,
+              value.name,
               style: GoogleFonts.raleway(color: Color(GlobalValues.blackText), fontWeight: FontWeight.normal, fontSize: 14),
             ),
           );
@@ -267,26 +320,15 @@ class _AddProPartidoDialogState extends State<AddProPartidoDialog> {
         _selectedTime = picked;
         _completeDate =
             DateTime(_selectedDateIndate.year, _selectedDateIndate.month, _selectedDateIndate.day, _selectedTime.hour, _selectedTime.minute);
-        _time = dateFormatTime.format(_completeDate);
+        _time = _dateFormatTime.format(_completeDate);
       });
     }
   }
 
   Future<void> addMatch() async {
     String contentToPost = "Partido abierto el " + DateFormat("dd.MM.yyyy").format(_selectedDateIndate);
-    contentToPost += " a las  " + _time + " en " + this.dropdownValue;
-
-    ModelPost modelPost = new ModelPost(
-        id: generateUuid(),
-        idUser: widget.viewModel.user.id,
-        nameOfUser: widget.viewModel.user.fullName,
-        content: contentToPost,
-        imageUser: widget.viewModel.user.image,
-        postType: ModelPost.typeProPMatch,
-        createdAt: DateTime.now());
-
-    await widget.viewModel.sendPost(modelPost);
-
+    contentToPost += " a las  " + _time + " en " + this._dropdownValue;
+    await widget.viewModel.addMatch(contentToPost);
     Navigator.of(context).pop();
   }
 }

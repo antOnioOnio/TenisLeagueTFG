@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:tenisleague100/models/ModelComment.dart';
 import 'package:tenisleague100/models/ModelMessages.dart';
+import 'package:tenisleague100/models/ModelPlace.dart';
 import 'package:tenisleague100/models/ModelPost.dart';
 import 'package:tenisleague100/models/ModelUserLeague.dart';
 import 'package:tenisleague100/services/FirestorePaths.dart';
@@ -14,8 +15,8 @@ class Database {
   ModelUserLeague _currentUser;
   final _service = FirestoreService.instance;
 
-  Future<void> registerUser(ModelUserLeague userLeague) {
-    _service.setData(path: FirestorePath.createUser(uid), data: userLeague.toMap());
+  Future<void> registerUser(ModelUserLeague userLeague) async {
+    await _service.setData(path: FirestorePath.createUser(uid), data: userLeague.toMap());
   }
 
   Stream<List<ModelUserLeague>> userStream() => _service.collectionStream(
@@ -77,8 +78,8 @@ class Database {
     await _service.addData(path: FirestorePath.chats(currentUser.id), data: newMessage.toMap());
   }
 
-  Future<void> sendPost(ModelPost post) {
-    _service.setData(
+  Future<void> sendPost(ModelPost post) async {
+    await _service.setData(
       path: FirestorePath.posts(post.id),
       data: post.toMap(),
     );
@@ -90,8 +91,8 @@ class Database {
         sort: (msg1, msg2) => msg2.createdAt.compareTo(msg1.createdAt),
       );
 
-  Future<void> deletePost(String id) {
-    _service.deleteData(
+  Future<void> deletePost(String id) async {
+    await _service.deleteData(
       path: FirestorePath.posts(id),
     );
   }
@@ -102,14 +103,36 @@ class Database {
         sort: (msg1, msg2) => msg2.createdAt.compareTo(msg1.createdAt),
       );
 
-  Future<void> sendComment(ModelComment comment, String postId) {
-    _service.setData(
+  Future<void> sendComment(ModelComment comment, String postId) async {
+    await _service.setData(
       path: FirestorePath.commentDoc(postId, comment.id),
       data: comment.toJson(),
     );
   }
 
-  Future<void> deleteComment(String idPost, String commentId) {
-    _service.deleteData(path: FirestorePath.commentDoc(idPost, commentId));
+  Future<void> deleteComment(String idPost, String commentId) async {
+    await _service.deleteData(path: FirestorePath.commentDoc(idPost, commentId));
+  }
+
+  Future<void> sendPlace(ModelPlace modelPlace) async {
+    await _service.setData(
+      path: FirestorePath.places(modelPlace.id),
+      data: modelPlace.toMap(),
+    );
+  }
+
+  Future<List<ModelPlace>> getPlacesCollection() async {
+    List<ModelPlace> placesToReturn = [];
+    CollectionReference _collectionRef = FirebaseFirestore.instance.collection(FirestorePath.placesCollection());
+    // Get docs from collection reference
+    QuerySnapshot querySnapshot = await _collectionRef.get();
+
+    // Get data from docs and convert map to List
+    final allData = querySnapshot.docs.map((doc) => doc.data()).toList();
+
+    for (var obj in allData) {
+      placesToReturn.add(new ModelPlace.fromJson(obj));
+    }
+    return placesToReturn;
   }
 }

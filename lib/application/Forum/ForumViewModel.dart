@@ -3,8 +3,10 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:tenisleague100/models/ModelComment.dart';
+import 'package:tenisleague100/models/ModelPlace.dart';
 import 'package:tenisleague100/models/ModelPost.dart';
 import 'package:tenisleague100/models/ModelUserLeague.dart';
+import 'package:tenisleague100/services/GlobalMethods.dart';
 import 'package:tenisleague100/services/database.dart';
 
 class ForumViewModel with ChangeNotifier {
@@ -22,6 +24,19 @@ class ForumViewModel with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> addMatch(String contentToPost) {
+    ModelPost modelPost = new ModelPost(
+        id: generateUuid(),
+        idUser: _currentUser.id,
+        nameOfUser: _currentUser.fullName,
+        content: contentToPost,
+        imageUser: _currentUser.image,
+        postType: ModelPost.typeProPMatch,
+        createdAt: DateTime.now());
+
+    sendPost(modelPost);
+  }
+
   Future<void> sendPost(ModelPost post) async {
     await database.sendPost(post);
   }
@@ -36,7 +51,13 @@ class ForumViewModel with ChangeNotifier {
 
   Stream<List<ModelPost>> postStream() => database.postStream();
   Stream<List<ModelComment>> commentStream(String idPost) => database.commentStream(idPost);
-  Future<void> deleteComment(String idPost, String commentId) => database.deleteComment(idPost, commentId);
+  Future<void> deleteComment(String idPost, String commentId) async => await database.deleteComment(idPost, commentId);
+  Future<List<ModelPlace>> getPlacesCollection() async => await database.getPlacesCollection();
+  Future<void> sendNewPlace(String nameOfPlace) async {
+    ModelPlace place = new ModelPlace(id: generateUuid(), name: nameOfPlace);
+    await database.sendPlace(place);
+  }
+
   bool get loading => isLoading;
   ModelUserLeague get user => _currentUser;
   Uint8List get imageUser => _bytesImage;
