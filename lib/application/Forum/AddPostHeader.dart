@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tenisleague100/application/Forum/Dialogs/AddEventDialog.dart';
 import 'package:tenisleague100/application/Forum/Dialogs/AddPictureDialog.dart';
 import 'package:tenisleague100/application/widgets/helpDecorations.dart';
 import 'package:tenisleague100/application/widgets/helpWidgets.dart';
@@ -68,15 +69,13 @@ class AddPostHeader extends StatelessWidget {
                             SizedBox(
                               width: 25,
                             ),
-                            GestureDetector(
-                              onTap: () => {
-                                openDialogForProMatch(context, viewModel),
-                              },
+                            TextButton(
+                              onPressed: () => openDialogForProMatch(context, viewModel),
                               child: Text(
                                 "Propuesta partido",
-                                style: GoogleFonts.raleway(color: Color(GlobalValues.mainGreen), fontWeight: FontWeight.bold, fontSize: 12),
+                                style: GoogleFonts.raleway(color: Color(GlobalValues.mainGreen), fontWeight: FontWeight.bold, fontSize: 10),
                               ),
-                            ),
+                            )
                           ],
                         ),
                       ),
@@ -99,10 +98,13 @@ class AddPostHeader extends StatelessWidget {
                             SizedBox(
                               width: 20,
                             ),
-                            Text(
-                              "Evento",
-                              style: GoogleFonts.raleway(color: Color(GlobalValues.mainGreen), fontWeight: FontWeight.bold, fontSize: 12),
-                             ),
+                            TextButton(
+                              onPressed: () => openDialogForEvent(context, viewModel),
+                              child: Text(
+                                "Evento",
+                                style: GoogleFonts.raleway(color: Color(GlobalValues.mainGreen), fontWeight: FontWeight.bold, fontSize: 10),
+                              ),
+                            )
                           ],
                         ),
                       ),
@@ -132,6 +134,16 @@ class AddPostHeader extends StatelessWidget {
         context: context,
         builder: (_) {
           return AddProPartidoDialog(
+            viewModel: viewModel,
+          );
+        });
+  }
+
+  void openDialogForEvent(BuildContext context, ForumViewModel viewModel) {
+    showDialog(
+        context: context,
+        builder: (_) {
+          return AddEventDialog(
             viewModel: viewModel,
           );
         });

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:tenisleague100/application/Forum/ForumViewModel.dart';
+import 'package:tenisleague100/application/Forum/TypesPostWidgets/EventWidget.dart';
 import 'package:tenisleague100/application/Forum/TypesPostWidgets/PictureWidget.dart';
 import 'package:tenisleague100/application/Forum/TypesPostWidgets/PropMatchWidget.dart';
 import 'package:tenisleague100/application/Forum/TypesPostWidgets/commomWidgets.dart';
@@ -61,6 +62,37 @@ class _PostIndependentState extends State<PostIndependent> {
         ],
       ),
     );
+  }
+
+  Widget post(ModelPost modelPost) {
+    if (modelPost.postType == ModelPost.typeProPMatch) {
+      return Hero(
+        tag: modelPost.id,
+        child: PropMatchWidget(
+          modelView: widget.viewModel,
+          modelPost: modelPost,
+          comingFromIndependent: true,
+        ),
+      );
+    } else if (modelPost.postType == ModelPost.typePicture) {
+      return Hero(
+        tag: modelPost.id,
+        child: PictureWidget(
+          modelView: widget.viewModel,
+          modelPost: modelPost,
+          comingFromIndependent: true,
+        ),
+      );
+    } else if (modelPost.postType == ModelPost.typeEvent) {
+      return Hero(
+        tag: modelPost.id,
+        child: EventWidget(
+          modelView: widget.viewModel,
+          modelPost: modelPost,
+          comingFromIndependent: true,
+        ),
+      );
+    }
   }
 
   Widget comments() {
@@ -176,27 +208,5 @@ class _PostIndependentState extends State<PostIndependent> {
 
       widget.viewModel.sendComment(newComment, widget.modelPost.id);
     } else {}
-  }
-
-  Widget post(ModelPost modelPost) {
-    if (modelPost.postType == ModelPost.typeProPMatch) {
-      return Hero(
-        tag: modelPost.id,
-        child: PropMatchWidget(
-          modelView: widget.viewModel,
-          modelPost: modelPost,
-          comingFromIndependent: true,
-        ),
-      );
-    } else if (modelPost.postType == ModelPost.typePicture) {
-      return Hero(
-        tag: modelPost.id,
-        child: PictureWidget(
-          modelView: widget.viewModel,
-          modelPost: modelPost,
-          comingFromIndependent: true,
-        ),
-      );
-    }
   }
 }

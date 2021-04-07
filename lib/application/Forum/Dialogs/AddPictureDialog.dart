@@ -5,6 +5,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:tenisleague100/application/Forum/TypesPostWidgets/commomWidgets.dart';
 import 'package:tenisleague100/application/widgets/helpDecorations.dart';
 import 'package:tenisleague100/application/widgets/helpWidgets.dart';
 import 'package:tenisleague100/constants/GlobalValues.dart';
@@ -172,18 +173,7 @@ class _AddPictureDialogState extends State<AddPictureDialog> {
     if (this._messageController.text.isNotEmpty) {
       String contentToPost = _messageController.text;
 
-      ModelPost modelPost = new ModelPost(
-        id: generateUuid(),
-        idUser: widget.viewModel.user.id,
-        nameOfUser: widget.viewModel.user.fullName,
-        content: contentToPost,
-        imageUser: widget.viewModel.user.image,
-        image: this._base64Image,
-        postType: ModelPost.typePicture,
-        createdAt: DateTime.now(),
-      );
-
-      await widget.viewModel.sendPost(modelPost);
+      await widget.viewModel.addPicture(contentToPost, this._base64Image);
 
       Navigator.of(context).pop();
     } else {
@@ -191,21 +181,5 @@ class _AddPictureDialogState extends State<AddPictureDialog> {
     }
   }
 
-  Future<void> showWriteDialog(BuildContext context) {
-    return showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text("Escribe algo.."),
-        content: Text("Es mejor cuando transmites un mensajes"),
-        actions: [
-          TextButton(
-            child: Text(
-              "ok..",
-            ),
-            onPressed: () => {Navigator.pop(context)},
-          ),
-        ],
-      ),
-    );
-  }
+
 }

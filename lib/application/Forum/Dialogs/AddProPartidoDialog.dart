@@ -21,8 +21,7 @@ class AddProPartidoDialog extends StatefulWidget {
 
 class _AddProPartidoDialogState extends State<AddProPartidoDialog> {
   String _dropdownValue = "";
-  /*  List<String> _options = ["Garros", "Pts", "Albolote", "Serrallo", "Chana"];*/
-  TextEditingController mailFieldController = new TextEditingController();
+  TextEditingController placeTextController = new TextEditingController();
   DateTime _selectedDateIndate, _completeDate;
   TimeOfDay _selectedTime;
   DateFormat _dateFormatTime = DateFormat("HH:mm");
@@ -181,7 +180,7 @@ class _AddProPartidoDialogState extends State<AddProPartidoDialog> {
         Container(
           width: 250,
           child: TextField(
-            controller: mailFieldController,
+            controller: placeTextController,
             decoration: InputDecoration(
               hintText: 'Escribe el nombre del sitio',
               suffixIcon: IconButton(
@@ -200,8 +199,8 @@ class _AddProPartidoDialogState extends State<AddProPartidoDialog> {
       _isLoading = true;
     });
 
-    if (mailFieldController.text != null && mailFieldController.text.isNotEmpty) {
-      if (listContainsPlaceName(mailFieldController.text)) {
+    if (placeTextController.text != null && placeTextController.text.isNotEmpty) {
+      if (listContainsPlaceName(placeTextController.text)) {
         Fluttertoast.showToast(
             msg: "Sitio ya añadido",
             toastLength: Toast.LENGTH_LONG,
@@ -210,10 +209,10 @@ class _AddProPartidoDialogState extends State<AddProPartidoDialog> {
             textColor: Colors.white,
             fontSize: 16.0);
       } else {
-        await widget.viewModel.sendNewPlace(mailFieldController.text);
+        await widget.viewModel.sendNewPlace(placeTextController.text);
         setState(() {
           _showAddPlace = false;
-          mailFieldController.clear();
+          placeTextController.clear();
         });
         await getPlaces();
       }

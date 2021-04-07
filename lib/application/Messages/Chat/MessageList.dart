@@ -68,9 +68,10 @@ class _MessageListState extends State<MessageList> {
         }
       }
       Timer(
-        Duration(milliseconds: 100),
-        () => _controller.jumpTo(_controller.position.minScrollExtent),
-      );
+          Duration(milliseconds: 100),
+          () => {
+                if (mounted) _controller.jumpTo(_controller.position.minScrollExtent),
+              });
     }
 
     return msgToShow.isEmpty

@@ -86,28 +86,43 @@ Widget rowCommentsAndDelete(ForumViewModel modelView, BuildContext context, Mode
   return Row(
     mainAxisAlignment: modelView.user.id == modelPost.idUser ? MainAxisAlignment.spaceEvenly : MainAxisAlignment.center,
     children: [
-      GestureDetector(
-        onTap: () => {
-          comingFromIndependent
-              ? null
-              : Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => PostIndependent(viewModel: modelView, modelPost: modelPost)),
-                )
-        },
-        child: Icon(
-          Icons.comment,
-          color: Color(GlobalValues.mainGreen),
+      Expanded(
+        flex: 5,
+        child: Align(
+          alignment: Alignment.centerRight,
+          child: GestureDetector(
+            onTap: () => {
+              comingFromIndependent
+                  ? null
+                  : Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => PostIndependent(viewModel: modelView, modelPost: modelPost)),
+                    )
+            },
+            child: Icon(
+              Icons.comment,
+              color: Color(GlobalValues.mainGreen),
+            ),
+          ),
         ),
       ),
       modelView.user.id == modelPost.idUser
-          ? GestureDetector(
-              onTap: () => displaySafetyQuestionPost(modelView, context, modelPost.id),
-              child: Icon(
-                Icons.delete,
-                color: Color(GlobalValues.mainGreen),
+          ? Expanded(
+              flex: 5,
+              child: GestureDetector(
+                onTap: () => displaySafetyQuestionPost(modelView, context, modelPost.id),
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 5),
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: Icon(
+                      Icons.delete,
+                      color: Color(GlobalValues.mainGreen),
+                    ),
+                  ),
+                ),
               ),
             )
-          : SizedBox.shrink(),
+          : Expanded(flex: 5, child: SizedBox.shrink()),
     ],
   );
 }
@@ -149,6 +164,27 @@ Widget typingContainer(TextEditingController _messageController, Function functi
           ),
         ),
       ),
+    ),
+  );
+}
+
+
+Future<void> showWriteDialog(BuildContext context) {
+  return showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: Text("Escribe algo.."),
+      content: Text("Es mejor cuando transmites un mensaje"),
+      actions: [
+        TextButton(
+          child: Text(
+            "ok..",
+          ),
+          onPressed: () => {
+            Navigator.pop(context),
+          },
+        ),
+      ],
     ),
   );
 }

@@ -24,7 +24,7 @@ class ForumViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> addMatch(String contentToPost) {
+  Future<void> addMatch(String contentToPost) async{
     ModelPost modelPost = new ModelPost(
         id: generateUuid(),
         idUser: _currentUser.id,
@@ -34,8 +34,36 @@ class ForumViewModel with ChangeNotifier {
         postType: ModelPost.typeProPMatch,
         createdAt: DateTime.now());
 
-    sendPost(modelPost);
+    await sendPost(modelPost);
   }
+
+  Future<void> addPicture(String contentToPost, String image64)async{
+    ModelPost modelPost = new ModelPost(
+      id: generateUuid(),
+      idUser: _currentUser.id,
+      nameOfUser: _currentUser.fullName,
+      content: contentToPost,
+      imageUser: _currentUser.image,
+      image: image64,
+      postType: ModelPost.typePicture,
+      createdAt: DateTime.now(),
+    );
+    await sendPost(modelPost);
+  }
+  Future<void> addEvent(String contentToPost) async{
+    ModelPost modelPost = new ModelPost(
+        id: generateUuid(),
+        idUser: _currentUser.id,
+        nameOfUser: _currentUser.fullName,
+        content: contentToPost,
+        imageUser: _currentUser.image,
+        postType: ModelPost.typeEvent,
+        createdAt: DateTime.now());
+
+    await sendPost(modelPost);
+  }
+
+
 
   Future<void> sendPost(ModelPost post) async {
     await database.sendPost(post);

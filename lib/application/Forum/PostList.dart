@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tenisleague100/application/Forum/ForumViewModel.dart';
+import 'package:tenisleague100/application/Forum/TypesPostWidgets/EventWidget.dart';
 import 'package:tenisleague100/application/Forum/TypesPostWidgets/PictureWidget.dart';
 import 'package:tenisleague100/application/Forum/TypesPostWidgets/PropMatchWidget.dart';
 import 'package:tenisleague100/application/widgets/helpWidgets.dart';
@@ -59,6 +60,15 @@ class _PostListState extends State<PostList> {
       return Hero(
         tag: modelPost.id,
         child: PictureWidget(
+          modelView: widget.modelView,
+          modelPost: modelPost,
+          comingFromIndependent: false,
+        ),
+      );
+    } else if (modelPost.postType == ModelPost.typeEvent) {
+      return Hero(
+        tag: modelPost.id,
+        child: EventWidget(
           modelView: widget.modelView,
           modelPost: modelPost,
           comingFromIndependent: false,
