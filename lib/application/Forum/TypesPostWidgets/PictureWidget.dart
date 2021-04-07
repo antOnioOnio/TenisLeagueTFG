@@ -24,6 +24,7 @@ class PictureWidget extends StatefulWidget {
 }
 
 class _PictureWidgetState extends State<PictureWidget> {
+
   @override
   Widget build(BuildContext context) {
     Uint8List bytes = base64Decode(widget.modelPost.imageUser);
