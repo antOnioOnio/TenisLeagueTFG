@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:tenisleague100/application/League/MainLeague.dart';
 import 'package:tenisleague100/application/Messages/chats_list.dart';
 import 'package:tenisleague100/application/Settings/settings.dart';
+import 'package:tenisleague100/application/Users/MainUsers.dart';
 import 'package:tenisleague100/constants/GlobalValues.dart';
 
 import 'Forum/MainForum.dart';
@@ -18,10 +20,8 @@ class _DashboardState extends State<Dashboard> {
   static const TextStyle optionStyle = TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static List<Widget> _widgetOptions = <Widget>[
     Forum(),
-    Text(
-      'Index 1: Business',
-      style: optionStyle,
-    ),
+    MainUsers(),
+    MainLeague(),
     Text(
       'Index 2: School',
       style: optionStyle,
@@ -40,15 +40,19 @@ class _DashboardState extends State<Dashboard> {
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            label: 'Home',
+            label: 'Foro',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.supervised_user_circle),
+            label: 'usuarios',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.business),
-            label: 'Business',
+            label: 'Ligas',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.school),
-            label: 'School',
+            icon: Icon(Icons.calendar_today),
+            label: 'Calendario',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.settings),

@@ -1,11 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:tenisleague100/models/ModelComment.dart';
+import 'package:tenisleague100/models/ModelLeague.dart';
+import 'package:tenisleague100/models/ModelMatch.dart';
 import 'package:tenisleague100/models/ModelMessages.dart';
 import 'package:tenisleague100/models/ModelPlace.dart';
 import 'package:tenisleague100/models/ModelPost.dart';
 import 'package:tenisleague100/models/ModelUserLeague.dart';
-import 'package:tenisleague100/services/FirestorePaths.dart';
+import 'file:///C:/Projects/FlutterProjects/tenisleague100/lib/services/Database/FirestorePaths.dart';
 
 import 'firestore_service.dart';
 
@@ -15,6 +17,9 @@ class Database {
   ModelUserLeague _currentUser;
   final _service = FirestoreService.instance;
 
+  //-------------------------------------------------------------
+  //                  Users
+  //-------------------------------------------------------------
   Future<void> registerUser(ModelUserLeague userLeague) async {
     await _service.setData(path: FirestorePath.createUser(uid), data: userLeague.toMap());
   }
@@ -58,6 +63,9 @@ class Database {
     return usersToReturn;
   }
 
+  //-------------------------------------------------------------
+  //                    Messages
+  //-------------------------------------------------------------
   Stream<List<ModelMessage>> messagesStream(String idUser) => _service.collectionStream(
         path: FirestorePath.chats(idUser),
         builder: (data, documentId) => ModelMessage.fromJson(data),
@@ -78,6 +86,9 @@ class Database {
     await _service.addData(path: FirestorePath.chats(currentUser.id), data: newMessage.toMap());
   }
 
+  //-------------------------------------------------------------
+  //                  Posts
+  //-------------------------------------------------------------
   Future<void> sendPost(ModelPost post) async {
     await _service.setData(
       path: FirestorePath.posts(post.id),
@@ -97,6 +108,9 @@ class Database {
     );
   }
 
+  //-------------------------------------------------------------
+  //                        Commets
+  //-------------------------------------------------------------
   Stream<List<ModelComment>> commentStream(String idPost) => _service.collectionStream(
         path: FirestorePath.commentCollection(idPost),
         builder: (data, documentId) => ModelComment.fromJson(data),
@@ -114,6 +128,9 @@ class Database {
     await _service.deleteData(path: FirestorePath.commentDoc(idPost, commentId));
   }
 
+  //-------------------------------------------------------------
+  //                  Places
+  //-------------------------------------------------------------
   Future<void> sendPlace(ModelPlace modelPlace) async {
     await _service.setData(
       path: FirestorePath.places(modelPlace.id),
@@ -134,5 +151,37 @@ class Database {
       placesToReturn.add(new ModelPlace.fromJson(obj));
     }
     return placesToReturn;
+  }
+
+  //-------------------------------------------------------------
+  //                  League and matches
+  //-------------------------------------------------------------
+  Future<void> sendLeague(ModelLeague league) async {
+    await _service.setData(
+      path: FirestorePath.leagues(league.id),
+      data: league.toMap(),
+    );
+  }
+
+  Future<void> sendMatch(ModelMatch match) async {
+    await _service.setData(
+      path: FirestorePath.matches(match.idLeague, match.id),
+      data: match.toJson(),
+    );
+  }
+
+  Future<List<ModelLeague>> getLeaguesCollection() async {
+    List<ModelLeague> leaguesToReturn = [];
+    CollectionReference _collectionRef = FirebaseFirestore.instance.collection(FirestorePath.leaguesCollection);
+    // Get docs from collection reference
+    QuerySnapshot querySnapshot = await _collectionRef.get();
+
+    // Get data from docs and convert map to List
+    final allData = querySnapshot.docs.map((doc) => doc.data()).toList();
+
+    for (var obj in allData) {
+      leaguesToReturn.add(new ModelLeague.fromJson(obj));
+    }
+    return leaguesToReturn;
   }
 }

@@ -47,7 +47,9 @@ class _MainForumState extends State<MainForum> {
   }
 
   void initVM() async {
-    await widget.viewModel.initUser();
+    Future.delayed(const Duration(milliseconds: 500), () {
+      widget.viewModel.initUser();
+    });
   }
 
   @override
@@ -81,6 +83,4 @@ class _MainForumState extends State<MainForum> {
       ),
     );
   }
-
-
 }

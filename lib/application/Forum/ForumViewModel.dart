@@ -7,7 +7,7 @@ import 'package:tenisleague100/models/ModelPlace.dart';
 import 'package:tenisleague100/models/ModelPost.dart';
 import 'package:tenisleague100/models/ModelUserLeague.dart';
 import 'package:tenisleague100/services/GlobalMethods.dart';
-import 'package:tenisleague100/services/database.dart';
+import 'file:///C:/Projects/FlutterProjects/tenisleague100/lib/services/Database/Database.dart';
 
 class ForumViewModel with ChangeNotifier {
   final Database database;

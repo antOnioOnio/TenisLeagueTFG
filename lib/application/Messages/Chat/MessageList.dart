@@ -9,7 +9,7 @@ import 'package:tenisleague100/application/widgets/helpWidgets.dart';
 import 'package:tenisleague100/application/widgets/showAlertDialog.dart';
 import 'package:tenisleague100/models/ModelMessages.dart';
 import 'package:tenisleague100/models/ModelUserLeague.dart';
-import 'package:tenisleague100/services/database.dart';
+import 'file:///C:/Projects/FlutterProjects/tenisleague100/lib/services/Database/Database.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -70,7 +70,7 @@ class _MessageListState extends State<MessageList> {
       Timer(
           Duration(milliseconds: 100),
           () => {
-                if (mounted) _controller.jumpTo(_controller.position.minScrollExtent),
+                if (_controller.hasClients) _controller.jumpTo(_controller.position.minScrollExtent),
               });
     }
 

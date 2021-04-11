@@ -14,7 +14,7 @@ import 'package:tenisleague100/application/widgets/helpWidgets.dart';
 import 'package:tenisleague100/application/widgets/showAlertDialog.dart';
 import 'package:tenisleague100/constants/GlobalValues.dart';
 import 'package:tenisleague100/models/ModelUserLeague.dart';
-import 'package:tenisleague100/services/database.dart';
+import 'file:///C:/Projects/FlutterProjects/tenisleague100/lib/services/Database/Database.dart';
 
 import '../top_providers.dart';
 
@@ -58,22 +58,26 @@ class _RegisterState extends State<RegisterPage> {
   TextEditingController passwordController = new TextEditingController();
   TextEditingController nameController = new TextEditingController();
   TextEditingController levelController = new TextEditingController();
+  TextEditingController tlfController = new TextEditingController();
   bool hidePassword;
   FocusNode _focusPass = new FocusNode();
   FocusNode _focusEmail = new FocusNode();
   FocusNode _focusUserName = new FocusNode();
   FocusNode _focusLevel = new FocusNode();
+  FocusNode _focustlf = new FocusNode();
   bool _hasFocusPass = false;
   bool _hasFocusUserEmail = false;
   bool _hasFocusUserName = false;
   bool _hasFocusUserLevel = false;
+  bool _hasFocusUsertlf = false;
   final formKeyEmail = GlobalKey<FormState>();
   final formKeyPassword = GlobalKey<FormState>();
   final formKeyUserName = GlobalKey<FormState>();
   final formKeyUserLevel = GlobalKey<FormState>();
+  final formKeytlf = GlobalKey<FormState>();
   bool clickedSignInOnce = false;
-  String dropdownValue = "Principiante";
-  List<String> _options = ["Principiante", "Medio", "Avanzado"];
+  String dropdownValue = GlobalValues.levelPrincipiante;
+  List<String> _options = [GlobalValues.levelPrincipiante, GlobalValues.leveMedio, GlobalValues.levelAvanzado];
   File _image;
   String _base64Image;
 
@@ -81,6 +85,7 @@ class _RegisterState extends State<RegisterPage> {
   static const int FIELD_EMAIL = 1;
   static const int FIELD_PASSWORD = 2;
   static const int FIELD_LEVEL = 3;
+  static const int FIELD_TLF = 4;
 
   @override
   void initState() {
@@ -94,12 +99,14 @@ class _RegisterState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        alignment: Alignment.center,
-        children: [
-          basicScreenColor(),
-          widget.viewModel.isLoading ? circularLoadingBar() : _registerBlock(),
-        ],
+      body: SafeArea(
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            basicScreenColor(),
+            widget.viewModel.isLoading ? circularLoadingBar() : _registerBlock(),
+          ],
+        ),
       ),
     );
   }
@@ -112,17 +119,16 @@ class _RegisterState extends State<RegisterPage> {
         children: [
           Column(
             children: [
-              SizedBox(height: 50.0),
               Text(
                 "Register",
                 style: GoogleFonts.raleway(fontWeight: FontWeight.bold, fontSize: 24),
               ),
-              SizedBox(height: 25.0),
+              SizedBox(height: 15.0),
               Container(
                 margin: EdgeInsets.only(right: 12),
                 child: CircleAvatar(
                   backgroundColor: Color(GlobalValues.mainTextColorHint),
-                  radius: 50,
+                  radius: 30,
                   child: _image != null
                       ? ClipRRect(
                           borderRadius: BorderRadius.circular(50),
@@ -143,7 +149,7 @@ class _RegisterState extends State<RegisterPage> {
                 ),
               ),
               SizedBox(
-                height: 50.0,
+                height: 30.0,
               ),
               _customField(
                   "Nombre completo",
@@ -162,6 +168,11 @@ class _RegisterState extends State<RegisterPage> {
               ),
               _customField("Email", Icon(Icons.attach_email), SizedBox.shrink(), formKeyEmail, _focusEmail, FIELD_EMAIL, mailFieldController, "Email",
                   _hasFocusUserEmail),
+              SizedBox(
+                height: 20.0,
+              ),
+              _customField("Teléfono", Icon(Icons.mobile_friendly), SizedBox.shrink(), formKeytlf, _focustlf, FIELD_TLF, tlfController, "Teléfono",
+                  _hasFocusUsertlf),
               SizedBox(
                 height: 20.0,
               ),
@@ -302,12 +313,15 @@ class _RegisterState extends State<RegisterPage> {
                                 case FIELD_PASSWORD:
                                   return val.isEmpty || val.length < 3 ? "Escribe una contraseña válida" : null;
                                   break;
+                                case FIELD_TLF:
+                                  return val.isEmpty || val.length != 9 ? "Telefono debe tener 9 digitos" : null;
+                                  break;
                               }
                               return "";
                             },
                             obscureText: valueForValidation == FIELD_PASSWORD ? hidePassword : false,
                             controller: controller,
-                            keyboardType: valueForValidation == FIELD_EMAIL ? TextInputType.emailAddress : TextInputType.text,
+                            keyboardType: textInputType(valueForValidation),
                             style: GoogleFonts.raleway(color: Color(GlobalValues.blackText), fontWeight: FontWeight.normal, fontSize: 14),
                             decoration: inputDecoration(hint),
                           ),
@@ -348,16 +362,31 @@ class _RegisterState extends State<RegisterPage> {
     );
   }
 
+  TextInputType textInputType(int field) {
+    if (field == FIELD_EMAIL) {
+      return TextInputType.emailAddress;
+    } else if (field == FIELD_TLF) {
+      return TextInputType.number;
+    } else {
+      return TextInputType.text;
+    }
+  }
+
   void register() async {
     clickedSignInOnce = true;
-    if (formKeyPassword.currentState.validate() && formKeyEmail.currentState.validate()) {
+    if (validateForms()) {
       if (_base64Image != null) {
         await widget.viewModel.register(this.mailFieldController.text, this.passwordController.text, context);
         final database = context.read<Database>(databaseProvider);
         String userId = widget.viewModel.currentId;
         await database.registerUser(
           new ModelUserLeague(
-              fullName: this.nameController.text, email: this.mailFieldController.text, level: dropdownValue, image: this._base64Image, id: userId),
+              fullName: this.nameController.text,
+              tlf: this.tlfController.text,
+              email: this.mailFieldController.text,
+              level: dropdownValue,
+              image: this._base64Image,
+              id: userId),
         );
       } else {
         showAlertDialog(
@@ -369,6 +398,13 @@ class _RegisterState extends State<RegisterPage> {
         );
       }
     }
+  }
+
+  bool validateForms() {
+    return formKeyUserName.currentState.validate() &&
+        formKeyEmail.currentState.validate() &&
+        formKeytlf.currentState.validate() &&
+        formKeyPassword.currentState.validate();
   }
 
   void showHidePassword() {
@@ -383,6 +419,7 @@ class _RegisterState extends State<RegisterPage> {
       _hasFocusUserEmail = _focusEmail.hasFocus;
       _hasFocusUserName = _focusUserName.hasFocus;
       _hasFocusUserLevel = _focusLevel.hasFocus;
+      _hasFocusUsertlf = _focustlf.hasFocus;
     });
   }
 

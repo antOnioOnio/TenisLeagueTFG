@@ -2,7 +2,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod/riverpod.dart';
-import 'package:tenisleague100/services/database.dart';
+import 'file:///C:/Projects/FlutterProjects/tenisleague100/lib/services/Database/Database.dart';
 
 final firebaseAuthProvider = Provider<FirebaseAuth>((ref) => FirebaseAuth.instance);
 

@@ -3,6 +3,8 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:tenisleague100/constants/GlobalValues.dart';
 
+import 'helpDecorations.dart';
+
 Widget basicScreenColor() {
   return Container(
     height: double.infinity,
@@ -46,6 +48,32 @@ Widget customAvatar(Uint8List bytes) {
         height: 37.0,
         width: 37.0,
       ),
+    ),
+  );
+}
+Widget headerTabBar(BuildContext context) {
+  return Container(
+    decoration: containerChatSelection(),
+    height: 40,
+    width: MediaQuery.of(context).size.width,
+    child: TabBar(
+      indicator: UnderlineTabIndicator(
+        borderSide: BorderSide(width: 2.0, color: Color(GlobalValues.mainGreen)),
+        insets: EdgeInsets.symmetric(horizontal: 16.0),
+      ),
+      labelColor: Color(GlobalValues.mainGreen),
+      unselectedLabelColor: Colors.grey,
+      tabs: [
+        Tab(
+          text: "Principiante",
+        ),
+        Tab(
+          text: "Medio",
+        ),
+        Tab(
+          text: "Avanzado",
+        ),
+      ],
     ),
   );
 }

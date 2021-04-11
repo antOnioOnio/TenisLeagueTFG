@@ -9,7 +9,7 @@ import 'package:tenisleague100/application/widgets/helpDecorations.dart';
 import 'package:tenisleague100/application/widgets/helpWidgets.dart';
 import 'package:tenisleague100/constants/GlobalValues.dart';
 import 'package:tenisleague100/models/ModelUserLeague.dart';
-import 'package:tenisleague100/services/database.dart';
+import 'file:///C:/Projects/FlutterProjects/tenisleague100/lib/services/Database/Database.dart';
 import 'package:tenisleague100/services/shared_preferences_service.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
