@@ -7,7 +7,7 @@ import 'package:tenisleague100/models/ModelMessages.dart';
 import 'package:tenisleague100/models/ModelPlace.dart';
 import 'package:tenisleague100/models/ModelPost.dart';
 import 'package:tenisleague100/models/ModelUserLeague.dart';
-import 'file:///C:/Projects/FlutterProjects/tenisleague100/lib/services/Database/FirestorePaths.dart';
+import 'package:tenisleague100/services/Database/FirestorePaths.dart';
 
 import 'firestore_service.dart';
 
@@ -15,13 +15,18 @@ class Database {
   Database({@required this.uid});
   final String uid;
   ModelUserLeague _currentUser;
+  List<ModelUserLeague> _everyUser = [];
   final _service = FirestoreService.instance;
 
   //-------------------------------------------------------------
   //                  Users
   //-------------------------------------------------------------
-  Future<void> registerUser(ModelUserLeague userLeague) async {
-    await _service.setData(path: FirestorePath.createUser(uid), data: userLeague.toMap());
+  Future<void> setUser(ModelUserLeague userLeague) async {
+    print("STEP 3 update it in backend==> " + userLeague.currentScore.toString());
+    await _service.setData(path: FirestorePath.userPath(uid), data: userLeague.toMap());
+/*    Future.delayed(const Duration(seconds: 3), () async {
+      await getUserCollection(true);
+    });*/
   }
 
   Stream<List<ModelUserLeague>> userStream() => _service.collectionStream(
@@ -48,20 +53,40 @@ class Database {
     return _currentUser;
   }
 
-  Future<List<ModelUserLeague>> getUserCollection() async {
-    List<ModelUserLeague> usersToReturn = [];
-    CollectionReference _collectionRef = FirebaseFirestore.instance.collection(FirestorePath.users);
-    // Get docs from collection reference
-    QuerySnapshot querySnapshot = await _collectionRef.get();
+/*  Future<List<ModelUserLeague>> getUserCollection(bool update) async {
 
-    // Get data from docs and convert map to List
-    final allData = querySnapshot.docs.map((doc) => doc.data()).toList();
+      print("STEP 4: update users...as they have fucking changed");
+      CollectionReference _collectionRef = FirebaseFirestore.instance.collection(FirestorePath.users);
+      // Get docs from collection reference
+      QuerySnapshot querySnapshot = await _collectionRef.get();
 
-    for (var obj in allData) {
-      usersToReturn.add(new ModelUserLeague.fromJson(obj));
+      // Get data from docs and convert map to List
+      final allData = querySnapshot.docs.map((doc) => doc.data()).toList();
+
+      for (var obj in allData) {
+        ModelUserLeague user = new ModelUserLeague.fromJson(obj);
+        if(!_everyUser.contains(user)){
+          _everyUser.add(user);
+        }
+
+      }
+      print("STEP 5 now i should get it with increased score ==>" + _everyUser[0].currentScore.toString());
+      return _everyUser;
     }
-    return usersToReturn;
+  }*/
+/*
+
+  Future<ModelUserLeague> getUserById(String userId) async {
+    if(_everyUser.isEmpty) await getUserCollection(true);
+
+    for (var user in _everyUser) {
+      print("user id==> " + user.id);
+      if (user.id == userId) {
+        return user;
+      }
+    }
   }
+*/
 
   //-------------------------------------------------------------
   //                    Messages
@@ -183,5 +208,20 @@ class Database {
       leaguesToReturn.add(new ModelLeague.fromJson(obj));
     }
     return leaguesToReturn;
+  }
+
+  Future<List<ModelMatch>> getMatchesCollection(String idLeague) async {
+    List<ModelMatch> matchesToReturn = [];
+    CollectionReference _collectionRef = FirebaseFirestore.instance.collection(FirestorePath.matchesCollection(idLeague));
+    // Get docs from collection reference
+    QuerySnapshot querySnapshot = await _collectionRef.get();
+
+    // Get data from docs and convert map to List
+    final allData = querySnapshot.docs.map((doc) => doc.data()).toList();
+
+    for (var obj in allData) {
+      matchesToReturn.add(new ModelMatch.fromJson(obj));
+    }
+    return matchesToReturn;
   }
 }

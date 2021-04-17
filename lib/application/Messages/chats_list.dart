@@ -7,9 +7,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:tenisleague100/application/top_providers.dart';
 import 'package:tenisleague100/application/widgets/helpDecorations.dart';
 import 'package:tenisleague100/application/widgets/helpWidgets.dart';
+import 'package:tenisleague100/application/widgets/showAlertDialog.dart';
 import 'package:tenisleague100/constants/GlobalValues.dart';
 import 'package:tenisleague100/models/ModelUserLeague.dart';
-import 'file:///C:/Projects/FlutterProjects/tenisleague100/lib/services/Database/Database.dart';
+import 'package:tenisleague100/services/Database/Database.dart';
 import 'package:tenisleague100/services/shared_preferences_service.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -27,12 +28,10 @@ class Chats extends StatefulWidget {
 class _ChatsState extends State<Chats> {
   TextEditingController searchFieldController = new TextEditingController();
   List<ModelUserLeague> _filteredUsers, _everyUser;
-  bool _isLoading;
-  Stream stream;
+
   @override
   void initState() {
     super.initState();
-    getUsers();
   }
 
   @override
@@ -51,7 +50,7 @@ class _ChatsState extends State<Chats> {
                     height: 10,
                   ),
                   customSearchField(),
-                  mainListUsers(),
+                  mainUsers(),
                 ],
               ),
             ),
@@ -61,21 +60,46 @@ class _ChatsState extends State<Chats> {
     );
   }
 
+  Widget mainUsers() {
+    final database = context.read<Database>(databaseProvider);
+    return StreamBuilder<List<ModelUserLeague>>(
+      stream: database.userStream(),
+      builder: (context, snapshot) {
+        switch (snapshot.connectionState) {
+          case ConnectionState.waiting:
+            return circularLoadingBar();
+          default:
+            if (snapshot.hasError) {
+              return showAlertDialog(
+                context: context,
+                title: 'Error',
+                content: "Intentalo de nuevo más tarde",
+                defaultActionText: 'OK',
+                requiredCallback: false,
+              );
+            } else {
+              final users = snapshot.data;
+              _filteredUsers = users;
+              return mainListUsers();
+            }
+        }
+      },
+    );
+  }
+
   Widget mainListUsers() {
-    return _isLoading
-        ? circularLoadingBar()
-        : Container(
-            padding: EdgeInsets.all(10),
-            constraints: BoxConstraints(maxHeight: 400),
-            child: ListView.builder(
-              physics: BouncingScrollPhysics(),
-              itemCount: _filteredUsers.length,
-              itemBuilder: (context, index) {
-                final user = _filteredUsers[index];
-                return userRow(user);
-              },
-            ),
-          );
+    return Container(
+      padding: EdgeInsets.all(10),
+      constraints: BoxConstraints(maxHeight: 400),
+      child: ListView.builder(
+        physics: BouncingScrollPhysics(),
+        itemCount: _filteredUsers.length,
+        itemBuilder: (context, index) {
+          final user = _filteredUsers[index];
+          return userRow(user);
+        },
+      ),
+    );
   }
 
   Widget userRow(ModelUserLeague user) {
@@ -149,27 +173,5 @@ class _ChatsState extends State<Chats> {
         ),
       ],
     );
-  }
-
-  void getUsers() async {
-    print("geUsers called");
-    final database = context.read<Database>(databaseProvider);
-    setState(() {
-      _isLoading = true;
-    });
-    final sp = context.read<SharedPreferencesService>(sharedPreferencesServiceProvider);
-    String currentUserId = sp.getCurrentUSerId();
-    _everyUser = await database.getUserCollection();
-    ModelUserLeague mySelfToDelete;
-    for (var obj in _everyUser) {
-      if (obj.id == currentUserId) {
-        mySelfToDelete = obj;
-      }
-    }
-    _everyUser.remove(mySelfToDelete);
-    _filteredUsers = _everyUser;
-    setState(() {
-      _isLoading = false;
-    });
   }
 }

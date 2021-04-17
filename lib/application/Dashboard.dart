@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tenisleague100/application/Calendario/MainCalendar.dart';
 import 'package:tenisleague100/application/League/MainLeague.dart';
 import 'package:tenisleague100/application/Messages/chats_list.dart';
 import 'package:tenisleague100/application/Settings/settings.dart';
@@ -14,21 +15,10 @@ class Dashboard extends StatefulWidget {
   _DashboardState createState() => _DashboardState();
 }
 
-/// This is the private State class that goes with MyStatefulWidget.
 class _DashboardState extends State<Dashboard> {
   int _selectedIndex = 0;
   static const TextStyle optionStyle = TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  static List<Widget> _widgetOptions = <Widget>[
-    Forum(),
-    MainUsers(),
-    MainLeague(),
-    Text(
-      'Index 2: School',
-      style: optionStyle,
-    ),
-    SettingsPage(),
-    Chats()
-  ];
+  static List<Widget> _widgetOptions = <Widget>[Forum(), MainUsers(), MainLeague(), MainCalendar(), SettingsPage(), Chats()];
 
   @override
   Widget build(BuildContext context) {

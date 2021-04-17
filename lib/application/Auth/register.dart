@@ -14,7 +14,7 @@ import 'package:tenisleague100/application/widgets/helpWidgets.dart';
 import 'package:tenisleague100/application/widgets/showAlertDialog.dart';
 import 'package:tenisleague100/constants/GlobalValues.dart';
 import 'package:tenisleague100/models/ModelUserLeague.dart';
-import 'file:///C:/Projects/FlutterProjects/tenisleague100/lib/services/Database/Database.dart';
+import 'package:tenisleague100/services/Database/Database.dart';
 
 import '../top_providers.dart';
 
@@ -379,12 +379,16 @@ class _RegisterState extends State<RegisterPage> {
         await widget.viewModel.register(this.mailFieldController.text, this.passwordController.text, context);
         final database = context.read<Database>(databaseProvider);
         String userId = widget.viewModel.currentId;
-        await database.registerUser(
+        await database.setUser(
           new ModelUserLeague(
               fullName: this.nameController.text,
               tlf: this.tlfController.text,
               email: this.mailFieldController.text,
               level: dropdownValue,
+              currentScore: 0,
+              matchWins: 0,
+              matchPlayed: 0,
+              matchLosses: 0,
               image: this._base64Image,
               id: userId),
         );

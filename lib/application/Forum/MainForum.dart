@@ -8,11 +8,6 @@ import '../top_providers.dart';
 import 'AddPostHeader.dart';
 import 'ForumViewModel.dart';
 
-final forumModelProvider = ChangeNotifierProvider<ForumViewModel>((ref) {
-  final database = ref.watch(databaseProvider);
-  return ForumViewModel(database: database);
-});
-
 class Forum extends ConsumerWidget {
   @override
   Widget build(BuildContext context, watch) {

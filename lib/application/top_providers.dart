@@ -1,8 +1,11 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod/riverpod.dart';
-import 'file:///C:/Projects/FlutterProjects/tenisleague100/lib/services/Database/Database.dart';
+import 'package:tenisleague100/services/Database/Database.dart';
+
+import 'Forum/ForumViewModel.dart';
 
 final firebaseAuthProvider = Provider<FirebaseAuth>((ref) => FirebaseAuth.instance);
 
@@ -17,6 +20,13 @@ final databaseProvider = Provider<Database>((ref) {
   }
   throw UnimplementedError();
 });
+
+final forumModelProvider = ChangeNotifierProvider<ForumViewModel>((ref) {
+  final database = ref.watch(databaseProvider);
+  return ForumViewModel(database: database);
+});
+
+
 
 final loggerProvider = Provider<Logger>((ref) => Logger(
   printer: PrettyPrinter(

@@ -9,9 +9,9 @@ import 'package:tenisleague100/application/widgets/helpWidgets.dart';
 import 'package:tenisleague100/application/widgets/showAlertDialog.dart';
 import 'package:tenisleague100/models/ModelMessages.dart';
 import 'package:tenisleague100/models/ModelUserLeague.dart';
-import 'file:///C:/Projects/FlutterProjects/tenisleague100/lib/services/Database/Database.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tenisleague100/services/Database/Database.dart';
 
 class MessageList extends StatefulWidget {
   final String currentUserId;
