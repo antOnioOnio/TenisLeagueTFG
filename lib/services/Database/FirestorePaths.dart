@@ -10,10 +10,10 @@ class FirestorePath {
   static String places(String idPlace) => 'places/$idPlace';
   static String placesCollection() => 'places/';
 
-  static String leaguesCollection = 'leagues';
+  static String leaguesStream = 'leagues/';
   static String leagues(String idLeague) => 'leagues/$idLeague';
-  static String matchesCollection(String idLeague) => 'leagues/$idLeague/matches';
-  static String matches(String idLeague, String idMatch) => 'leagues/$idLeague/matches/$idMatch';
+  static String matches(String idLeague) => 'leagues/$idLeague/matches/';
+  static String match(String idLeague, String idMatch) => 'leagues/$idLeague/matches/$idMatch';
 
   //static String entry(String uid, String entryId) =>
   //    'users/$uid/entries/$entryId';

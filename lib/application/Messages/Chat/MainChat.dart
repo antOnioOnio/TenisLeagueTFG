@@ -17,8 +17,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../top_providers.dart';
 
 class MainChat extends StatefulWidget {
+  final String currentUserid;
   final ModelUserLeague modelUserLeague;
-  const MainChat({Key key, @required this.modelUserLeague}) : super(key: key);
+  const MainChat({Key key, @required this.modelUserLeague,@required this.currentUserid}) : super(key: key);
 
   @override
   _MainChatState createState() => _MainChatState();
@@ -26,14 +27,12 @@ class MainChat extends StatefulWidget {
 
 class _MainChatState extends State<MainChat> {
   TextEditingController _messageController = new TextEditingController();
-  String currentUserId;
   FocusNode _focusMsg = new FocusNode();
   bool _hasFocus = false;
   @override
   void initState() {
     super.initState();
     final sp = context.read<SharedPreferencesService>(sharedPreferencesServiceProvider);
-    currentUserId = sp.getCurrentUSerId();
     _focusMsg.addListener(_onFocusChange);
   }
 
@@ -58,7 +57,7 @@ class _MainChatState extends State<MainChat> {
                     width: MediaQuery.of(context).size.width,
                     padding: EdgeInsets.all(10),
                     decoration: chatBgDecoration(0.5),
-                    child: MessageList(currentUserId: currentUserId, userChat: widget.modelUserLeague),
+                    child: MessageList(currentUserId: widget.currentUserid, userChat: widget.modelUserLeague),
                   ),
                 ),
                 typingContainer()

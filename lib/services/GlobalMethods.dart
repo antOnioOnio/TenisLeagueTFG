@@ -35,3 +35,30 @@ String leagueId( List<ModelLeague> leagues, String level){
 
     database.sendMatch(match);
   }*/
+
+
+/*
+  void sendMatch() async {
+    final database = context.read<Database>(databaseProvider);
+    ModelMatch match = new ModelMatch(
+        id: generateUuid(),
+        idLeague: "8209fbb0-9a22-11eb-ae3f-c5f87e07e75b",
+        idPlayer1: "pBIgiZJWQNhqp1H7UVqrO3fsAg42",
+        idPlayer2: "Cgnl06Nhg0YVFoOIHnXokLaLgMl2",
+        idPlayerWinner: "Cgnl06Nhg0YVFoOIHnXokLaLgMl2",
+        played: true,
+        dateMatch: DateTime.now());
+
+    ModelUserLeague userWinner = await database.getUserById(match.idPlayerWinner);
+    String idUserLost = match.idPlayer1 == match.idPlayerWinner ? match.idPlayer2 : match.idPlayer1;
+    ModelUserLeague userLoser = await database.getUserById(idUserLost);
+
+    print("STEP 1, get the user and this is his score ==> " + userWinner.currentScore.toString());
+    userWinner = userWinner.copyWithOneMoreMatch(true);
+    print("STEP 2, increase his score ==> " + userWinner.currentScore.toString());
+    userLoser = userLoser.copyWithOneMoreMatch(false);
+
+      await database.sendMatch(match);
+    await database.setUser(userWinner);
+       await database.setUser(userLoser);
+  }*/

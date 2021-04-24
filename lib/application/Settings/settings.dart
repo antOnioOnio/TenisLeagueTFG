@@ -22,6 +22,7 @@ class _SettingsPageState extends State<SettingsPage> {
         alignment: Alignment.center,
         children: [
           basicScreenColor(),
+          createMatchesButton(),
           _buildUserInfo(user, firebaseAuth),
         ],
       ),
@@ -48,7 +49,9 @@ class _SettingsPageState extends State<SettingsPage> {
       width: 310,
       height: 40,
       child: FlatButton(
-        onPressed: () => {_signOut(context, firebaseAuth)},
+        onPressed: () => {
+          _signOut(context, firebaseAuth),
+        },
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
         ),
@@ -60,6 +63,26 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
     );
   }
+
+  Widget createMatchesButton() {
+    return Container(
+      width: 310,
+      height: 40,
+      child: FlatButton(
+        onPressed: () => {_createMatches()},
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        color: Colors.blueAccent,
+        child: Text(
+          "Create Matches",
+          style: GoogleFonts.raleway(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _createMatches() async {}
 
   Future<void> _signOut(BuildContext context, FirebaseAuth firebaseAuth) async {
     try {

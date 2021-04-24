@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 
@@ -28,10 +29,14 @@ class Chats extends StatefulWidget {
 class _ChatsState extends State<Chats> {
   TextEditingController searchFieldController = new TextEditingController();
   List<ModelUserLeague> _filteredUsers, _everyUser;
-
+  String _currentUserId;
+  bool _isLoading;
+  Stream stream;
   @override
   void initState() {
     super.initState();
+    setCurrentUserId();
+    getUsers();
   }
 
   @override
@@ -50,7 +55,7 @@ class _ChatsState extends State<Chats> {
                     height: 10,
                   ),
                   customSearchField(),
-                  mainUsers(),
+                  mainListUsers(),
                 ],
               ),
             ),
@@ -60,68 +65,46 @@ class _ChatsState extends State<Chats> {
     );
   }
 
-  Widget mainUsers() {
-    final database = context.read<Database>(databaseProvider);
-    return StreamBuilder<List<ModelUserLeague>>(
-      stream: database.userStream(),
-      builder: (context, snapshot) {
-        switch (snapshot.connectionState) {
-          case ConnectionState.waiting:
-            return circularLoadingBar();
-          default:
-            if (snapshot.hasError) {
-              return showAlertDialog(
-                context: context,
-                title: 'Error',
-                content: "Intentalo de nuevo más tarde",
-                defaultActionText: 'OK',
-                requiredCallback: false,
-              );
-            } else {
-              final users = snapshot.data;
-              _filteredUsers = users;
-              return mainListUsers();
-            }
-        }
-      },
-    );
-  }
-
   Widget mainListUsers() {
-    return Container(
-      padding: EdgeInsets.all(10),
-      constraints: BoxConstraints(maxHeight: 400),
-      child: ListView.builder(
-        physics: BouncingScrollPhysics(),
-        itemCount: _filteredUsers.length,
-        itemBuilder: (context, index) {
-          final user = _filteredUsers[index];
-          return userRow(user);
-        },
-      ),
-    );
+    return _isLoading
+        ? circularLoadingBar()
+        : Container(
+            padding: EdgeInsets.all(10),
+            constraints: BoxConstraints(maxHeight: 400),
+            child: ListView.builder(
+              physics: BouncingScrollPhysics(),
+              itemCount: _filteredUsers.length,
+              itemBuilder: (context, index) {
+                final user = _filteredUsers[index];
+                return userRow(user);
+              },
+            ),
+          );
   }
 
   Widget userRow(ModelUserLeague user) {
     Uint8List bytes = base64Decode(user.image);
-    return Container(
-      height: 60,
-      decoration: containerChatSelection(),
-      margin: EdgeInsets.only(bottom: 5),
-      child: ListTile(
-        onTap: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => MainChat(modelUserLeague: user),
-            ),
-          );
-        },
-        leading: CircleAvatar(
-          backgroundColor: Color(GlobalValues.mainGreen),
-          radius: 20,
-          child: customAvatar(bytes),
+    return Visibility(
+      visible: user.id == _currentUserId ? false : true,
+      child: Container(
+        height: 60,
+        decoration: containerChatSelection(),
+        margin: EdgeInsets.only(bottom: 5),
+        child: ListTile(
+          onTap: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => MainChat(modelUserLeague: user),
+              ),
+            );
+          },
+          leading: CircleAvatar(
+            backgroundColor: Color(GlobalValues.mainGreen),
+            radius: 20,
+            child: customAvatar(bytes),
+          ),
+          title: Text(user.fullName),
         ),
-        title: Text(user.fullName),
       ),
     );
   }
@@ -173,5 +156,23 @@ class _ChatsState extends State<Chats> {
         ),
       ],
     );
+  }
+
+  void setCurrentUserId() async {
+    final sp = context.read<SharedPreferencesService>(sharedPreferencesServiceProvider);
+    _currentUserId = await sp.getCurrentUSerId();
+  }
+
+  void getUsers() async {
+    print("geUsers called");
+    final database = context.read<Database>(databaseProvider);
+    setState(() {
+      _isLoading = true;
+    });
+    _everyUser = await database.getUserCollection();
+    _filteredUsers = _everyUser;
+    setState(() {
+      _isLoading = false;
+    });
   }
 }

@@ -51,6 +51,7 @@ Widget customAvatar(Uint8List bytes) {
     ),
   );
 }
+
 Widget headerTabBar(BuildContext context) {
   return Container(
     decoration: containerChatSelection(),

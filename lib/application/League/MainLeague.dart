@@ -29,7 +29,7 @@ class _MainLeagueState extends State<MainLeague> {
   Widget build(BuildContext context) {
     final database = context.read<Database>(databaseProvider);
     return StreamBuilder(
-      stream: database.userStream(),
+      stream: database.usersStream(),
       builder: (context, snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.waiting:

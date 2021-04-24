@@ -24,12 +24,9 @@ class Database {
   Future<void> setUser(ModelUserLeague userLeague) async {
     print("STEP 3 update it in backend==> " + userLeague.currentScore.toString());
     await _service.setData(path: FirestorePath.userPath(uid), data: userLeague.toMap());
-/*    Future.delayed(const Duration(seconds: 3), () async {
-      await getUserCollection(true);
-    });*/
   }
 
-  Stream<List<ModelUserLeague>> userStream() => _service.collectionStream(
+  Stream<List<ModelUserLeague>> usersStream() => _service.collectionStream(
         path: FirestorePath.users,
         builder: (data, documentId) => ModelUserLeague.fromJson(data),
       );
@@ -53,9 +50,9 @@ class Database {
     return _currentUser;
   }
 
-/*  Future<List<ModelUserLeague>> getUserCollection(bool update) async {
-
-      print("STEP 4: update users...as they have fucking changed");
+  Future<List<ModelUserLeague>> getUserCollection() async {
+    if (_everyUser.isEmpty) {
+      List<ModelUserLeague> usersToReturn = [];
       CollectionReference _collectionRef = FirebaseFirestore.instance.collection(FirestorePath.users);
       // Get docs from collection reference
       QuerySnapshot querySnapshot = await _collectionRef.get();
@@ -64,29 +61,12 @@ class Database {
       final allData = querySnapshot.docs.map((doc) => doc.data()).toList();
 
       for (var obj in allData) {
-        ModelUserLeague user = new ModelUserLeague.fromJson(obj);
-        if(!_everyUser.contains(user)){
-          _everyUser.add(user);
-        }
-
-      }
-      print("STEP 5 now i should get it with increased score ==>" + _everyUser[0].currentScore.toString());
-      return _everyUser;
-    }
-  }*/
-/*
-
-  Future<ModelUserLeague> getUserById(String userId) async {
-    if(_everyUser.isEmpty) await getUserCollection(true);
-
-    for (var user in _everyUser) {
-      print("user id==> " + user.id);
-      if (user.id == userId) {
-        return user;
+        _everyUser.add(new ModelUserLeague.fromJson(obj));
       }
     }
+
+    return _everyUser;
   }
-*/
 
   //-------------------------------------------------------------
   //                    Messages
@@ -181,6 +161,12 @@ class Database {
   //-------------------------------------------------------------
   //                  League and matches
   //-------------------------------------------------------------
+
+  Stream<List<ModelLeague>> leagueStream() => _service.collectionStream(
+        path: FirestorePath.leaguesStream,
+        builder: (data, documentId) => ModelLeague.fromJson(data),
+      );
+
   Future<void> sendLeague(ModelLeague league) async {
     await _service.setData(
       path: FirestorePath.leagues(league.id),
@@ -190,14 +176,14 @@ class Database {
 
   Future<void> sendMatch(ModelMatch match) async {
     await _service.setData(
-      path: FirestorePath.matches(match.idLeague, match.id),
+      path: FirestorePath.match(match.idLeague, match.id),
       data: match.toJson(),
     );
   }
 
   Future<List<ModelLeague>> getLeaguesCollection() async {
     List<ModelLeague> leaguesToReturn = [];
-    CollectionReference _collectionRef = FirebaseFirestore.instance.collection(FirestorePath.leaguesCollection);
+    CollectionReference _collectionRef = FirebaseFirestore.instance.collection(FirestorePath.leaguesStream);
     // Get docs from collection reference
     QuerySnapshot querySnapshot = await _collectionRef.get();
 
@@ -210,9 +196,15 @@ class Database {
     return leaguesToReturn;
   }
 
+  Stream<List<ModelMatch>> matchesStream(String idLeague) => _service.collectionStream(
+    path: FirestorePath.matches(idLeague),
+    builder: (data, documentId) => ModelMatch.fromJson(data),
+  );
+
+
   Future<List<ModelMatch>> getMatchesCollection(String idLeague) async {
     List<ModelMatch> matchesToReturn = [];
-    CollectionReference _collectionRef = FirebaseFirestore.instance.collection(FirestorePath.matchesCollection(idLeague));
+    CollectionReference _collectionRef = FirebaseFirestore.instance.collection(FirestorePath.matches(idLeague));
     // Get docs from collection reference
     QuerySnapshot querySnapshot = await _collectionRef.get();
 

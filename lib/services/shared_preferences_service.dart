@@ -23,6 +23,6 @@ class SharedPreferencesService {
     await sharedPreferences.setString(CURRENT_USER, userId);
   }
 
-  String getCurrentUSerId() =>
-      sharedPreferences.getString(CURRENT_USER) ?? "";
+  Future<String> getCurrentUSerId()async =>
+      await sharedPreferences.getString(CURRENT_USER) ?? "";
 }
