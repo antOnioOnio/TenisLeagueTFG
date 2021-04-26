@@ -13,6 +13,15 @@ List<ModelUserLeague> userByLevel(List<ModelUserLeague> users, String level) {
   return users.where((element) => element.level == level).toList();
 }
 
+ModelUserLeague getUserFromList(List<ModelUserLeague> list, String id){
+  for ( var obj in list){
+    if(obj.id == id){
+      return obj;
+    }
+  }
+  return null;
+}
+
 String leagueId( List<ModelLeague> leagues, String level){
   for(var obj in leagues){
     if(obj.level == level){

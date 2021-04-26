@@ -95,7 +95,6 @@ class _MainLeagueState extends State<MainLeague> {
 
 class LeagueTable extends StatelessWidget {
   final List<ModelUserLeague> users;
-
   const LeagueTable({Key key, @required this.users}) : super(key: key);
 
   @override

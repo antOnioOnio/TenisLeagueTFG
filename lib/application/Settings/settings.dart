@@ -6,6 +6,10 @@ import 'package:tenisleague100/application/top_providers.dart';
 import 'package:tenisleague100/application/widgets/helpWidgets.dart';
 import 'package:tenisleague100/application/widgets/showAlertDialog.dart';
 import 'package:tenisleague100/constants/GlobalValues.dart';
+import 'package:tenisleague100/models/ModelMatch.dart';
+import 'package:tenisleague100/models/ModelUserLeague.dart';
+import 'package:tenisleague100/services/Database/Database.dart';
+import 'package:tenisleague100/services/GlobalMethods.dart';
 
 class SettingsPage extends StatefulWidget {
   @override
@@ -69,7 +73,7 @@ class _SettingsPageState extends State<SettingsPage> {
       width: 310,
       height: 40,
       child: FlatButton(
-        onPressed: () => {_createMatches()},
+        onPressed: () => {/*_createMatches()*/},
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
         ),
@@ -82,7 +86,6 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  Future<void> _createMatches() async {}
 
   Future<void> _signOut(BuildContext context, FirebaseAuth firebaseAuth) async {
     try {

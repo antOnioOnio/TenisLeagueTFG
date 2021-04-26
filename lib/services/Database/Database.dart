@@ -197,10 +197,10 @@ class Database {
   }
 
   Stream<List<ModelMatch>> matchesStream(String idLeague) => _service.collectionStream(
-    path: FirestorePath.matches(idLeague),
-    builder: (data, documentId) => ModelMatch.fromJson(data),
-  );
-
+        path: FirestorePath.matches(idLeague),
+        builder: (data, documentId) => ModelMatch.fromJson(data),
+        sort: (msg1, msg2) => msg1.week.compareTo(msg2.week),
+      );
 
   Future<List<ModelMatch>> getMatchesCollection(String idLeague) async {
     List<ModelMatch> matchesToReturn = [];

@@ -12,6 +12,7 @@ class ModelMatch extends Equatable {
   final String resultSet2;
   final String resultSet3;
   final DateTime dateMatch;
+  final int week;
 
   ModelMatch(
       {@required this.id,
@@ -23,7 +24,8 @@ class ModelMatch extends Equatable {
       this.resultSet1,
       this.resultSet2,
       this.resultSet3,
-      @required this.dateMatch});
+        this.dateMatch,
+      @required this.week});
 
   factory ModelMatch.fromJson(Map<String, dynamic> json) => ModelMatch(
       id: json['id'] as String,
@@ -35,6 +37,7 @@ class ModelMatch extends Equatable {
       resultSet1: json['resultSet1'] as String,
       resultSet2: json['resultSet2'] as String,
       resultSet3: json['resultSet3'] as String,
+      week: json['week'] as int,
       dateMatch: json['dateMatch'] == null ? null : DateTime.parse(json['dateMatch'] as String));
 
   Map<String, dynamic> toJson() {
@@ -48,15 +51,16 @@ class ModelMatch extends Equatable {
       'resultSet1': this.resultSet1,
       'resultSet2': this.resultSet2,
       'resultSet3': this.resultSet3,
+      'week': this.week,
       'dateMatch': this.dateMatch?.toIso8601String(),
     };
   }
 
   @override
-  List<Object> get props => [id,idLeague, idPlayer1, idPlayer2, idPlayerWinner, played, resultSet1, resultSet2, resultSet3, dateMatch];
+  List<Object> get props => [id, idLeague, idPlayer1, idPlayer2, idPlayerWinner, played, resultSet1, resultSet2, resultSet3,week, dateMatch];
 
   @override
   String toString() {
-    return 'ModelMatch{id: $id, idLeague: $idLeague, idPlayer1: $idPlayer1, idPlayer2: $idPlayer2, idPlayerWinner: $idPlayerWinner, played: $played, resultSet1: $resultSet1, resultSet2: $resultSet2, resultSet3: $resultSet3, dateMatch: $dateMatch}';
+    return 'ModelMatch{id: $id, idLeague: $idLeague, idPlayer1: $idPlayer1, idPlayer2: $idPlayer2, idPlayerWinner: $idPlayerWinner, played: $played, resultSet1: $resultSet1, resultSet2: $resultSet2, resultSet3: $resultSet3, dateMatch: $dateMatch, week: $week}';
   }
 }
