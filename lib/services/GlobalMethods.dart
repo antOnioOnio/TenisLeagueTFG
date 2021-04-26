@@ -1,4 +1,5 @@
 import 'package:tenisleague100/models/ModelLeague.dart';
+import 'package:tenisleague100/models/ModelMatch.dart';
 import 'package:tenisleague100/models/ModelUserLeague.dart';
 import 'package:uuid/uuid.dart';
 
@@ -13,6 +14,10 @@ List<ModelUserLeague> userByLevel(List<ModelUserLeague> users, String level) {
   return users.where((element) => element.level == level).toList();
 }
 
+
+List<ModelMatch> matchesByWeek(List<ModelMatch> matches, int Week) {
+  return matches.where((element) => element.week == Week).toList();
+}
 ModelUserLeague getUserFromList(List<ModelUserLeague> list, String id){
   for ( var obj in list){
     if(obj.id == id){
@@ -30,6 +35,8 @@ String leagueId( List<ModelLeague> leagues, String level){
   }
   return "";
 }
+
+
 
 /*  void sendLeague() {
     final database = context.read<Database>(databaseProvider);

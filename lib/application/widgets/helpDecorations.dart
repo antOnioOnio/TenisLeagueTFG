@@ -52,6 +52,21 @@ BoxDecoration containerChatSelection() {
   );
 }
 
+BoxDecoration decWeekMatch() {
+  return BoxDecoration(
+    border: Border(
+      left: BorderSide(
+        width: 0.5,
+        color: Color(GlobalValues.mainTextColorHint),
+      ),
+      right: BorderSide(
+        width: 0.5,
+        color: Color(GlobalValues.mainTextColorHint),
+      ),
+    ),
+  );
+}
+
 BoxDecoration messageDecoration(bool isMe) {
   return BoxDecoration(
     color: isMe ? Colors.grey[100] : Color(GlobalValues.mainGreen),

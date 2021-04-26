@@ -143,6 +143,10 @@ class CalendarByLevel extends StatefulWidget {
 }
 
 class _CalendarByLevelState extends State<CalendarByLevel> {
+  List<int> _weeks = [];
+  List<ModelMatch> _matches = [];
+  List<bool> _weekClicked = [];
+
   @override
   void initState() {
     super.initState();
@@ -172,22 +176,74 @@ class _CalendarByLevelState extends State<CalendarByLevel> {
                     return circularLoadingBar();
                   } else {
                     final matches = snapshot.data;
-                    return matches.isEmpty
-                        /* ? Center(child: Text("No hay partidos.."))*/
-                        ? createMatchesButton()
-                        : ListView.builder(
-                            physics: BouncingScrollPhysics(),
-                            reverse: false,
-                            itemCount: matches.length,
-                            itemBuilder: (context, index) {
-                              return match(matches[index]);
-                            },
-                          );
+                    return matches.isEmpty ? createMatchesButton() : listWeeks(matches);
                   }
               }
             },
           )
-        : /*Center(child: Text("No hay partidos.."));*/ createMatchesButton();
+        : createMatchesButton();
+  }
+
+  Widget listWeeks(List<ModelMatch> matches) {
+    _matches = matches;
+    initWeeks(_matches[_matches.length - 1].week);
+
+    return ListView.builder(
+      physics: BouncingScrollPhysics(),
+      reverse: false,
+      itemCount: _weeks.length,
+      itemBuilder: (context, index) {
+        return _weekNumberWidget(_weeks[index]);
+      },
+    );
+  }
+
+  Widget _weekNumberWidget(int numberWeek) {
+    return GestureDetector(
+      onTap: () => changeWeekClicked(numberWeek - 1),
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: Text(
+              "SEMANA " + numberWeek.toString(),
+              style: GoogleFonts.raleway(color: Color(GlobalValues.mainGreen), fontWeight: FontWeight.normal, fontSize: 13),
+            ),
+          ),
+          Divider(
+            height: 1,
+            color: Color(GlobalValues.mainTextColorHint),
+          ),
+          listMatches(
+            matchesByWeek(_matches, numberWeek),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget listMatches(List<ModelMatch> matches) {
+    return ListView.builder(
+      physics: BouncingScrollPhysics(),
+      reverse: false,
+      shrinkWrap: true,
+      itemCount: matches.length,
+      itemBuilder: (context, index) {
+        return match(matches[index]);
+      },
+    );
+  }
+
+  void initWeeks(int maximWeek) {
+    _weeks.clear();
+    _weekClicked.clear();
+    for (int i = 0; i < maximWeek; i++) {
+      this._weeks.add(i + 1);
+    }
+    print("SIZE==> " + _weeks.length.toString());
+    for (var obj in _weeks) {
+      this._weekClicked.add(false);
+    }
   }
 
   Widget createMatchesButton() {
@@ -209,7 +265,52 @@ class _CalendarByLevelState extends State<CalendarByLevel> {
   Widget match(ModelMatch match) {
     ModelUserLeague user1 = getUserFromList(widget.users, match.idPlayer1);
     ModelUserLeague user2 = getUserFromList(widget.users, match.idPlayer2);
-    return Text(user1.fullName + " vs " + user2.fullName + "===> " + match.week.toString());
+    return Column(
+      children: [
+        Container(
+          /*  decoration: containerChatSelection(),*/
+          height: 35,
+          child: Row(
+            children: [
+              Expanded(
+                flex: 3,
+                child: Container(
+                  child: Center(
+                    child: Text(
+                      user1.fullName,
+                      style: GoogleFonts.raleway(color: Color(GlobalValues.blackText), fontWeight: FontWeight.normal, fontSize: 12),
+                    ),
+                  ),
+                ),
+              ),
+              Expanded(
+                flex: 3,
+                child: Container(
+                  decoration: decWeekMatch(),
+                  child: Center(
+                    child: Text(
+                      user2.fullName,
+                      style: GoogleFonts.raleway(color: Color(GlobalValues.blackText), fontWeight: FontWeight.normal, fontSize: 12),
+                    ),
+                  ),
+                  /* color: Colors.red,*/
+                ),
+              ),
+              Expanded(
+                flex: 3,
+                child: Container(),
+              ),
+/*        Text(user1.fullName),
+              Text(user2.fullName),*/
+            ],
+          ),
+        ),
+        Divider(
+          height: 1,
+          color: Color(GlobalValues.mainTextColorHint),
+        )
+      ],
+    );
   }
 
   void _createMatches() async {
@@ -274,5 +375,11 @@ class _CalendarByLevelState extends State<CalendarByLevel> {
       }
     }
     return list;
+  }
+
+  void changeWeekClicked(int week) {
+    setState(() {
+      this._weekClicked[week] = !this._weekClicked[week];
+    });
   }
 }
