@@ -223,6 +223,7 @@ class _CalendarByLevelState extends State<CalendarByLevel> {
     );
   }
 
+
   bool getVisibilityForMatch(ModelMatch match) {
     if (widget.justMyMatches && (match.idPlayer1 == _currentUserId || match.idPlayer2 == _currentUserId)) {
       return true;
@@ -231,6 +232,7 @@ class _CalendarByLevelState extends State<CalendarByLevel> {
     }
     return false;
   }
+
 
   void showDialogSetResult(BuildContext context, ModelMatch match, ModelUserLeague user1, ModelUserLeague user2) {
     showDialog(
