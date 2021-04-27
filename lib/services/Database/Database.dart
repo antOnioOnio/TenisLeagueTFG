@@ -23,7 +23,7 @@ class Database {
   //-------------------------------------------------------------
   Future<void> setUser(ModelUserLeague userLeague) async {
     print("STEP 3 update it in backend==> " + userLeague.currentScore.toString());
-    await _service.setData(path: FirestorePath.userPath(uid), data: userLeague.toMap());
+    await _service.setData(path: FirestorePath.userPath(userLeague.id), data: userLeague.toMap());
   }
 
   Stream<List<ModelUserLeague>> usersStream() => _service.collectionStream(

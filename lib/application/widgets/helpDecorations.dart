@@ -52,8 +52,9 @@ BoxDecoration containerChatSelection() {
   );
 }
 
-BoxDecoration decWeekMatch() {
+BoxDecoration decWeekMatch(Color color) {
   return BoxDecoration(
+    color: color,
     border: Border(
       left: BorderSide(
         width: 0.5,

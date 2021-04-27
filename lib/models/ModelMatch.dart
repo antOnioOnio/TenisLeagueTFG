@@ -24,8 +24,23 @@ class ModelMatch extends Equatable {
       this.resultSet1,
       this.resultSet2,
       this.resultSet3,
-        this.dateMatch,
+      this.dateMatch,
       @required this.week});
+
+  ModelMatch copyWith(String idPlayerWinner, String resultSet1, String resultSet2, String resultSet3, DateTime date) {
+    return new ModelMatch(
+        id: this.id,
+        idPlayerWinner: idPlayerWinner,
+        resultSet1: resultSet1,
+        resultSet2: resultSet2,
+        resultSet3: resultSet3,
+        dateMatch: date,
+        idLeague: this.idLeague,
+        idPlayer1: this.idPlayer1,
+        idPlayer2: this.idPlayer2,
+        played: true,
+        week: this.week);
+  }
 
   factory ModelMatch.fromJson(Map<String, dynamic> json) => ModelMatch(
       id: json['id'] as String,
@@ -56,8 +71,13 @@ class ModelMatch extends Equatable {
     };
   }
 
+
+  String get getResultSet1 => resultSet1 != null ? resultSet1 : "";
+  String get getResultSet2 => resultSet2 != null ? resultSet2 : "";
+  String get getResultSet3 => resultSet3 != null ? resultSet3 : "";
+  String get getPlayerWinner => idPlayerWinner != null ? idPlayerWinner : "";
   @override
-  List<Object> get props => [id, idLeague, idPlayer1, idPlayer2, idPlayerWinner, played, resultSet1, resultSet2, resultSet3,week, dateMatch];
+  List<Object> get props => [id, idLeague, idPlayer1, idPlayer2, idPlayerWinner, played, resultSet1, resultSet2, resultSet3, week, dateMatch];
 
   @override
   String toString() {

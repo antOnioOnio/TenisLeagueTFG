@@ -92,7 +92,7 @@ class _CalendarByLevelState extends State<CalendarByLevel> {
             padding: const EdgeInsets.all(4.0),
             child: Text(
               "SEMANA " + numberWeek.toString(),
-              style: GoogleFonts.raleway(color: Color(GlobalValues.mainGreen), fontWeight: FontWeight.normal, fontSize: 13),
+              style: GoogleFonts.raleway(color: Color(GlobalValues.mainGreen), fontWeight: FontWeight.bold, fontSize: 13),
             ),
           ),
           Divider(
@@ -149,18 +149,23 @@ class _CalendarByLevelState extends State<CalendarByLevel> {
   Widget match(ModelMatch match) {
     ModelUserLeague user1 = getUserFromList(widget.users, match.idPlayer1);
     ModelUserLeague user2 = getUserFromList(widget.users, match.idPlayer2);
+    Color colorFirstCell = match.getPlayerWinner == user1.id ? Colors.green[100] : Colors.white;
+    Color colorSecondtCell = match.getPlayerWinner == user2.id ? Colors.green[100] : Colors.white;
     return Column(
       children: [
         Container(
           /*  decoration: containerChatSelection(),*/
           height: 35,
           child: GestureDetector(
-            onTap: () => user1.id == this._currentUserId || user2.id == this._currentUserId ? showDialogSetResult(context, match, user1, user2) : DoNothingAction(),
+            onTap: () => user1.id == this._currentUserId || user2.id == this._currentUserId
+                ? showDialogSetResult(context, match, user1, user2)
+                : DoNothingAction(),
             child: Row(
               children: [
                 Expanded(
                   flex: 3,
                   child: Container(
+                    color: colorFirstCell,
                     child: Row(
                       children: [
                         Padding(
@@ -186,7 +191,7 @@ class _CalendarByLevelState extends State<CalendarByLevel> {
                 Expanded(
                   flex: 3,
                   child: Container(
-                    decoration: decWeekMatch(),
+                    decoration: decWeekMatch(colorSecondtCell),
                     child: Center(
                       child: Text(
                         user2.fullName,
@@ -198,7 +203,16 @@ class _CalendarByLevelState extends State<CalendarByLevel> {
                 ),
                 Expanded(
                   flex: 3,
-                  child: Container(),
+                  child: Container(
+                    decoration: decWeekMatch(Colors.white),
+                    child: Center(
+                      child: Text(
+                        match.getResultSet1 + "  " + match.getResultSet2 + "  " + match.getResultSet3,
+                        style: GoogleFonts.raleway(color: Color(GlobalValues.blackText), fontWeight: FontWeight.bold, fontSize: 12),
+                      ),
+                    ),
+                    /* color: Colors.red,*/
+                  ),
                 ),
               ],
             ),
@@ -246,8 +260,6 @@ class _CalendarByLevelState extends State<CalendarByLevel> {
       print("\n\nDAY ==> " + (day + 1).toString());
       int teamIdx = day % teamsSize;
 
-      print(teams[teamIdx].fullName.toString() + "<==>" + listTeam[0].fullName.toString());
-
       if (teams[teamIdx].fullName != "BYE") {
         ModelMatch match = new ModelMatch(
             id: generateUuid(), idLeague: widget.leagueId, idPlayer1: teams[teamIdx].id, idPlayer2: listTeam[0].id, played: false, week: day + 1);
@@ -257,7 +269,6 @@ class _CalendarByLevelState extends State<CalendarByLevel> {
       for (int idx = 1; idx < halfSize; idx++) {
         int firstTeam = (day + idx) % teamsSize;
         int secondTeam = (day + teamsSize - idx) % teamsSize;
-        print(teams[firstTeam].fullName.toString() + "<===>" + teams[secondTeam].fullName.toString());
         if (teams[firstTeam].fullName != "BYE" && teams[secondTeam].fullName != "BYE") {
           ModelMatch match = new ModelMatch(
               id: generateUuid(),

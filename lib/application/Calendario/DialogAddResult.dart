@@ -2,14 +2,17 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
 import 'package:tenisleague100/application/widgets/helpDecorations.dart';
 import 'package:tenisleague100/application/widgets/helpWidgets.dart';
+import 'package:tenisleague100/application/widgets/showAlertDialog.dart';
 import 'package:tenisleague100/constants/GlobalValues.dart';
 import 'package:tenisleague100/models/ModelMatch.dart';
-import 'package:tenisleague100/models/ModelPlace.dart';
 import 'package:tenisleague100/models/ModelUserLeague.dart';
+import 'package:tenisleague100/services/Database/Database.dart';
+
+import '../top_providers.dart';
 
 class AddResultDialog extends StatefulWidget {
   final ModelMatch match;
@@ -53,7 +56,7 @@ class _AddResultDialogState extends State<AddResultDialog> {
       ),
       elevation: 0,
       backgroundColor: Colors.transparent,
-      child: /*_isLoading ? circularLoadingBar() :*/ mainContent(context),
+      child: mainContent(context),
     );
   }
 
@@ -133,7 +136,7 @@ class _AddResultDialogState extends State<AddResultDialog> {
         ),
         TextButton(
           onPressed: () {
-            /*  addMatch();*/
+            updateMatch(widget.match);
           },
           child: Text(
             "Guardar",
@@ -189,6 +192,57 @@ class _AddResultDialogState extends State<AddResultDialog> {
     );
   }
 
+  void updateMatch(ModelMatch match) async {
+    final database = context.read<Database>(databaseProvider);
+
+    String idPlayerWinner = getWinner();
+
+    if (idPlayerWinner != "") {
+      String resultSet1 = _dropdownValueUser1Set1 + "-" + _dropdownValueUser2Set1;
+      String resultSet2 = _dropdownValueUser1Set2 + "-" + _dropdownValueUser2Set2;
+      String resultSet3 = _dropdownValueUser1Set3 + "-" + _dropdownValueUser2Set3;
+      match = match.copyWith(idPlayerWinner, resultSet1, resultSet2, resultSet3, new DateTime.now());
+      await database.sendMatch(match);
+      await updatePlayers(idPlayerWinner);
+      Navigator.of(context).pop();
+    } else {
+      showAlertDialog(
+        context: context,
+        title: 'Foto sin rellenar',
+        content: "Hazte un selfie..",
+        defaultActionText: 'OK',
+        requiredCallback: false,
+      );
+    }
+  }
+
+  Future<void> updatePlayers(String idWinner) async {
+    final database = context.read<Database>(databaseProvider);
+    if (idWinner == widget.user1.id) {
+      ModelUserLeague userWinner = widget.user1.copyWithOneMoreMatch(true);
+      await database.setUser(userWinner);
+      ModelUserLeague userLosser = widget.user2.copyWithOneMoreMatch(false);
+      await database.setUser(userLosser);
+    } else {
+      ModelUserLeague userWinner = widget.user2.copyWithOneMoreMatch(true);
+      await database.setUser(userWinner);
+      ModelUserLeague userLosser = widget.user1.copyWithOneMoreMatch(false);
+      await database.setUser(userLosser);
+    }
+    return;
+  }
+
+  String getWinner() {
+    if (idWinnerSet1 == idWinnerSet2 || idWinnerSet1 == idWinnerSet3) {
+      return idWinnerSet1;
+    }
+    if (idWinnerSet2 == idWinnerSet3) {
+      return idWinnerSet2;
+    } else {
+      return "";
+    }
+  }
+
   double getOpacity(String set, int user) {
     if (set == "1") {
       if (user == 1) {
@@ -229,13 +283,13 @@ class _AddResultDialogState extends State<AddResultDialog> {
   Widget dropDownPlaces(int set) {
     return new Theme(
       data: Theme.of(context).copyWith(
-        canvasColor: Color(GlobalValues.mainGreen),
+        canvasColor: Colors.green[400],
       ),
       child: DropdownButton<String>(
         value: getValue(set),
         iconSize: 0,
         elevation: 16,
-        style: GoogleFonts.raleway(color: Color(GlobalValues.blackText), fontWeight: FontWeight.normal, fontSize: 14),
+        style: GoogleFonts.raleway(color: Color(GlobalValues.blackText), fontWeight: FontWeight.bold, fontSize: 14),
         underline: Container(
           height: 0,
         ),
