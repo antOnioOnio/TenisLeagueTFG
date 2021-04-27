@@ -16,7 +16,8 @@ import 'DialogAddResult.dart';
 class CalendarByLevel extends StatefulWidget {
   final String leagueId;
   final List<ModelUserLeague> users;
-  const CalendarByLevel({Key key, @required this.leagueId, @required this.users}) : super(key: key);
+  final bool justMyMatches;
+  const CalendarByLevel({Key key, @required this.leagueId, @required this.users, @required this.justMyMatches}) : super(key: key);
   @override
   _CalendarByLevelState createState() => _CalendarByLevelState();
 }
@@ -24,8 +25,8 @@ class CalendarByLevel extends StatefulWidget {
 class _CalendarByLevelState extends State<CalendarByLevel> {
   List<int> _weeks = [];
   List<ModelMatch> _matches = [];
-  List<bool> _weekClicked = [];
   String _currentUserId = "";
+
   @override
   void initState() {
     super.initState();
@@ -84,26 +85,23 @@ class _CalendarByLevelState extends State<CalendarByLevel> {
   }
 
   Widget _weekNumberWidget(int numberWeek) {
-    return GestureDetector(
-      onTap: () => changeWeekClicked(numberWeek - 1),
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(4.0),
-            child: Text(
-              "SEMANA " + numberWeek.toString(),
-              style: GoogleFonts.raleway(color: Color(GlobalValues.mainGreen), fontWeight: FontWeight.bold, fontSize: 13),
-            ),
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(4.0),
+          child: Text(
+            "SEMANA " + numberWeek.toString(),
+            style: GoogleFonts.raleway(color: Color(GlobalValues.mainGreen), fontWeight: FontWeight.bold, fontSize: 13),
           ),
-          Divider(
-            height: 1,
-            color: Color(GlobalValues.mainTextColorHint),
-          ),
-          listMatches(
-            matchesByWeek(_matches, numberWeek),
-          ),
-        ],
-      ),
+        ),
+        Divider(
+          height: 1,
+          color: Color(GlobalValues.mainTextColorHint),
+        ),
+        listMatches(
+          matchesByWeek(_matches, numberWeek),
+        ),
+      ],
     );
   }
 
@@ -121,13 +119,92 @@ class _CalendarByLevelState extends State<CalendarByLevel> {
 
   void initWeeks(int maximWeek) {
     _weeks.clear();
-    _weekClicked.clear();
     for (int i = 0; i < maximWeek; i++) {
       this._weeks.add(i + 1);
     }
-    for (var obj in _weeks) {
-      this._weekClicked.add(false);
-    }
+  }
+
+  Widget match(ModelMatch match) {
+    ModelUserLeague user1 = getUserFromList(widget.users, match.idPlayer1);
+    ModelUserLeague user2 = getUserFromList(widget.users, match.idPlayer2);
+    Color colorFirstCell = match.getPlayerWinner == user1.id ? Colors.green[100] : Colors.white;
+    Color colorSecondtCell = match.getPlayerWinner == user2.id ? Colors.green[100] : Colors.white;
+
+    return Visibility(
+      visible: getVisibilityForMatch(match),
+      child: Column(
+        children: [
+          Container(
+            height: 35,
+            child: GestureDetector(
+              onTap: () => user1.id == this._currentUserId || user2.id == this._currentUserId
+                  ? showDialogSetResult(context, match, user1, user2)
+                  : DoNothingAction(),
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 3,
+                    child: Container(
+                      color: colorFirstCell,
+                      child: Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(6.0),
+                            child: Icon(
+                              Icons.sports_baseball_rounded,
+                              size: 10,
+                              color: Color(GlobalValues.mainGreen),
+                            ),
+                          ),
+                          Expanded(
+                            child: Center(
+                              child: Text(
+                                user1.fullName,
+                                style: GoogleFonts.raleway(color: Color(GlobalValues.blackText), fontWeight: FontWeight.normal, fontSize: 12),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 3,
+                    child: Container(
+                      decoration: decWeekMatch(colorSecondtCell),
+                      child: Center(
+                        child: Text(
+                          user2.fullName,
+                          style: GoogleFonts.raleway(color: Color(GlobalValues.blackText), fontWeight: FontWeight.normal, fontSize: 12),
+                        ),
+                      ),
+                      /* color: Colors.red,*/
+                    ),
+                  ),
+                  Expanded(
+                    flex: 3,
+                    child: Container(
+                      decoration: decWeekMatch(Colors.white),
+                      child: Center(
+                        child: Text(
+                          match.getResultSet1 + "  " + match.getResultSet2 + "  " + match.getResultSet3,
+                          style: GoogleFonts.raleway(color: Color(GlobalValues.blackText), fontWeight: FontWeight.bold, fontSize: 12),
+                        ),
+                      ),
+                      /* color: Colors.red,*/
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Divider(
+            height: 1,
+            color: Color(GlobalValues.mainTextColorHint),
+          )
+        ],
+      ),
+    );
   }
 
   Widget createMatchesButton() {
@@ -146,84 +223,13 @@ class _CalendarByLevelState extends State<CalendarByLevel> {
     );
   }
 
-  Widget match(ModelMatch match) {
-    ModelUserLeague user1 = getUserFromList(widget.users, match.idPlayer1);
-    ModelUserLeague user2 = getUserFromList(widget.users, match.idPlayer2);
-    Color colorFirstCell = match.getPlayerWinner == user1.id ? Colors.green[100] : Colors.white;
-    Color colorSecondtCell = match.getPlayerWinner == user2.id ? Colors.green[100] : Colors.white;
-    return Column(
-      children: [
-        Container(
-          /*  decoration: containerChatSelection(),*/
-          height: 35,
-          child: GestureDetector(
-            onTap: () => user1.id == this._currentUserId || user2.id == this._currentUserId
-                ? showDialogSetResult(context, match, user1, user2)
-                : DoNothingAction(),
-            child: Row(
-              children: [
-                Expanded(
-                  flex: 3,
-                  child: Container(
-                    color: colorFirstCell,
-                    child: Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(6.0),
-                          child: Icon(
-                            Icons.sports_baseball_rounded,
-                            size: 10,
-                            color: Color(GlobalValues.mainGreen),
-                          ),
-                        ),
-                        Expanded(
-                          child: Center(
-                            child: Text(
-                              user1.fullName,
-                              style: GoogleFonts.raleway(color: Color(GlobalValues.blackText), fontWeight: FontWeight.normal, fontSize: 12),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Expanded(
-                  flex: 3,
-                  child: Container(
-                    decoration: decWeekMatch(colorSecondtCell),
-                    child: Center(
-                      child: Text(
-                        user2.fullName,
-                        style: GoogleFonts.raleway(color: Color(GlobalValues.blackText), fontWeight: FontWeight.normal, fontSize: 12),
-                      ),
-                    ),
-                    /* color: Colors.red,*/
-                  ),
-                ),
-                Expanded(
-                  flex: 3,
-                  child: Container(
-                    decoration: decWeekMatch(Colors.white),
-                    child: Center(
-                      child: Text(
-                        match.getResultSet1 + "  " + match.getResultSet2 + "  " + match.getResultSet3,
-                        style: GoogleFonts.raleway(color: Color(GlobalValues.blackText), fontWeight: FontWeight.bold, fontSize: 12),
-                      ),
-                    ),
-                    /* color: Colors.red,*/
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        Divider(
-          height: 1,
-          color: Color(GlobalValues.mainTextColorHint),
-        )
-      ],
-    );
+  bool getVisibilityForMatch(ModelMatch match) {
+    if (widget.justMyMatches && (match.idPlayer1 == _currentUserId || match.idPlayer2 == _currentUserId)) {
+      return true;
+    } else if (!widget.justMyMatches) {
+      return true;
+    }
+    return false;
   }
 
   void showDialogSetResult(BuildContext context, ModelMatch match, ModelUserLeague user1, ModelUserLeague user2) {
@@ -297,11 +303,5 @@ class _CalendarByLevelState extends State<CalendarByLevel> {
       }
     }
     return list;
-  }
-
-  void changeWeekClicked(int week) {
-    setState(() {
-      this._weekClicked[week] = !this._weekClicked[week];
-    });
   }
 }

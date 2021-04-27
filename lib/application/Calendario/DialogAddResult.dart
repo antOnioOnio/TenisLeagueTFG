@@ -42,10 +42,7 @@ class _AddResultDialogState extends State<AddResultDialog> {
   @override
   void initState() {
     super.initState();
-/*    DateTime now = DateTime.now();
-    _selectedDateIndate = DateTime(now.year, now.month, now.day);
-    _selectedTime = TimeOfDay(hour: now.hour, minute: now.minute);
-    _time = "00:00";*/
+
   }
 
   @override
@@ -78,7 +75,6 @@ class _AddResultDialogState extends State<AddResultDialog> {
                   height: 15,
                 ),
                 Row(
-                  /* mainAxisAlignment: MainAxisAlignment.spaceEvenly,*/
                   children: [
                     Expanded(flex: 4, child: customAvatar(bytesUser1)),
                     Expanded(
@@ -192,6 +188,35 @@ class _AddResultDialogState extends State<AddResultDialog> {
     );
   }
 
+  Widget dropDownPlaces(int set) {
+    return new Theme(
+      data: Theme.of(context).copyWith(
+        canvasColor: Colors.green[400],
+      ),
+      child: DropdownButton<String>(
+        value: getValue(set),
+        iconSize: 0,
+        elevation: 16,
+        style: GoogleFonts.raleway(color: Color(GlobalValues.blackText), fontWeight: FontWeight.bold, fontSize: 14),
+        underline: Container(
+          height: 0,
+        ),
+        onChanged: (String newValue) {
+          setValueDropDown(newValue, set);
+        },
+        items: valuesSet.map<DropdownMenuItem<String>>((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Text(
+              value.toString(),
+              style: GoogleFonts.raleway(color: Color(GlobalValues.blackText), fontWeight: FontWeight.normal, fontSize: 14),
+            ),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
   void updateMatch(ModelMatch match) async {
     final database = context.read<Database>(databaseProvider);
 
@@ -208,8 +233,8 @@ class _AddResultDialogState extends State<AddResultDialog> {
     } else {
       showAlertDialog(
         context: context,
-        title: 'Foto sin rellenar',
-        content: "Hazte un selfie..",
+        title: 'Contenido mal rellenado',
+        content: "No hay ganador aún, rellena bien los sets..",
         defaultActionText: 'OK',
         requiredCallback: false,
       );
@@ -278,35 +303,6 @@ class _AddResultDialogState extends State<AddResultDialog> {
       }
     }
     return 0;
-  }
-
-  Widget dropDownPlaces(int set) {
-    return new Theme(
-      data: Theme.of(context).copyWith(
-        canvasColor: Colors.green[400],
-      ),
-      child: DropdownButton<String>(
-        value: getValue(set),
-        iconSize: 0,
-        elevation: 16,
-        style: GoogleFonts.raleway(color: Color(GlobalValues.blackText), fontWeight: FontWeight.bold, fontSize: 14),
-        underline: Container(
-          height: 0,
-        ),
-        onChanged: (String newValue) {
-          setValueDropDown(newValue, set);
-        },
-        items: valuesSet.map<DropdownMenuItem<String>>((String value) {
-          return DropdownMenuItem<String>(
-            value: value,
-            child: Text(
-              value.toString(),
-              style: GoogleFonts.raleway(color: Color(GlobalValues.blackText), fontWeight: FontWeight.normal, fontSize: 14),
-            ),
-          );
-        }).toList(),
-      ),
-    );
   }
 
   void setValueDropDown(String newValue, int i) {

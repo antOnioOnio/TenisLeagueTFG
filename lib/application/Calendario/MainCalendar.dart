@@ -18,6 +18,7 @@ class MainCalendar extends StatefulWidget {
 class _MainCalendarState extends State<MainCalendar> {
   List<ModelLeague> _currentLeagues = [];
   List<ModelUserLeague> _users = [];
+  ModelUserLeague _currentUser;
   bool _isLoading;
   String _levelPrincipianteId = "";
   String _levelMedioId = "";
@@ -61,20 +62,25 @@ class _MainCalendarState extends State<MainCalendar> {
     return Expanded(
       child: TabBarView(
         children: [
-          Container(
-            color: Colors.blueAccent,
+          CalendarByLevel(
+            leagueId: this._levelPrincipianteId,
+            users: userByLevel(_users, _currentUser.level),
+            justMyMatches: true,
           ),
           CalendarByLevel(
             leagueId: this._levelPrincipianteId,
             users: userByLevel(_users, GlobalValues.levelPrincipiante),
+            justMyMatches: false,
           ),
           CalendarByLevel(
             leagueId: this._levelMedioId,
             users: userByLevel(_users, GlobalValues.leveMedio),
+            justMyMatches: false,
           ),
           CalendarByLevel(
             leagueId: this._levelAvanzadoId,
             users: userByLevel(_users, GlobalValues.levelAvanzado),
+            justMyMatches: false,
           ),
         ],
       ),
@@ -128,6 +134,7 @@ class _MainCalendarState extends State<MainCalendar> {
       }
     }
     _users = await database.getUserCollection();
+    _currentUser = await database.getCurrentUser();
     setState(() {
       _isLoading = false;
     });
