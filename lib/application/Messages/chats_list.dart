@@ -35,7 +35,7 @@ class _ChatsState extends State<Chats> {
   @override
   void initState() {
     super.initState();
-    setCurrentUserId();
+    getCurrentUserId();
     getUsers();
   }
 
@@ -94,7 +94,10 @@ class _ChatsState extends State<Chats> {
           onTap: () {
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => MainChat(modelUserLeague: user),
+                builder: (context) => MainChat(
+                  modelUserLeague: user,
+                  currentUserid: _currentUserId,
+                ),
               ),
             );
           },
@@ -158,7 +161,7 @@ class _ChatsState extends State<Chats> {
     );
   }
 
-  void setCurrentUserId() async {
+  void getCurrentUserId() async {
     final sp = context.read<SharedPreferencesService>(sharedPreferencesServiceProvider);
     _currentUserId = await sp.getCurrentUSerId();
   }

@@ -27,7 +27,6 @@ class _MessageListState extends State<MessageList> {
   final _controller = ScrollController();
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     _controller.dispose();
   }
@@ -60,7 +59,9 @@ class _MessageListState extends State<MessageList> {
   }
 
   Widget filterMessages(List<ModelMessage> list) {
+    print("list size ==> " + list.length.toString());
     List<ModelMessage> msgToShow = [];
+
     if (list.isNotEmpty) {
       for (var obj in list) {
         if (obj.idUserSendTo == widget.currentUserId || obj.idUser == widget.currentUserId) {
