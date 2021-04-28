@@ -9,8 +9,10 @@ import 'package:tenisleague100/application/widgets/helpWidgets.dart';
 import 'package:tenisleague100/application/widgets/showAlertDialog.dart';
 import 'package:tenisleague100/constants/GlobalValues.dart';
 import 'package:tenisleague100/models/ModelMatch.dart';
+import 'package:tenisleague100/models/ModelPost.dart';
 import 'package:tenisleague100/models/ModelUserLeague.dart';
 import 'package:tenisleague100/services/Database/Database.dart';
+import 'package:tenisleague100/services/GlobalMethods.dart';
 
 import '../top_providers.dart';
 
@@ -42,7 +44,6 @@ class _AddResultDialogState extends State<AddResultDialog> {
   @override
   void initState() {
     super.initState();
-
   }
 
   @override
@@ -221,13 +222,22 @@ class _AddResultDialogState extends State<AddResultDialog> {
     final database = context.read<Database>(databaseProvider);
 
     String idPlayerWinner = getWinner();
-
+    String nameUserWinner = idPlayerWinner == widget.user1.id ? widget.user1.fullName : widget.user2.fullName;
+    String nameUserLoser = idPlayerWinner == widget.user1.id ? widget.user2.fullName : widget.user1.fullName;
     if (idPlayerWinner != "") {
       String resultSet1 = _dropdownValueUser1Set1 + "-" + _dropdownValueUser2Set1;
       String resultSet2 = _dropdownValueUser1Set2 + "-" + _dropdownValueUser2Set2;
       String resultSet3 = _dropdownValueUser1Set3 + "-" + _dropdownValueUser2Set3;
       match = match.copyWith(idPlayerWinner, resultSet1, resultSet2, resultSet3, new DateTime.now());
       await database.sendMatch(match);
+      await database.sendPost(new ModelPost(
+          id: generateUuid(),
+          idUser: idPlayerWinner,
+          nameOfUser: nameUserWinner,
+          content: nameUserWinner + " ha ganado a " + nameUserLoser + " por " + resultSet1 + " " + resultSet2 + " " + resultSet3,
+          imageUser: null,
+          postType: ModelPost.matchResult,
+          createdAt: DateTime.now()));
       await updatePlayers(idPlayerWinner);
       Navigator.of(context).pop();
     } else {

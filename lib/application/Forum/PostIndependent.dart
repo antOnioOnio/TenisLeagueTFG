@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:tenisleague100/application/Forum/ForumViewModel.dart';
 import 'package:tenisleague100/application/Forum/TypesPostWidgets/EventWidget.dart';
+import 'package:tenisleague100/application/Forum/TypesPostWidgets/MatchResultWidget.dart';
 import 'package:tenisleague100/application/Forum/TypesPostWidgets/PictureWidget.dart';
 import 'package:tenisleague100/application/Forum/TypesPostWidgets/PropMatchWidget.dart';
 import 'package:tenisleague100/application/Forum/TypesPostWidgets/commomWidgets.dart';
@@ -92,6 +93,15 @@ class _PostIndependentState extends State<PostIndependent> {
           comingFromIndependent: true,
         ),
       );
+    } else if (modelPost.postType == ModelPost.matchResult) {
+      return Hero(
+        tag: modelPost.id,
+        child: MatchResultWidget(
+          modelView: widget.viewModel,
+          modelPost: modelPost,
+          comingFromIndependent: true,
+        ),
+      );
     }
   }
 
@@ -110,7 +120,7 @@ class _PostIndependentState extends State<PostIndependent> {
               } else {
                 final comments = snapshot.data;
                 return comments.isEmpty
-                    ? Text("No hay comments..")
+                    ? Text("No hay comentarios..")
                     : ListView.builder(
                         physics: BouncingScrollPhysics(),
                         reverse: false,

@@ -58,7 +58,6 @@ class _CalendarByLevelState extends State<CalendarByLevel> {
                   return circularLoadingBar();
                 default:
                   if (snapshot.hasError) {
-                    print("there is an error");
                     return circularLoadingBar();
                   } else {
                     final matches = snapshot.data;
@@ -136,7 +135,7 @@ class _CalendarByLevelState extends State<CalendarByLevel> {
           Container(
             height: 35,
             child: GestureDetector(
-              onTap: () => user1.id == this._currentUserId || user2.id == this._currentUserId
+              onTap: () => (user1.id == this._currentUserId || user2.id == this._currentUserId) && match.idPlayerWinner == null
                   ? showDialogSetResult(context, match, user1, user2)
                   : DoNothingAction(),
               child: Row(

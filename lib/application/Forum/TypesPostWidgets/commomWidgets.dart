@@ -168,7 +168,6 @@ Widget typingContainer(TextEditingController _messageController, Function functi
   );
 }
 
-
 Future<void> showWriteDialog(BuildContext context) {
   return showDialog(
     context: context,
