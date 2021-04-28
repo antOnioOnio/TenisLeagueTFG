@@ -36,6 +36,22 @@ Widget circularLoadingBar() {
   );
 }
 
+Widget customAvatarBigger(Uint8List bytes) {
+  return CircleAvatar(
+    backgroundColor: Color(GlobalValues.mainGreen),
+    radius: 43,
+    child: ClipRRect(
+      borderRadius: BorderRadius.circular(40),
+      child: new Image.memory(
+        bytes,
+        fit: BoxFit.fill,
+        height: 80,
+        width: 80,
+      ),
+    ),
+  );
+}
+
 Widget customAvatar(Uint8List bytes) {
   return CircleAvatar(
     backgroundColor: Color(GlobalValues.mainGreen),
@@ -78,3 +94,4 @@ Widget headerTabBar(BuildContext context) {
     ),
   );
 }
+

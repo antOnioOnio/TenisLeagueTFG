@@ -129,7 +129,6 @@ class _CalendarByLevelState extends State<CalendarByLevel> {
     ModelUserLeague user2 = getUserFromList(widget.users, match.idPlayer2);
     Color colorFirstCell = match.getPlayerWinner == user1.id ? Colors.green[100] : Colors.white;
     Color colorSecondtCell = match.getPlayerWinner == user2.id ? Colors.green[100] : Colors.white;
-
     return Visibility(
       visible: getVisibilityForMatch(match),
       child: Column(
@@ -223,7 +222,6 @@ class _CalendarByLevelState extends State<CalendarByLevel> {
     );
   }
 
-
   bool getVisibilityForMatch(ModelMatch match) {
     if (widget.justMyMatches && (match.idPlayer1 == _currentUserId || match.idPlayer2 == _currentUserId)) {
       return true;
@@ -232,7 +230,6 @@ class _CalendarByLevelState extends State<CalendarByLevel> {
     }
     return false;
   }
-
 
   void showDialogSetResult(BuildContext context, ModelMatch match, ModelUserLeague user1, ModelUserLeague user2) {
     showDialog(
