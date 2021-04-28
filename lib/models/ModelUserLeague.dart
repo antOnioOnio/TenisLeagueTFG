@@ -59,6 +59,7 @@ class ModelUserLeague extends Equatable {
         'matchLosses': this.matchLosses,
       };
 
+  String get getFulleName => fullName != null ? fullName : "BYE";
   @override
   String toString() {
     return 'ModelUserLeague{id: $id, fullName: $fullName, email: $email, level: $level, tlf: $tlf,  currentScore: $currentScore, matchPlayed: $matchPlayed, matchWins: $matchWins, matchLosses: $matchLosses}';

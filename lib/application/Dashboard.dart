@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tenisleague100/application/Calendario/MainCalendar.dart';
+import 'package:tenisleague100/application/Draw/MainDraw.dart';
 import 'package:tenisleague100/application/League/MainLeague.dart';
 import 'package:tenisleague100/application/Messages/chats_list.dart';
 import 'package:tenisleague100/application/Settings/settings.dart';
@@ -18,7 +19,15 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
   int _selectedIndex = 0;
   static const TextStyle optionStyle = TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  static List<Widget> _widgetOptions = <Widget>[Forum(), MainUsers(), MainLeague(), MainCalendar(), SettingsPage(), Chats()];
+  static List<Widget> _widgetOptions = <Widget>[
+    Forum(),
+    MainUsers(),
+    MainLeague(),
+    MainCalendar(),
+    MainDraw(),
+    SettingsPage(),
+    Chats(),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -43,6 +52,10 @@ class _DashboardState extends State<Dashboard> {
           BottomNavigationBarItem(
             icon: Icon(Icons.calendar_today),
             label: 'Calendario',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.sports_tennis_outlined),
+            label: 'Fase Final',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.settings),
