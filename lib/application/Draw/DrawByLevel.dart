@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:tenisleague100/application/widgets/helpDecorations.dart';
 import 'package:tenisleague100/application/widgets/helpWidgets.dart';
-import 'package:tenisleague100/constants/GlobalValues.dart';
+import 'package:tenisleague100/models/ModelMatch.dart';
 import 'package:tenisleague100/models/ModelUserLeague.dart';
+
+import 'package:tenisleague100/services/GlobalMethods.dart';
+
+import 'dart:math' as math;
 
 class DrawByLevel extends StatefulWidget {
   final List<ModelUserLeague> users;
@@ -15,19 +18,77 @@ class DrawByLevel extends StatefulWidget {
 
 class _DrawByLevelState extends State<DrawByLevel> {
   List<Widget> widgets = [];
+  List<ModelUserLeague> users;
+  List<ModelMatch> matches = [];
   bool _isLoading;
+  int lenghtTournament;
   @override
   void initState() {
     super.initState();
+    users = widget.users;
+    lenghtTournament = findLenght(widget.users.length);
+    reOrderArraY();
     initWidgets();
+  }
+
+  /*1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16
+
+  (1, 16),  (2, 15),  (3, 14),  (4, 13),   (5, 12),   (6, 11),   (7, 10),   (8, 9)
+
+  (1, 16, 8, 9),  (2, 15, 7, 10),  (3, 14, 6, 11),  (4, 13, 5, 12)
+
+  (1, 16, 8, 9, 4, 13, 5, 12),  (2, 15, 7, 10, 3, 14, 6, 11)*/
+  void reOrderArraY() {
+    for (int i = widget.users.length; i < lenghtTournament; i++) {
+      users.add(new ModelUserLeague(fullName: "BYE", id: generateUuid()));
+    }
+    List<ModelUserLeague> list = users;
+
+    int lenght = (list.length / 2).toInt();
+    int iter = lenght;
+    int slice = 1;
+    while (slice < lenght) {
+      List<ModelUserLeague> temp = list;
+      Iterable iterable = temp.reversed;
+      List<ModelUserLeague> listReversed = iterable.toList();
+      list = [];
+
+      for (int i = 0; i < iter; i++) {
+        List<ModelUserLeague> subBeg = temp.sublist(0, slice);
+        for (var obj in subBeg) temp.remove(obj);
+        List<ModelUserLeague> subRev = listReversed.sublist(0, slice);
+        for (var obj in subRev) listReversed.remove(obj);
+        list.addAll(subBeg);
+        list.addAll(subRev);
+      }
+      slice = slice * 2;
+      iter = (iter / 2).toInt();
+    }
+
+    users = list;
+    for (int i = 0; i < list.length; i = i + 2) {
+      matches.add(
+          new ModelMatch(id: generateUuid(), idLeague: generateUuid(), idPlayer1: users[i].id, idPlayer2: users[i + 1].id, played: false, week: 0));
+    }
   }
 
   void initWidgets() {
     setState(() {
       _isLoading = true;
     });
-    for (var i = 0; i < widget.users.length; i++) {
-      widgets.add(new Text(widget.users[i].fullName));
+
+    for (var i = 0; i < matches.length; i++) {
+      ModelUserLeague player1 = getUserFromList(users, matches[i].idPlayer1);
+      ModelUserLeague player2 = getUserFromList(users, matches[i].idPlayer2);
+      widgets.add(Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            new Container(width: 100, height: 30, color: Colors.green, child: Text(player1.fullName)),
+            new Container(width: 100, height: 30, color: Colors.green, child: Text(player2.fullName)),
+          ],
+        ),
+      ));
     }
     setState(() {
       _isLoading = false;
@@ -40,13 +101,19 @@ class _DrawByLevelState extends State<DrawByLevel> {
       decoration: containerChatSelection(),
       margin: EdgeInsets.only(top: 10),
       child: _isLoading ? circularLoadingBar() : mainListUsers(),
+      /* child: Text("somehit"),*/
     );
   }
 
   Widget mainListUsers() {
     return Container(
-      child: Column(
-        children: widgets,
+      padding: EdgeInsets.all(8),
+      child: Row(
+        children: [
+          Column(
+            children: widgets,
+          ),
+        ],
       ),
     );
   }
