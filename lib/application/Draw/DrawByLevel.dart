@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:tenisleague100/application/widgets/helpDecorations.dart';
 import 'package:tenisleague100/application/widgets/helpWidgets.dart';
 import 'package:tenisleague100/models/ModelMatch.dart';
@@ -17,7 +18,11 @@ class DrawByLevel extends StatefulWidget {
 }
 
 class _DrawByLevelState extends State<DrawByLevel> {
-  List<Widget> widgets = [];
+  List<Widget> firstRound = [];
+  List<Widget> secondRound = [];
+  List<Widget> thirdRound = [];
+  List<Widget> fourthRound = [];
+  List<Widget> fithRound = [];
   List<ModelUserLeague> users;
   List<ModelMatch> matches = [];
   bool _isLoading;
@@ -39,7 +44,7 @@ class _DrawByLevelState extends State<DrawByLevel> {
 
   (1, 16, 8, 9, 4, 13, 5, 12),  (2, 15, 7, 10, 3, 14, 6, 11)*/
   void reOrderArraY() {
-    for (int i = widget.users.length; i < lenghtTournament; i++) {
+    for (int i = widget.users.length; i < 16; i++) {
       users.add(new ModelUserLeague(fullName: "BYE", id: generateUuid()));
     }
     List<ModelUserLeague> list = users;
@@ -80,16 +85,204 @@ class _DrawByLevelState extends State<DrawByLevel> {
     for (var i = 0; i < matches.length; i++) {
       ModelUserLeague player1 = getUserFromList(users, matches[i].idPlayer1);
       ModelUserLeague player2 = getUserFromList(users, matches[i].idPlayer2);
-      widgets.add(Padding(
-        padding: const EdgeInsets.all(8.0),
+      /*  String result = matches[i].getResultSet1*/
+      firstRound.add(Padding(
+        padding: const EdgeInsets.all(4.0),
+        child: Container(
+          decoration: drawDeco(),
+          width: 90,
+          height: 80,
+          child: Column(
+            children: [
+              SizedBox(
+                height: 5,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(2.0),
+                child: Text(
+                  player1.fullName,
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.raleway(fontWeight: FontWeight.normal, fontSize: 10),
+                ),
+              ),
+              Container(
+                decoration: resultDraw(),
+                width: 50,
+                child: Text(""),
+              ),
+              SizedBox(
+                height: 8,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(2.0),
+                child: Text(
+                  player2.fullName,
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.raleway(fontWeight: FontWeight.normal, fontSize: 10),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ));
+    }
+
+    for (int i = 0; i < matches.length / 2; i++) {
+      secondRound.add(Padding(
+        padding: const EdgeInsets.all(4.0),
         child: Column(
           children: [
-            new Container(width: 100, height: 30, color: Colors.green, child: Text(player1.fullName)),
-            new Container(width: 100, height: 30, color: Colors.green, child: Text(player2.fullName)),
+            Container(
+              height: 40,
+            ),
+            Container(
+              decoration: drawDeco(),
+              width: 90,
+              height: 80,
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(2.0),
+                    child: Text(
+                      "Player 1",
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.raleway(fontWeight: FontWeight.normal, fontSize: 10),
+                    ),
+                  ),
+                  Container(
+                    decoration: resultDraw(),
+                    width: 50,
+                    child: Text(""),
+                  ),
+                  SizedBox(
+                    height: 8,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(2.0),
+                    child: Text(
+                      "Player 2",
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.raleway(fontWeight: FontWeight.normal, fontSize: 10),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              height: 40,
+            ),
           ],
         ),
       ));
     }
+
+    if (matches.length / 4 >= 1) {
+      print("matches / 4 " + (matches.length / 4).toString());
+      for (int i = 0; i < matches.length / 4; i++) {
+        print("i==> " + i.toString());
+        thirdRound.add(Padding(
+          padding: const EdgeInsets.all(4.0),
+          child: Column(
+            children: [
+              Column(
+                children: [
+                  Container(
+                    height: 120,
+                  ),
+                  Container(
+                    decoration: drawDeco(),
+                    width: 90,
+                    height: 80,
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(2.0),
+                          child: Text(
+                            "Player 1",
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.raleway(fontWeight: FontWeight.normal, fontSize: 10),
+                          ),
+                        ),
+                        Container(
+                          decoration: resultDraw(),
+                          width: 50,
+                          child: Text(""),
+                        ),
+                        SizedBox(
+                          height: 8,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(2.0),
+                          child: Text(
+                            "Player 2",
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.raleway(fontWeight: FontWeight.normal, fontSize: 10),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    height: 120,
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ));
+      }
+    }
+
+    if (matches.length / 8 >= 1) {
+      for (int i = 0; i < matches.length / 8; i++) {
+        fourthRound.add(Padding(
+          padding: const EdgeInsets.all(4.0),
+          child: Container(
+            decoration: drawDeco(),
+            width: 90,
+            height: 80,
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 5,
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(2.0),
+                  child: Text(
+                    "Player 1",
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.raleway(fontWeight: FontWeight.normal, fontSize: 10),
+                  ),
+                ),
+                Container(
+                  decoration: resultDraw(),
+                  width: 50,
+                  child: Text(""),
+                ),
+                SizedBox(
+                  height: 8,
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(2.0),
+                  child: Text(
+                    "Player 2",
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.raleway(fontWeight: FontWeight.normal, fontSize: 10),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ));
+      }
+    }
+
     setState(() {
       _isLoading = false;
     });
@@ -106,14 +299,28 @@ class _DrawByLevelState extends State<DrawByLevel> {
   }
 
   Widget mainListUsers() {
-    return Container(
-      padding: EdgeInsets.all(8),
-      child: Row(
-        children: [
-          Column(
-            children: widgets,
-          ),
-        ],
+    return SingleChildScrollView(
+      child: Container(
+        padding: EdgeInsets.all(8),
+        child: Row(
+          children: [
+            Column(
+              children: firstRound,
+            ),
+            Column(
+              children: secondRound,
+            ),
+            Column(
+              children: thirdRound,
+            ),
+            Column(
+              children: fourthRound,
+            ),
+            Column(
+              children: fithRound,
+            ),
+          ],
+        ),
       ),
     );
   }

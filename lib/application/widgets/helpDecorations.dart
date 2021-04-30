@@ -52,6 +52,28 @@ BoxDecoration containerChatSelection() {
   );
 }
 
+BoxDecoration resultDraw() {
+  return BoxDecoration(
+    /*   color: Colors.transparent,*/
+    border: Border(
+      bottom: BorderSide(
+        width: 0.5,
+        color: Color(GlobalValues.mainGreen),
+      ),
+    ),
+  );
+}
+
+BoxDecoration drawDeco() {
+  return BoxDecoration(
+    color: Colors.grey[100],
+    border: Border.all(
+      width: 0.5,
+      color: Color(GlobalValues.mainGreen),
+    ),
+  );
+}
+
 BoxDecoration decWeekMatch(Color color) {
   return BoxDecoration(
     color: color,
