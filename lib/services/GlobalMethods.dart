@@ -54,3 +54,15 @@ int findLenght(int i) {
   }
 }
 
+String getCompleteResult(String set1, String set2, String set3){
+  if(set1 != null && set2 != null){
+    String result = set1 + " " + set2;
+    if(set3!= null){
+      result += " " + set3;
+    }
+  }else {
+    return "";
+  }
+}
+
+

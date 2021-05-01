@@ -13,6 +13,7 @@ import 'package:tenisleague100/application/widgets/helpDecorations.dart';
 import 'package:tenisleague100/application/widgets/helpWidgets.dart';
 import 'package:tenisleague100/application/widgets/showAlertDialog.dart';
 import 'package:tenisleague100/constants/GlobalValues.dart';
+import 'package:tenisleague100/models/ModelLeague.dart';
 import 'package:tenisleague100/models/ModelMatch.dart';
 import 'package:tenisleague100/models/ModelUserLeague.dart';
 import 'package:tenisleague100/services/Database/Database.dart';
@@ -173,10 +174,11 @@ class _SettingsPageState extends State<SettingsPage> {
               SizedBox(
                 height: 15.0,
               ),
-              RowButtons(user),
+              RowButtonsCreate(),
               SizedBox(
                 height: 20.0,
               ),
+              RowButtons(user),
             ],
           )
         ],
@@ -359,6 +361,47 @@ class _SettingsPageState extends State<SettingsPage> {
         ),
       ],
     );
+  }
+
+  Widget RowButtonsCreate() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Container(
+          width: 200,
+          child: FlatButton(
+            onPressed: () => {createLeaguesAndTournament()},
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            color: Color(GlobalValues.mainGreen),
+            child: Text(
+              "Crear ligas y fase final",
+              style: GoogleFonts.raleway(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  void createLeaguesAndTournament() async {
+    final database = context.read<Database>(databaseProvider);
+    ModelLeague leagueB = new ModelLeague(id: generateUuid(), level: GlobalValues.levelPrincipiante, dateLeague: DateTime.now());
+    ModelLeague leagueP = new ModelLeague(id: generateUuid(), level: GlobalValues.leveMedio, dateLeague: DateTime.now());
+    ModelLeague leagueA = new ModelLeague(id: generateUuid(), level: GlobalValues.levelAvanzado, dateLeague: DateTime.now());
+
+    await database.sendLeague(leagueB);
+    await database.sendLeague(leagueP);
+    await database.sendLeague(leagueA);
+
+    ModelLeague tournamentB = new ModelLeague(id: generateUuid(), level: GlobalValues.levelPrincipiante, dateLeague: DateTime.now());
+    ModelLeague tournamentP = new ModelLeague(id: generateUuid(), level: GlobalValues.leveMedio, dateLeague: DateTime.now());
+    ModelLeague tournamentA = new ModelLeague(id: generateUuid(), level: GlobalValues.levelAvanzado, dateLeague: DateTime.now());
+
+    await database.sendTournament(tournamentB);
+    await database.sendTournament(tournamentP);
+    await database.sendTournament(tournamentA);
   }
 
   void saveChanges(FirebaseAuth firebaseAuth) async {

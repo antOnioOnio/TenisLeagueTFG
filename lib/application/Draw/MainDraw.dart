@@ -5,6 +5,7 @@ import 'package:tenisleague100/application/widgets/helpDecorations.dart';
 import 'package:tenisleague100/application/widgets/helpWidgets.dart';
 import 'package:tenisleague100/application/widgets/showAlertDialog.dart';
 import 'package:tenisleague100/constants/GlobalValues.dart';
+import 'package:tenisleague100/models/ModelLeague.dart';
 import 'package:tenisleague100/models/ModelUserLeague.dart';
 import 'package:tenisleague100/services/Database/Database.dart';
 import 'package:tenisleague100/services/GlobalMethods.dart';
@@ -17,12 +18,17 @@ class MainDraw extends StatefulWidget {
 
 class _MainDrawState extends State<MainDraw> {
   List<ModelUserLeague> _everyUser = [];
+  List<ModelLeague> _currentTournaments = [];
   bool _isLoading;
+  String _levelPrincipianteId = "";
+  String _levelMedioId = "";
+  String _levelAvanzadoId = "";
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    getUsers();
+    getTournamentsAndUsers();
   }
 
   @override
@@ -53,33 +59,47 @@ class _MainDrawState extends State<MainDraw> {
           );
   }
 
-  void getUsers() async {
-    print("geUsers called");
-    final database = context.read<Database>(databaseProvider);
-    setState(() {
-      _isLoading = true;
-    });
-    _everyUser = await database.getUserCollection();
-    setState(() {
-      _isLoading = false;
-    });
-  }
-
   Widget pages() {
     return Expanded(
       child: TabBarView(
         children: [
           DrawByLevel(
             users: userByLevel(_everyUser, GlobalValues.levelPrincipiante),
+            tournamentID: this._levelPrincipianteId ,
           ),
           DrawByLevel(
             users: userByLevel(_everyUser, GlobalValues.leveMedio),
+            tournamentID: this._levelMedioId,
           ),
           DrawByLevel(
             users: userByLevel(_everyUser, GlobalValues.levelAvanzado),
+            tournamentID: this._levelAvanzadoId,
           ),
         ],
       ),
     );
   }
+
+  void getTournamentsAndUsers() async {
+    print("geUsers called");
+    final database = context.read<Database>(databaseProvider);
+    setState(() {
+      _isLoading = true;
+    });
+    _currentTournaments = await database.getTournamentCollection();
+    for (var league in _currentTournaments) {
+      if (league.level == GlobalValues.levelPrincipiante) {
+        this._levelPrincipianteId = league.id;
+      } else if (league.level == GlobalValues.levelAvanzado) {
+        this._levelAvanzadoId = league.id;
+      } else if (league.level == GlobalValues.leveMedio) {
+        this._levelMedioId = league.id;
+      }
+    }
+    _everyUser = await database.getUserCollection();
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
 }

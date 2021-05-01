@@ -181,9 +181,40 @@ class Database {
     );
   }
 
+  Future<void> sendTournament(ModelLeague league) async {
+    await _service.setData(
+      path: FirestorePath.tournament(league.id),
+      data: league.toMap(),
+    );
+  }
+
+  Future<void> sendMatchTournament(ModelMatch match) async {
+    await _service.setData(
+      path: FirestorePath.matchTournament(match.idLeague, match.id),
+      data: match.toJson(),
+    );
+  }
+
+
   Future<List<ModelLeague>> getLeaguesCollection() async {
     List<ModelLeague> leaguesToReturn = [];
     CollectionReference _collectionRef = FirebaseFirestore.instance.collection(FirestorePath.leaguesStream);
+    // Get docs from collection reference
+    QuerySnapshot querySnapshot = await _collectionRef.get();
+
+    // Get data from docs and convert map to List
+    final allData = querySnapshot.docs.map((doc) => doc.data()).toList();
+
+    for (var obj in allData) {
+      leaguesToReturn.add(new ModelLeague.fromJson(obj));
+    }
+    return leaguesToReturn;
+  }
+
+
+  Future<List<ModelLeague>> getTournamentCollection() async {
+    List<ModelLeague> leaguesToReturn = [];
+    CollectionReference _collectionRef = FirebaseFirestore.instance.collection(FirestorePath.tournamentStream);
     // Get docs from collection reference
     QuerySnapshot querySnapshot = await _collectionRef.get();
 
@@ -202,9 +233,31 @@ class Database {
         sort: (msg1, msg2) => msg1.week.compareTo(msg2.week),
       );
 
+  Stream<List<ModelMatch>> matchesTournamentStream(String idLeague) => _service.collectionStream(
+    path: FirestorePath.matchesTournament(idLeague),
+    builder: (data, documentId) => ModelMatch.fromJson(data),
+    sort: (msg1, msg2) => msg1.week.compareTo(msg2.week),
+  );
+
+
   Future<List<ModelMatch>> getMatchesCollection(String idLeague) async {
     List<ModelMatch> matchesToReturn = [];
     CollectionReference _collectionRef = FirebaseFirestore.instance.collection(FirestorePath.matches(idLeague));
+    // Get docs from collection reference
+    QuerySnapshot querySnapshot = await _collectionRef.get();
+
+    // Get data from docs and convert map to List
+    final allData = querySnapshot.docs.map((doc) => doc.data()).toList();
+
+    for (var obj in allData) {
+      matchesToReturn.add(new ModelMatch.fromJson(obj));
+    }
+    return matchesToReturn;
+  }
+
+  Future<List<ModelMatch>> getMatchesTournamentCollection(String idLeague) async {
+    List<ModelMatch> matchesToReturn = [];
+    CollectionReference _collectionRef = FirebaseFirestore.instance.collection(FirestorePath.matchesTournament(idLeague));
     // Get docs from collection reference
     QuerySnapshot querySnapshot = await _collectionRef.get();
 
