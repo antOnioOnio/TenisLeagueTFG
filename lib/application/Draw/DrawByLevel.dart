@@ -34,24 +34,13 @@ class _DrawByLevelState extends State<DrawByLevel> {
   bool _isLoading;
   int lenghtUsersInTournament;
   int firstRoundLenght;
+
   @override
   void initState() {
     super.initState();
     users = widget.users;
     lenghtUsersInTournament = findLenght(widget.users.length);
-    getMatches();
-  }
-
-  void getMatches() async {
-    final database = context.read<Database>(databaseProvider);
-    setState(() {
-      _isLoading = true;
-    });
-
-    this.matches = await database.getMatchesTournamentCollection(widget.tournamentID);
-    firstRoundLenght = (matches.length + 1) ~/ 2;
-    print("matches size==>" + matches.length.toString());
-    initWidgets();
+    getMatches(false);
   }
 
   @override
@@ -102,7 +91,9 @@ class _DrawByLevelState extends State<DrawByLevel> {
     print("createMatches");
     return Center(
       child: FlatButton(
-        onPressed: () => {createMatches()},
+        onPressed: () => {
+          createMatches(),
+        },
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
         ),
@@ -115,23 +106,121 @@ class _DrawByLevelState extends State<DrawByLevel> {
     );
   }
 
-  Widget customWidget(String user1, String user2) {
-    return Column(
-      children: [
-        Container(
-          width: 100,
-          height: 40,
-          color: Colors.blueAccent,
-          child: Text(user1),
-        ),
-        Container(
-          width: 100,
-          height: 40,
-          color: Colors.red,
-          child: Text(user2),
-        ),
-      ],
+  Widget match(ModelMatch match, bool firstRound, int round) {
+    ModelUserLeague player1 = getUserFromList(users, match.idPlayer1);
+    ModelUserLeague player2 = getUserFromList(users, match.idPlayer2);
+    String result = getCompleteResult(match.resultSet1, match.resultSet2, match.resultSet3);
+    return GestureDetector(
+      onTap: () => findNextMatch(match),
+      child: Column(
+        children: [
+          Container(
+            height: ((round - 1) * 40).toDouble(),
+          ),
+          Container(
+            decoration: drawDeco(),
+            width: 90,
+            height: 80,
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 5,
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(2.0),
+                  child: Text(
+                    player1 != null
+                        ? player1.fullName
+                        : firstRound
+                            ? "BYE"
+                            : "Por definir",
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.raleway(fontWeight: FontWeight.normal, fontSize: 10),
+                  ),
+                ),
+                Container(
+                  decoration: resultDraw(),
+                  width: 50,
+                  child: Text(
+                    match.week.toString(),
+                    style: GoogleFonts.raleway(fontWeight: FontWeight.normal, fontSize: 10),
+                  ),
+                ),
+                SizedBox(
+                  height: 8,
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(2.0),
+                  child: Text(
+                    player2 != null
+                        ? player2.fullName
+                        : firstRound
+                            ? "BYE"
+                            : "Por definir",
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.raleway(fontWeight: FontWeight.normal, fontSize: 10),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Container(
+            height: ((round - 1) * 40).toDouble(),
+          ),
+        ],
+      ),
     );
+  }
+
+  ModelMatch findNextMatch(ModelMatch match) {
+    int sizeRound = (matches.length + 1) ~/ 2;
+    int roundFound;
+    int lastStart = 0;
+    int round = 1;
+    print("Match number==>" + match.week.toString());
+
+    while (sizeRound != 0) {
+      for (int i = lastStart; i < sizeRound + lastStart; i++) {
+        if (i + 1 == match.week) {
+          roundFound = round;
+        }
+      }
+      if (round == 1) {
+        lastStart = lastStart + firstRound.length;
+      }
+      if (round == 2) {
+        lastStart = lastStart + secondRound.length;
+      } else if (round == 3) {
+        lastStart = lastStart + thirdRound.length;
+      }
+      sizeRound = sizeRound ~/ 2;
+      round++;
+    }
+
+    int aux = match.week;
+    int roundSize;
+    int lastIndex;
+    if (aux % 2 != 0) {
+      aux++;
+    }
+    print("AUX==>" + aux.toString());
+
+    if (roundFound == 1) {
+      roundSize = firstRound.length;
+      lastIndex = firstRoundLenght;
+    }
+    if (roundFound == 2) {
+      roundSize = secondRound.length;
+      lastIndex = firstRoundLenght + secondRound.length;
+    } else if (roundFound == 3) {
+      roundSize = thirdRound.length;
+      lastIndex = firstRoundLenght + secondRound.length + thirdRound.length;
+    }
+    int toSumNextRound = aux ~/ 2 % (roundSize);
+    int newIndex = lastIndex + toSumNextRound;
+    print("new index ==> " + (newIndex - 1).toString());
+
+    return matches[newIndex - 1];
   }
 
   /*1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16
@@ -143,9 +232,12 @@ class _DrawByLevelState extends State<DrawByLevel> {
   (1, 16, 8, 9, 4, 13, 5, 12),  (2, 15, 7, 10, 3, 14, 6, 11)*/
   void createMatches() async {
     print("createMatches called");
+    setState(() {
+      _isLoading = true;
+    });
     final database = context.read<Database>(databaseProvider);
     for (int i = widget.users.length; i < lenghtUsersInTournament; i++) {
-      users.add(new ModelUserLeague(fullName: "BYE", id: generateUuid()));
+      users.add(new ModelUserLeague(fullName: "BYE", id: "BYE"));
     }
     List<ModelUserLeague> list = users;
 
@@ -173,8 +265,6 @@ class _DrawByLevelState extends State<DrawByLevel> {
     users = list;
     int week = 1;
     for (int i = 0; i < list.length; i = i + 2) {
-/*      matches.add(new ModelMatch(
-          id: generateUuid(), idLeague: generateUuid(), idPlayer1: users[i].id, idPlayer2: users[i + 1].id, played: false, week: week));*/
       ModelMatch match = new ModelMatch(
           id: generateUuid(), idLeague: widget.tournamentID, idPlayer1: users[i].id, idPlayer2: users[i + 1].id, played: false, week: week);
       await database.sendMatchTournament(match);
@@ -188,58 +278,24 @@ class _DrawByLevelState extends State<DrawByLevel> {
       for (int i = 0; i < lenghtRound; i++) {
         ModelMatch match = new ModelMatch(id: generateUuid(), idLeague: widget.tournamentID, played: false, week: week);
         await database.sendMatchTournament(match);
+        week++;
       }
-      week++;
     }
+
+    setState(() {
+      _isLoading = false;
+    });
+    getMatches(true);
   }
 
   void initWidgets() {
-    print("initWidget called with first round size=>" + firstRoundLenght.toString());
+    firstRound.clear();
+    secondRound.clear();
+    thirdRound.clear();
     for (var i = 0; i < firstRoundLenght; i++) {
-      ModelUserLeague player1 = getUserFromList(users, matches[i].idPlayer1);
-      ModelUserLeague player2 = getUserFromList(users, matches[i].idPlayer2);
-      String result = getCompleteResult(matches[i].resultSet1, matches[i].resultSet2, matches[i].resultSet3);
       firstRound.add(Padding(
         padding: const EdgeInsets.all(4.0),
-        child: Container(
-          decoration: drawDeco(),
-          width: 90,
-          height: 80,
-          child: Column(
-            children: [
-              SizedBox(
-                height: 5,
-              ),
-              Padding(
-                padding: const EdgeInsets.all(2.0),
-                child: Text(
-                  player1 != null ? player1.fullName : "BYE",
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.raleway(fontWeight: FontWeight.normal, fontSize: 10),
-                ),
-              ),
-              Container(
-                decoration: resultDraw(),
-                width: 50,
-                child: Text(
-                  matches[i].week.toString(),
-                  style: GoogleFonts.raleway(fontWeight: FontWeight.normal, fontSize: 10),
-                ),
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              Padding(
-                padding: const EdgeInsets.all(2.0),
-                child: Text(
-                  player2 != null ? player2.fullName : "BYE",
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.raleway(fontWeight: FontWeight.normal, fontSize: 10),
-                ),
-              ),
-            ],
-          ),
-        ),
+        child: match(matches[i], true, 1),
       ));
     }
 
@@ -248,57 +304,13 @@ class _DrawByLevelState extends State<DrawByLevel> {
     int lastIndex = firstRoundLenght;
     while (roundSize != 0) {
       List<Widget> roundWidget = [];
-
       for (int i = lastIndex; i < lastIndex + roundSize; i++) {
-        roundWidget.add(Padding(
-          padding: const EdgeInsets.all(4.0),
-          child: Column(
-            children: [
-              Container(
-                height: 40,
-              ),
-              Container(
-                decoration: drawDeco(),
-                width: 90,
-                height: 80,
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(2.0),
-                      child: Text(
-                        "Player 1",
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.raleway(fontWeight: FontWeight.normal, fontSize: 10),
-                      ),
-                    ),
-                    Container(
-                      decoration: resultDraw(),
-                      width: 50,
-                      child: Text(i.toString()),
-                    ),
-                    SizedBox(
-                      height: 8,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(2.0),
-                      child: Text(
-                        "Player 2",
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.raleway(fontWeight: FontWeight.normal, fontSize: 10),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                height: 40,
-              ),
-            ],
+        roundWidget.add(
+          Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: match(matches[i], false, round),
           ),
-        ));
+        );
       }
       if (round == 2) {
         secondRound = roundWidget;
@@ -310,9 +322,38 @@ class _DrawByLevelState extends State<DrawByLevel> {
       roundSize = roundSize ~/ 2;
       round++;
     }
+  }
 
+  void getMatches(bool checkForByesInMatches) async {
+    final database = context.read<Database>(databaseProvider);
+    setState(() {
+      _isLoading = true;
+    });
+
+    this.matches = await database.getMatchesTournamentCollection(widget.tournamentID);
+    firstRoundLenght = (matches.length + 1) ~/ 2;
+
+    initWidgets();
+
+    if (checkForByesInMatches) {
+      checkForByes();
+    }
     setState(() {
       _isLoading = false;
     });
+  }
+
+  void checkForByes() async {
+    final database = context.read<Database>(databaseProvider);
+    print("checking for byes");
+    for (var obj in matches) {
+      if ((obj.idPlayer1 != "BYE" && obj.idPlayer2 == "BYE") || (obj.idPlayer2 != "BYE" && obj.idPlayer1 == "BYE")) {
+        ModelMatch nexMatch = findNextMatch(obj);
+        String idPlayerToMove = obj.idPlayer1 != "BYE" ? obj.idPlayer1 : obj.idPlayer2;
+        ModelMatch updateMatch = nexMatch.copyWithNewPlayer(idPlayerToMove);
+        await database.sendMatchTournament(updateMatch);
+      }
+    }
+    getMatches(false);
   }
 }

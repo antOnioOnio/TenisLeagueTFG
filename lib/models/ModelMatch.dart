@@ -41,6 +41,28 @@ class ModelMatch extends Equatable {
         played: true,
         week: this.week);
   }
+  ModelMatch copyWithNewPlayer(String idNewPlayer) {
+    String player1;
+    String player2;
+    if(idPlayer1==null){
+      player1 = idNewPlayer;
+    }else{
+      player2 = idNewPlayer;
+    }
+    return new ModelMatch(
+        id: this.id,
+        idPlayerWinner: idPlayerWinner,
+        resultSet1: resultSet1,
+        resultSet2: resultSet2,
+        resultSet3: resultSet3,
+        dateMatch: dateMatch,
+        idLeague: this.idLeague,
+        idPlayer1: player1,
+        idPlayer2: player2,
+        played: true,
+        week: this.week);
+  }
+
 
   factory ModelMatch.fromJson(Map<String, dynamic> json) => ModelMatch(
       id: json['id'] as String,
