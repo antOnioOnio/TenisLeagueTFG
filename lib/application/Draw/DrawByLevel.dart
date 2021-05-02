@@ -126,6 +126,7 @@ class _DrawByLevelState extends State<DrawByLevel> {
           Container(
             height: ((round - 1) * 40).toDouble(),
           ),
+
           Container(
             decoration: drawDeco(),
             width: 90,
