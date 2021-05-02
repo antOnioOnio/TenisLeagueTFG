@@ -20,8 +20,10 @@ class AddResultDialog extends StatefulWidget {
   final ModelMatch match;
   final ModelUserLeague user1;
   final ModelUserLeague user2;
-  const AddResultDialog({Key key, @required this.match, @required this.user1, @required this.user2}) : super(key: key);
-
+  final bool tournament;
+  final Function callback;
+  const AddResultDialog({Key key, @required this.match, @required this.user1, @required this.user2, @required this.tournament, this.callback})
+      : super(key: key);
   @override
   _AddResultDialogState createState() => _AddResultDialogState();
 }
@@ -229,7 +231,13 @@ class _AddResultDialogState extends State<AddResultDialog> {
       String resultSet2 = _dropdownValueUser1Set2 + "-" + _dropdownValueUser2Set2;
       String resultSet3 = _dropdownValueUser1Set3 + "-" + _dropdownValueUser2Set3;
       match = match.copyWith(idPlayerWinner, resultSet1, resultSet2, resultSet3, new DateTime.now());
-      await database.sendMatch(match);
+      if (widget.tournament) {
+        await database.sendMatchTournament(match);
+        widget.callback(match);
+      } else {
+        await database.sendMatch(match);
+        await updatePlayers(idPlayerWinner);
+      }
       await database.sendPost(new ModelPost(
           id: generateUuid(),
           idUser: idPlayerWinner,
@@ -238,7 +246,7 @@ class _AddResultDialogState extends State<AddResultDialog> {
           imageUser: null,
           postType: ModelPost.matchResult,
           createdAt: DateTime.now()));
-      await updatePlayers(idPlayerWinner);
+
       Navigator.of(context).pop();
     } else {
       showAlertDialog(

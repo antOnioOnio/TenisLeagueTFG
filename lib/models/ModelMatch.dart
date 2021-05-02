@@ -41,12 +41,15 @@ class ModelMatch extends Equatable {
         played: true,
         week: this.week);
   }
+
   ModelMatch copyWithNewPlayer(String idNewPlayer) {
     String player1;
     String player2;
-    if(idPlayer1==null){
+    if (idPlayer1 == null /*|| idPlayer1 == "Por definir"*/) {
       player1 = idNewPlayer;
-    }else{
+      player2 = this.idPlayer2;
+    } else {
+      player1 = this.idPlayer1;
       player2 = idNewPlayer;
     }
     return new ModelMatch(
@@ -62,7 +65,6 @@ class ModelMatch extends Equatable {
         played: true,
         week: this.week);
   }
-
 
   factory ModelMatch.fromJson(Map<String, dynamic> json) => ModelMatch(
       id: json['id'] as String,
@@ -92,7 +94,6 @@ class ModelMatch extends Equatable {
       'dateMatch': this.dateMatch?.toIso8601String(),
     };
   }
-
 
   String get getResultSet1 => resultSet1 != null ? resultSet1 : "";
   String get getResultSet2 => resultSet2 != null ? resultSet2 : "";

@@ -136,7 +136,7 @@ class _CalendarByLevelState extends State<CalendarByLevel> {
             height: 35,
             child: GestureDetector(
               onTap: () => (user1.id == this._currentUserId || user2.id == this._currentUserId) && match.idPlayerWinner == null
-                  ? showDialogSetResult(context, match, user1, user2)
+                  ? showDialogSetResult(context, match, user1, user2, false, null)
                   : DoNothingAction(),
               child: Row(
                 children: [
@@ -205,6 +205,8 @@ class _CalendarByLevelState extends State<CalendarByLevel> {
     );
   }
 
+
+
   Widget createMatchesButton() {
     return Center(
       child: FlatButton(
@@ -228,18 +230,6 @@ class _CalendarByLevelState extends State<CalendarByLevel> {
       return true;
     }
     return false;
-  }
-
-  void showDialogSetResult(BuildContext context, ModelMatch match, ModelUserLeague user1, ModelUserLeague user2) {
-    showDialog(
-        context: context,
-        builder: (_) {
-          return AddResultDialog(
-            match: match,
-            user1: user1,
-            user2: user2,
-          );
-        });
   }
 
   void _createMatches() async {

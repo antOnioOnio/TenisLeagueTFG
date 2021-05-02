@@ -29,6 +29,7 @@ class _DrawByLevelState extends State<DrawByLevel> {
   List<Widget> thirdRound = [];
   List<Widget> fourthRound = [];
   List<Widget> fithRound = [];
+  ModelUserLeague _currentUser;
   List<ModelUserLeague> users;
   List<ModelMatch> matches = [];
   bool _isLoading;
@@ -41,6 +42,12 @@ class _DrawByLevelState extends State<DrawByLevel> {
     users = widget.users;
     lenghtUsersInTournament = findLenght(widget.users.length);
     getMatches(false);
+    getCurrentUser();
+  }
+
+  void getCurrentUser() async {
+    final database = context.read<Database>(databaseProvider);
+    _currentUser = await database.getCurrentUser();
   }
 
   @override
@@ -111,7 +118,9 @@ class _DrawByLevelState extends State<DrawByLevel> {
     ModelUserLeague player2 = getUserFromList(users, match.idPlayer2);
     String result = getCompleteResult(match.resultSet1, match.resultSet2, match.resultSet3);
     return GestureDetector(
-      onTap: () => findNextMatch(match),
+      onTap: () => (player1.id == this._currentUser.id || player2.id == this._currentUser.id) && match.idPlayerWinner == null
+          ? showDialogSetResult(context, match, player1, player2, true, findNextMatchAndUpdate)
+          : DoNothingAction(),
       child: Column(
         children: [
           Container(
@@ -122,44 +131,36 @@ class _DrawByLevelState extends State<DrawByLevel> {
             width: 90,
             height: 80,
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                SizedBox(
-                  height: 5,
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(2.0),
-                  child: Text(
-                    player1 != null
-                        ? player1.fullName
-                        : firstRound
-                            ? "BYE"
-                            : "Por definir",
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.raleway(fontWeight: FontWeight.normal, fontSize: 10),
-                  ),
+                Text(
+                  player1 != null
+                      ? player1.fullName
+                      : firstRound
+                          ? "BYE"
+                          : "Por definir",
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.raleway(fontWeight: FontWeight.normal, fontSize: 10),
                 ),
                 Container(
-                  decoration: resultDraw(),
-                  width: 50,
-                  child: Text(
-                    match.week.toString(),
-                    style: GoogleFonts.raleway(fontWeight: FontWeight.normal, fontSize: 10),
-                  ),
-                ),
-                SizedBox(
-                  height: 8,
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(2.0),
-                  child: Text(
-                    player2 != null
-                        ? player2.fullName
-                        : firstRound
-                            ? "BYE"
-                            : "Por definir",
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.raleway(fontWeight: FontWeight.normal, fontSize: 10),
-                  ),
+                    width: 70,
+                    height: 20,
+                    child: Text(
+                      result,
+                      style: TextStyle(
+                        color: Colors.green,
+                        fontSize: 10,
+                        decoration: TextDecoration.underline,
+                      ),
+                    )),
+                Text(
+                  player2 != null
+                      ? player2.fullName
+                      : firstRound
+                          ? "BYE"
+                          : "Por definir",
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.raleway(fontWeight: FontWeight.normal, fontSize: 10),
                 ),
               ],
             ),
@@ -325,6 +326,7 @@ class _DrawByLevelState extends State<DrawByLevel> {
   }
 
   void getMatches(bool checkForByesInMatches) async {
+    print("get matches called");
     final database = context.read<Database>(databaseProvider);
     setState(() {
       _isLoading = true;
@@ -355,5 +357,21 @@ class _DrawByLevelState extends State<DrawByLevel> {
       }
     }
     getMatches(false);
+  }
+
+  void findNextMatchAndUpdate(ModelMatch match) async {
+    setState(() {
+      _isLoading = true;
+    });
+    print("findNextMatchAndUpdate called");
+    final database = context.read<Database>(databaseProvider);
+    ModelMatch nextMatch = findNextMatch(match);
+    String idPlayerToMove = match.idPlayerWinner;
+    ModelMatch updateMatch = nextMatch.copyWithNewPlayer(idPlayerToMove);
+    await database.sendMatchTournament(updateMatch);
+    getMatches(false);
+    setState(() {
+      _isLoading = false;
+    });
   }
 }

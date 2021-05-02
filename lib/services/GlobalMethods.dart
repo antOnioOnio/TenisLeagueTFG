@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+import 'package:tenisleague100/application/Calendario/DialogAddResult.dart';
 import 'package:tenisleague100/models/ModelLeague.dart';
 import 'package:tenisleague100/models/ModelMatch.dart';
 import 'package:tenisleague100/models/ModelUserLeague.dart';
@@ -9,27 +11,26 @@ String generateUuid() {
   return uuid.v1();
 }
 
-
 List<ModelUserLeague> userByLevel(List<ModelUserLeague> users, String level) {
   return users.where((element) => element.level == level).toList();
 }
 
-
 List<ModelMatch> matchesByWeek(List<ModelMatch> matches, int Week) {
   return matches.where((element) => element.week == Week).toList();
 }
-ModelUserLeague getUserFromList(List<ModelUserLeague> list, String id){
-  for ( var obj in list){
-    if(obj.id == id){
+
+ModelUserLeague getUserFromList(List<ModelUserLeague> list, String id) {
+  for (var obj in list) {
+    if (obj.id == id) {
       return obj;
     }
   }
   return null;
 }
 
-String leagueId( List<ModelLeague> leagues, String level){
-  for(var obj in leagues){
-    if(obj.level == level){
+String leagueId(List<ModelLeague> leagues, String level) {
+  for (var obj in leagues) {
+    if (obj.level == level) {
       return obj.id;
     }
   }
@@ -54,15 +55,29 @@ int findLenght(int i) {
   }
 }
 
-String getCompleteResult(String set1, String set2, String set3){
-  if(set1 != null && set2 != null){
+String getCompleteResult(String set1, String set2, String set3) {
+  if (set1 != null && set2 != null) {
     String result = set1 + " " + set2;
-    if(set3!= null){
+    if (set3 != null) {
       result += " " + set3;
     }
-  }else {
+    return result;
+  } else {
+    print("returning empty ");
     return "";
   }
 }
 
-
+void showDialogSetResult(BuildContext context, ModelMatch match, ModelUserLeague user1, ModelUserLeague user2, bool tournament, Function callback) {
+  showDialog(
+      context: context,
+      builder: (_) {
+        return AddResultDialog(
+          match: match,
+          user1: user1,
+          user2: user2,
+          tournament: tournament,
+          callback: callback,
+        );
+      });
+}
