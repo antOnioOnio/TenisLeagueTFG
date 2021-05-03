@@ -40,6 +40,7 @@ class _DrawByLevelState extends State<DrawByLevel> {
   void initState() {
     super.initState();
     users = widget.users;
+    users.sort((pl1, pl2) => pl2.currentScore.compareTo(pl1.currentScore));
     lenghtUsersInTournament = findLenght(widget.users.length);
     getMatches(false);
     getCurrentUser();
@@ -118,15 +119,12 @@ class _DrawByLevelState extends State<DrawByLevel> {
     ModelUserLeague player2 = getUserFromList(users, match.idPlayer2);
     String result = getCompleteResult(match.resultSet1, match.resultSet2, match.resultSet3);
     return GestureDetector(
-      onTap: () => (player1.id == this._currentUser.id || player2.id == this._currentUser.id) && match.idPlayerWinner == null
-          ? showDialogSetResult(context, match, player1, player2, true, findNextMatchAndUpdate)
-          : DoNothingAction(),
+      onTap: () => checkAndShow(match, player1, player2),
       child: Column(
         children: [
           Container(
             height: ((round - 1) * 40).toDouble(),
           ),
-
           Container(
             decoration: drawDeco(),
             width: 90,
@@ -141,15 +139,17 @@ class _DrawByLevelState extends State<DrawByLevel> {
                           ? "BYE"
                           : "Por definir",
                   textAlign: TextAlign.center,
-                  style: GoogleFonts.raleway(fontWeight: FontWeight.normal, fontSize: 10),
+                  style: GoogleFonts.raleway(fontWeight: FontWeight.bold, fontSize: 10),
                 ),
                 Container(
                     width: 70,
                     height: 20,
                     child: Text(
                       result,
+                      textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Colors.green,
+                        fontWeight: FontWeight.bold,
                         fontSize: 10,
                         decoration: TextDecoration.underline,
                       ),
@@ -161,7 +161,7 @@ class _DrawByLevelState extends State<DrawByLevel> {
                           ? "BYE"
                           : "Por definir",
                   textAlign: TextAlign.center,
-                  style: GoogleFonts.raleway(fontWeight: FontWeight.normal, fontSize: 10),
+                  style: GoogleFonts.raleway(fontWeight: FontWeight.bold, fontSize: 10),
                 ),
               ],
             ),
@@ -223,6 +223,16 @@ class _DrawByLevelState extends State<DrawByLevel> {
     print("new index ==> " + (newIndex - 1).toString());
 
     return matches[newIndex - 1];
+  }
+
+  void checkAndShow(ModelMatch match, ModelUserLeague player1, ModelUserLeague player2) {
+    if ((player1.id == this._currentUser.id || player2.id == this._currentUser.id) &&
+        ((player1.id != "BYE" && player2.id != "BYE")) &&
+        ((player1.id != null && player2.id != "null "))) {
+      showDialogSetResult(context, match, player1, player2, true, findNextMatchAndUpdate);
+    } else {
+      DoNothingAction();
+    }
   }
 
   /*1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16

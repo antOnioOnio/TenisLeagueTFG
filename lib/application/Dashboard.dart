@@ -1,4 +1,6 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:tenisleague100/application/Calendario/MainCalendar.dart';
 import 'package:tenisleague100/application/Draw/MainDraw.dart';
 import 'package:tenisleague100/application/League/MainLeague.dart';
@@ -6,6 +8,7 @@ import 'package:tenisleague100/application/Messages/chats_list.dart';
 import 'package:tenisleague100/application/Settings/settings.dart';
 import 'package:tenisleague100/application/Users/MainUsers.dart';
 import 'package:tenisleague100/constants/GlobalValues.dart';
+import 'package:tenisleague100/services/Notifications/FirebaseNotifications.dart';
 
 import 'Forum/MainForum.dart';
 
@@ -28,6 +31,13 @@ class _DashboardState extends State<Dashboard> {
     SettingsPage(),
     Chats(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    FirebaseNotifications firebaseNotifications = new FirebaseNotifications();
+    firebaseNotifications.setUp();
+  }
 
   @override
   Widget build(BuildContext context) {

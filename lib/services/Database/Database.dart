@@ -195,7 +195,6 @@ class Database {
     );
   }
 
-
   Future<List<ModelLeague>> getLeaguesCollection() async {
     List<ModelLeague> leaguesToReturn = [];
     CollectionReference _collectionRef = FirebaseFirestore.instance.collection(FirestorePath.leaguesStream);
@@ -210,7 +209,6 @@ class Database {
     }
     return leaguesToReturn;
   }
-
 
   Future<List<ModelLeague>> getTournamentCollection() async {
     List<ModelLeague> leaguesToReturn = [];
@@ -234,11 +232,10 @@ class Database {
       );
 
   Stream<List<ModelMatch>> matchesTournamentStream(String idLeague) => _service.collectionStream(
-    path: FirestorePath.matchesTournament(idLeague),
-    builder: (data, documentId) => ModelMatch.fromJson(data),
-    sort: (msg1, msg2) => msg1.week.compareTo(msg2.week),
-  );
-
+        path: FirestorePath.matchesTournament(idLeague),
+        builder: (data, documentId) => ModelMatch.fromJson(data),
+        sort: (msg1, msg2) => msg1.week.compareTo(msg2.week),
+      );
 
   Future<List<ModelMatch>> getMatchesCollection(String idLeague) async {
     List<ModelMatch> matchesToReturn = [];
@@ -267,6 +264,9 @@ class Database {
     for (var obj in allData) {
       matchesToReturn.add(new ModelMatch.fromJson(obj));
     }
+
+    matchesToReturn.sort((msg1, msg2) => msg1.week.compareTo(msg2.week));
+
     return matchesToReturn;
   }
 }
