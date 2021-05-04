@@ -2,46 +2,85 @@ import 'dart:convert';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:tenisleague100/constants/GlobalValues.dart';
 import 'package:tenisleague100/services/Notifications/NotificationHandler.dart';
 
-class FirebaseNotifications{
-  BuildContext myContext;
-  String _token;
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
-  void setUp(BuildContext context)async{
+class FirebaseNotifications {
+  static BuildContext myContext;
+  static String _token;
+
+  static void setUp(BuildContext context) async {
     myContext = context;
     getToken();
+
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
     await FirebaseMessaging.instance.subscribeToTopic('fcm_test');
+
+    final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
     /// Create an Android Notification Channel.
     ///
     /// We use this channel in the `AndroidManifest.xml` file to override the
     /// default FCM channel to enable heads up notifications.
     await flutterLocalNotificationsPlugin
-        .resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin>()
+        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
         ?.createNotificationChannel(channel);
 
-    /// Update the iOS foreground notification presentation options to allow
-    /// heads up notifications.
-    await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
-      alert: true,
-      badge: true,
-      sound: true,
-    );
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print("message received");
+      RemoteNotification notification = message.notification;
+      AndroidNotification android = message.notification?.android;
+
+      // If `onMessage` is triggered with a notification, construct our own
+      // local notification to show to users using the created channel.
+      if (notification != null && android != null) {
+        Fluttertoast.showToast(
+            msg: notification.body,
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.TOP,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Color(GlobalValues.mainGreen),
+            textColor: Colors.white,
+            fontSize: 16.0);
+      }
+    });
+
+/*    // Get any messages which caused the application to open from
+    // a terminated state.
+    RemoteMessage initialMessage =
+    await FirebaseMessaging.instance.getInitialMessage();
+
+    // If the message also contains a data property with a "type" of "chat",
+    // navigate to a chat screen
+    if (initialMessage?.data['type'] == 'chat') {
+      Navigator.pushNamed(context, '/chat',
+          arguments: ChatArguments(initialMessage));
+    }
+
+    // Also handle any interaction when the app is in the background via a
+    // Stream listener
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      if (message.data['type'] == 'chat') {
+        Navigator.pushNamed(context, '/chat',
+            arguments: ChatArguments(message));
+      }
+    });*/
   }
 
-  Future<void> getToken(){
+  static Future<void> getToken() {
     FirebaseMessaging.instance.getToken().then((value) => _token = value);
   }
-
 
   /// Define a top-level named handler which background/terminated messages will
   /// call.
   ///
   /// To verify things are working, check out the native platform logs.
-  Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  static Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
     print('Handling a background message ${message.messageId}');
   }
 
@@ -52,11 +91,6 @@ class FirebaseNotifications{
     'This channel is used for important notifications.', // description
     importance: Importance.high,
   );
-
-  /// Initialize the [FlutterLocalNotificationsPlugin] package.
-  static final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-  FlutterLocalNotificationsPlugin();
-
 
   /// The API endpoint here accepts a raw FCM payload for demonstration purposes.
   String constructFCMPayload(String token, String message) {
