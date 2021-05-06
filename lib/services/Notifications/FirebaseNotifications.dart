@@ -6,13 +6,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:tenisleague100/constants/GlobalValues.dart';
-import 'package:tenisleague100/services/Notifications/NotificationHandler.dart';
+import 'package:http/http.dart' as http;
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
 class FirebaseNotifications {
   static BuildContext myContext;
   static String _token;
+  static String firebaseKey = GlobalValues.firebaseKey;
 
   static void setUp(BuildContext context) async {
     myContext = context;
@@ -32,7 +33,6 @@ class FirebaseNotifications {
         ?.createNotificationChannel(channel);
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print("message received");
       RemoteNotification notification = message.notification;
       AndroidNotification android = message.notification?.android;
 
@@ -49,27 +49,6 @@ class FirebaseNotifications {
             fontSize: 16.0);
       }
     });
-
-/*    // Get any messages which caused the application to open from
-    // a terminated state.
-    RemoteMessage initialMessage =
-    await FirebaseMessaging.instance.getInitialMessage();
-
-    // If the message also contains a data property with a "type" of "chat",
-    // navigate to a chat screen
-    if (initialMessage?.data['type'] == 'chat') {
-      Navigator.pushNamed(context, '/chat',
-          arguments: ChatArguments(initialMessage));
-    }
-
-    // Also handle any interaction when the app is in the background via a
-    // Stream listener
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      if (message.data['type'] == 'chat') {
-        Navigator.pushNamed(context, '/chat',
-            arguments: ChatArguments(message));
-      }
-    });*/
   }
 
   static Future<void> getToken() {
@@ -106,25 +85,25 @@ class FirebaseNotifications {
       },
     });
   }
-
-/*  Future<void> sendPushMessage() async {
-    if (_token == null) {
-      print('Unable to send FCM message, no token exists.');
-      return;
-    }
-
-    try {
-      await http.post(
-        Uri.parse('https://api.rnfirebase.io/messaging/send'),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: constructFCMPayload(_token),
-      );
-      print('FCM request for device sent!');
-    } catch (e) {
-      print(e);
-    }
-  }*/
-
+  //https://stackoverflow.com/questions/37482366/is-it-safe-to-expose-firebase-apikey-to-the-public
+  static void sendPushMessage() async {
+    await http
+        .post('https://fcm.googleapis.com/fcm/send',
+            headers: <String, String>{
+              'Content-Type': 'application/json',
+              'Authorization':
+                  'key=$firebaseKey'
+            },
+            body: jsonEncode({
+              'notification': <String, dynamic>{'title': "Title", 'body': "Body", 'sound': 'true'},
+              'priority': 'high',
+              'data': <String, dynamic>{'click_action': 'FLUTTER_NOTIFICATION_CLICK', 'id': '1', 'status': 'done'},
+              "to": "/topics/fcm_test"
+            }))
+        .whenComplete(() {
+//      print('sendOrderCollected(): message sent');
+    }).catchError((e) {
+      print('sendOrderCollected() error: $e');
+    });
+  }
 }

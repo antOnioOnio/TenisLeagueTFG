@@ -7,5 +7,7 @@ class GlobalValues {
   static final levelPrincipiante = "Principiante";
   static final leveMedio = "Medio";
   static final levelAvanzado = "Avanzado";
+  static final firebaseKey = "AAAANtktjK8:APA91bEKl9xYGiLy5zwooHw06F4XwGxmJeyUpOzCeAmBotcoRbeSLaXcMsWXIQV2julMneJPFZ-GDc8spmSHuF6ls2v_KMyoeEsCub-l5V2jevi_8h-ZBSCS1TqcDgp9zCP86MLgrD1u";
+
 
 }

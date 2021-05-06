@@ -205,8 +205,6 @@ class _CalendarByLevelState extends State<CalendarByLevel> {
     );
   }
 
-
-
   Widget createMatchesButton() {
     return Center(
       child: FlatButton(
@@ -241,7 +239,7 @@ class _CalendarByLevelState extends State<CalendarByLevel> {
     }
 
     int numDays = (listTeam.length - 1); // Days needed to complete tournament
-    int halfSize = (listTeam.length / 2).toInt();
+    int halfSize = listTeam.length ~/ 2;
 
     List<ModelUserLeague> teams = [];
 
@@ -275,21 +273,5 @@ class _CalendarByLevelState extends State<CalendarByLevel> {
         }
       }
     }
-  }
-
-  List<ModelUserLeague> rotate(List<ModelUserLeague> listToRotate) {
-    print("rotate \n");
-    List<ModelUserLeague> list = listToRotate;
-
-    ModelUserLeague x = list[list.length - 1];
-    for (int i = list.length - 1; i > 0; i--) list[i] = list[i - 1];
-    list[0] = x;
-
-    for (var user in listToRotate) {
-      if (user != null) {
-        print("=>" + user.fullName);
-      }
-    }
-    return list;
   }
 }

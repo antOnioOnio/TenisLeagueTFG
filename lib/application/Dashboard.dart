@@ -35,8 +35,10 @@ class _DashboardState extends State<Dashboard> {
   @override
   void initState() {
     super.initState();
-    //FirebaseNotifications firebaseNotifications = new FirebaseNotifications();
     FirebaseNotifications.setUp(context);
+    Future.delayed(Duration(seconds: 5), () {
+      FirebaseNotifications.sendPushMessage();
+    });
   }
 
   @override
