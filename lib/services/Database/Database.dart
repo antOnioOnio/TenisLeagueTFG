@@ -276,5 +276,6 @@ class Database {
   void sendCustomNotification(String message, String title, String idUser) {
     ModelNotification notification = new ModelNotification(title: title, body: message, topic: idUser);
     FirebaseNotifications.sendPushMessage(notification);
+
   }
 }
