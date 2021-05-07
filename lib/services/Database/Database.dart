@@ -4,10 +4,12 @@ import 'package:tenisleague100/models/ModelComment.dart';
 import 'package:tenisleague100/models/ModelLeague.dart';
 import 'package:tenisleague100/models/ModelMatch.dart';
 import 'package:tenisleague100/models/ModelMessages.dart';
+import 'package:tenisleague100/models/ModelNotification.dart';
 import 'package:tenisleague100/models/ModelPlace.dart';
 import 'package:tenisleague100/models/ModelPost.dart';
 import 'package:tenisleague100/models/ModelUserLeague.dart';
 import 'package:tenisleague100/services/Database/FirestorePaths.dart';
+import 'package:tenisleague100/services/Notifications/FirebaseNotifications.dart';
 
 import 'firestore_service.dart';
 
@@ -268,5 +270,11 @@ class Database {
     matchesToReturn.sort((msg1, msg2) => msg1.week.compareTo(msg2.week));
 
     return matchesToReturn;
+  }
+
+  // Notifications
+  void sendCustomNotification(String message, String title, String idUser) {
+    ModelNotification notification = new ModelNotification(title: title, body: message, topic: idUser);
+    FirebaseNotifications.sendPushMessage(notification);
   }
 }
