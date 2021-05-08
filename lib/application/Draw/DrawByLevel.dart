@@ -226,12 +226,13 @@ class _DrawByLevelState extends State<DrawByLevel> {
   }
 
   void checkAndShow(ModelMatch match, ModelUserLeague player1, ModelUserLeague player2) {
-    if ((player1.id == this._currentUser.id || player2.id == this._currentUser.id) &&
+    if ((player1.id == this._currentUser.id || player2.id == this._currentUser.id || this._currentUser.role == "admin") &&
         ((player1.id != "BYE" && player2.id != "BYE")) &&
         ((player1.id != null && player2.id != "null "))) {
       showDialogSetResult(context, match, player1, player2, true, findNextMatchAndUpdate);
     } else {
       DoNothingAction();
+
     }
   }
 
