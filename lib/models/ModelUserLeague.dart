@@ -9,13 +9,14 @@ class ModelUserLeague extends Equatable {
   String level;
   String tlf;
   String image;
+  String role;
   int currentScore;
   int matchPlayed;
   int matchWins;
   int matchLosses;
 
   ModelUserLeague(
-      {this.id, this.fullName, this.email, this.tlf, this.level, this.currentScore, this.image, this.matchLosses, this.matchPlayed, this.matchWins})
+      {this.id, this.fullName, this.email, this.tlf, this.level, this.currentScore, this.image, this.role, this.matchLosses, this.matchPlayed, this.matchWins})
       : assert(level != GlobalValues.levelPrincipiante || level != GlobalValues.leveMedio || level != GlobalValues.levelAvanzado);
 
   factory ModelUserLeague.fromJson(Map<String, dynamic> json) => ModelUserLeague(
@@ -29,6 +30,7 @@ class ModelUserLeague extends Equatable {
         matchWins: json['matchWins'] as int,
         matchLosses: json['matchLosses'] as int,
         image: json['image'] as String,
+        role: json['role'] as String,
       );
 
   ModelUserLeague copyWithOneMoreMatch(bool win) {
@@ -43,6 +45,7 @@ class ModelUserLeague extends Equatable {
       matchWins: win ? this.matchWins + 1 : this.matchWins,
       matchLosses: win ? this.matchLosses : this.matchLosses + 1,
       image: this.image,
+      role: this.role,
     );
   }
 
@@ -57,14 +60,17 @@ class ModelUserLeague extends Equatable {
         'matchPlayed': this.matchPlayed,
         'matchWins': this.matchWins,
         'matchLosses': this.matchLosses,
+        'role': this.role,
       };
 
   String get getFulleName => fullName != null ? fullName : "BYE";
+
+
   @override
   String toString() {
-    return 'ModelUserLeague{id: $id, fullName: $fullName, email: $email, level: $level, tlf: $tlf,  currentScore: $currentScore, matchPlayed: $matchPlayed, matchWins: $matchWins, matchLosses: $matchLosses}';
+    return 'ModelUserLeague{id: $id, fullName: $fullName, email: $email, level: $level, tlf: $tlf, image: $image, role: $role, currentScore: $currentScore, matchPlayed: $matchPlayed, matchWins: $matchWins, matchLosses: $matchLosses}';
   }
 
   @override
-  List<Object> get props => [id, fullName, email, level, tlf, image, currentScore];
+  List<Object> get props => [id, fullName, email, level, tlf, image, currentScore, role];
 }

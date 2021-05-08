@@ -25,7 +25,7 @@ class CalendarByLevel extends StatefulWidget {
 class _CalendarByLevelState extends State<CalendarByLevel> {
   List<int> _weeks = [];
   List<ModelMatch> _matches = [];
-  String _currentUserId = "";
+  ModelUserLeague _currentUser;
 
   @override
   void initState() {
@@ -34,8 +34,8 @@ class _CalendarByLevelState extends State<CalendarByLevel> {
   }
 
   void getCurrentUserId() async {
-    final sp = context.read<SharedPreferencesService>(sharedPreferencesServiceProvider);
-    _currentUserId = await sp.getCurrentUSerId();
+    final database = context.read<Database>(databaseProvider);
+    _currentUser = await database.getCurrentUser();
   }
 
   @override
@@ -135,7 +135,8 @@ class _CalendarByLevelState extends State<CalendarByLevel> {
           Container(
             height: 35,
             child: GestureDetector(
-              onTap: () => (user1.id == this._currentUserId || user2.id == this._currentUserId) && match.idPlayerWinner == null
+              onTap: () => (user1.id == this._currentUser.id || user2.id == this._currentUser.id || this._currentUser.role == "admin") &&
+                      match.idPlayerWinner == null
                   ? showDialogSetResult(context, match, user1, user2, false, null)
                   : DoNothingAction(),
               child: Row(
@@ -222,7 +223,7 @@ class _CalendarByLevelState extends State<CalendarByLevel> {
   }
 
   bool getVisibilityForMatch(ModelMatch match) {
-    if (widget.justMyMatches && (match.idPlayer1 == _currentUserId || match.idPlayer2 == _currentUserId)) {
+    if (widget.justMyMatches && (match.idPlayer1 == _currentUser || match.idPlayer2 == _currentUser)) {
       return true;
     } else if (!widget.justMyMatches) {
       return true;
