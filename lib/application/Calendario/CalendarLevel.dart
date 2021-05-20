@@ -61,7 +61,16 @@ class _CalendarByLevelState extends State<CalendarByLevel> {
                     return circularLoadingBar();
                   } else {
                     final matches = snapshot.data;
-                    return matches.isEmpty ? createMatchesButton() : listWeeks(matches);
+                    return matches.isEmpty
+                        ? _currentUser.role == "admin"
+                            ? createMatchesButton()
+                            : Center(
+                                child: Text(
+                                  "No hay partidos aún",
+                                  style: GoogleFonts.raleway(fontWeight: FontWeight.bold, fontSize: 14),
+                                ),
+                              )
+                        : listWeeks(matches);
                   }
               }
             },
@@ -223,7 +232,7 @@ class _CalendarByLevelState extends State<CalendarByLevel> {
   }
 
   bool getVisibilityForMatch(ModelMatch match) {
-    if (widget.justMyMatches && (match.idPlayer1 == _currentUser || match.idPlayer2 == _currentUser)) {
+    if (widget.justMyMatches && (match.idPlayer1 == _currentUser.id || match.idPlayer2 == _currentUser.id)) {
       return true;
     } else if (!widget.justMyMatches) {
       return true;

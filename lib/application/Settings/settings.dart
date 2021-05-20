@@ -364,24 +364,27 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Widget RowButtonsCreate() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        Container(
-          width: 200,
-          child: FlatButton(
-            onPressed: () => {createLeaguesAndTournament()},
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            color: Color(GlobalValues.mainGreen),
-            child: Text(
-              "Crear ligas y fase final",
-              style: GoogleFonts.raleway(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+    return Visibility(
+      visible: _currentUserModel.role == "admin",
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Container(
+            width: 200,
+            child: FlatButton(
+              onPressed: () => {createLeaguesAndTournament()},
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              color: Color(GlobalValues.mainGreen),
+              child: Text(
+                "Crear ligas y fase final",
+                style: GoogleFonts.raleway(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
