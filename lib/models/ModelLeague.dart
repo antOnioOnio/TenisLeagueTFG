@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:tenisleague100/constants/GlobalValues.dart';
+import 'file:///C:/Projects/FlutterProjects/tenisleague100/lib/services/GlobalValues.dart';
 
 class ModelLeague extends Equatable {
   final String id;

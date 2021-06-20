@@ -7,7 +7,7 @@ import 'package:tenisleague100/application/League/MainLeague.dart';
 import 'package:tenisleague100/application/Messages/chats_list.dart';
 import 'package:tenisleague100/application/Settings/settings.dart';
 import 'package:tenisleague100/application/Users/MainUsers.dart';
-import 'package:tenisleague100/constants/GlobalValues.dart';
+import 'file:///C:/Projects/FlutterProjects/tenisleague100/lib/services/GlobalValues.dart';
 import 'package:tenisleague100/services/Notifications/FirebaseNotifications.dart';
 
 import 'Forum/MainForum.dart';

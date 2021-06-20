@@ -4,7 +4,7 @@ import 'package:tenisleague100/application/Forum/Dialogs/AddEventDialog.dart';
 import 'package:tenisleague100/application/Forum/Dialogs/AddPictureDialog.dart';
 import 'package:tenisleague100/application/widgets/helpDecorations.dart';
 import 'package:tenisleague100/application/widgets/helpWidgets.dart';
-import 'package:tenisleague100/constants/GlobalValues.dart';
+import 'file:///C:/Projects/FlutterProjects/tenisleague100/lib/services/GlobalValues.dart';
 
 import 'Dialogs/AddProPartidoDialog.dart';
 import 'ForumViewModel.dart';

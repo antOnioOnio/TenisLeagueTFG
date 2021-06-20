@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:tenisleague100/constants/GlobalValues.dart';
+import 'file:///C:/Projects/FlutterProjects/tenisleague100/lib/services/GlobalValues.dart';
 
 Widget basicScreenColorChatBg() {
   return Container(

@@ -7,7 +7,7 @@ import 'package:tenisleague100/application/Forum/PostIndependent.dart';
 import 'package:tenisleague100/application/Forum/TypesPostWidgets/commomWidgets.dart';
 import 'package:tenisleague100/application/widgets/helpDecorations.dart';
 import 'package:tenisleague100/application/widgets/helpWidgets.dart';
-import 'package:tenisleague100/constants/GlobalValues.dart';
+import 'file:///C:/Projects/FlutterProjects/tenisleague100/lib/services/GlobalValues.dart';
 import 'package:tenisleague100/models/ModelComment.dart';
 import 'package:tenisleague100/models/ModelPost.dart';
 

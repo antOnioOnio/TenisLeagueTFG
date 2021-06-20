@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:tenisleague100/constants/GlobalValues.dart';
+import 'file:///C:/Projects/FlutterProjects/tenisleague100/lib/services/GlobalValues.dart';
 
 // ignore: must_be_immutable
 class ModelUserLeague extends Equatable {

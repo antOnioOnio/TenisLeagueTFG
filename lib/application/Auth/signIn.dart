@@ -7,7 +7,7 @@ import 'package:tenisleague100/application/Auth/validators.dart';
 import 'package:tenisleague100/application/widgets/helpDecorations.dart';
 import 'package:tenisleague100/application/widgets/helpWidgets.dart';
 import 'package:tenisleague100/application/widgets/showAlertDialog.dart';
-import 'package:tenisleague100/constants/GlobalValues.dart';
+import 'file:///C:/Projects/FlutterProjects/tenisleague100/lib/services/GlobalValues.dart';
 
 import '../top_providers.dart';
 
@@ -75,13 +75,13 @@ class _SignInPageState extends State<SignInPage> {
         alignment: Alignment.center,
         children: [
           basicScreenColor(),
-          widget.viewModel.isLoading ? circularLoadingBar() : _signInblock(),
+          widget.viewModel.isLoading ? circularLoadingBar() : _signInBlock(),
         ],
       ),
     );
   }
 
-  Widget _signInblock() {
+  Widget _signInBlock() {
     return SingleChildScrollView(
       physics: AlwaysScrollableScrollPhysics(),
       child: Row(
@@ -265,7 +265,6 @@ class _SignInPageState extends State<SignInPage> {
     clickedSignInOnce = true;
     if (formKeyUser.currentState.validate() && formKeyPassword.currentState.validate()) {
       await  widget.viewModel.signIn(this.userController.text, this.passwordController.text, context);
-
     }
   }
 
@@ -289,4 +288,5 @@ class _SignInPageState extends State<SignInPage> {
     _focusPass.dispose();
     super.dispose();
   }
+  
 }

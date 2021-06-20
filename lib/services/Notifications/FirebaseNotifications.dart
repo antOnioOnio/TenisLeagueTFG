@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:tenisleague100/constants/GlobalValues.dart';
+import 'file:///C:/Projects/FlutterProjects/tenisleague100/lib/services/GlobalValues.dart';
 import 'package:http/http.dart' as http;
 import 'package:tenisleague100/models/ModelNotification.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -93,7 +93,6 @@ class FirebaseNotifications {
               "to": "/topics/" + notification.topic
             }))
         .whenComplete(() {
-//      print('sendOrderCollected(): message sent');
     }).catchError((e) {
       print('sendOrderCollected() error: $e');
     });

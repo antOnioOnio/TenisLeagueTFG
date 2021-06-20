@@ -12,10 +12,10 @@ class SignInViewModel with ChangeNotifier {
 
   Future<void> signIn(String email, String password, BuildContext context) async {
     try {
+      error = null;
       isLoading = true;
       notifyListeners();
       await auth.signInWithEmailAndPassword(email: email, password: password);
-      error = null;
       final sp = context.read<SharedPreferencesService>(sharedPreferencesServiceProvider);
       sp.setCurrentUserId(auth.currentUser.uid);
     } on FirebaseAuthException catch (e) {
@@ -38,12 +38,12 @@ class SignInViewModel with ChangeNotifier {
   Future<String> register(String email, String password, BuildContext context) async {
     try {
       isLoading = true;
+      error = null;
       notifyListeners();
       await auth.createUserWithEmailAndPassword(email: email, password: password);
       final sp = context.read<SharedPreferencesService>(sharedPreferencesServiceProvider);
       sp.setCurrentUserId(auth.currentUser.uid);
       currentId = auth.currentUser.uid;
-      error = null;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         error = 'The password provided is too weak.';

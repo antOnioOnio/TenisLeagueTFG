@@ -1,5 +1,4 @@
 class FirestorePath {
-  //static String job(String uid, String jobId) => 'users/$uid/jobs/$jobId';
   static String userPath(String uid) => 'users/$uid';
   static String users = 'users/';
   static String chats(String idUser) => 'chats/$idUser/messages';
@@ -19,8 +18,4 @@ class FirestorePath {
   static String tournament(String idLeague) => 'tournament/$idLeague';
   static String matchesTournament(String idTournament) => 'tournament/$idTournament/matches/';
   static String matchTournament(String idTournament, String idMatch) => 'tournament/$idTournament/matches/$idMatch';
-
-  //static String entry(String uid, String entryId) =>
-  //    'users/$uid/entries/$entryId';
-  //static String entries(String uid) => 'users/$uid/entries';
 }

@@ -1,3 +1,4 @@
+/*
 class PushNotification {
   PushNotification({
     this.title,
@@ -13,4 +14,4 @@ class PushNotification {
       body: json["notification"]["body"],
     );
   }
-}
+}*/
