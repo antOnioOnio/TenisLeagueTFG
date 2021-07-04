@@ -5,8 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tenisleague100/application/Forum/TypesPostWidgets/commomWidgets.dart';
 import 'package:tenisleague100/application/widgets/helpDecorations.dart';
-import 'package:tenisleague100/application/widgets/helpWidgets.dart';
-import 'file:///C:/Projects/FlutterProjects/tenisleague100/lib/services/GlobalValues.dart';
+import 'package:tenisleague100/services/GlobalValues.dart';
 import 'package:tenisleague100/models/ModelPost.dart';
 
 import '../ForumViewModel.dart';

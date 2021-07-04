@@ -1,6 +1,9 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'file:///C:/Projects/FlutterProjects/tenisleague100/lib/services/GlobalValues.dart';
+import 'package:tenisleague100/services/GlobalValues.dart';
+
+
+
 
 class ModelLeague extends Equatable {
   final String id;
@@ -9,10 +12,16 @@ class ModelLeague extends Equatable {
   ModelLeague({@required this.id, @required this.level, @required this.dateLeague})
       : assert(level != GlobalValues.levelPrincipiante || level != GlobalValues.leveMedio || level != GlobalValues.levelAvanzado);
 
-  factory ModelLeague.fromJson(Map<String, dynamic> json) => ModelLeague(
-      id: json['id'] as String,
-      level: json['level'] as String,
-      dateLeague: json['dateLeague'] == null ? null : DateTime.parse(json['dateLeague'] as String));
+  factory ModelLeague.fromJson(Map<String, dynamic> json) {
+    if (json== null){
+      throw StateError('Data cant be null');
+    }
+   return  ModelLeague(
+        id: json['id'] as String,
+        level: json['level'] as String,
+        dateLeague: json['dateLeague'] == null ? null : DateTime.parse(json['dateLeague'] as String));
+
+  }
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{

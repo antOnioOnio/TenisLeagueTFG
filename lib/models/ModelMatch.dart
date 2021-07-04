@@ -66,19 +66,24 @@ class ModelMatch extends Equatable {
         week: this.week);
   }
 
-  factory ModelMatch.fromJson(Map<String, dynamic> json) => ModelMatch(
-      id: json['id'] as String,
-      idLeague: json['idLeague'] as String,
-      idPlayer1: json['idPlayer1'] as String,
-      idPlayer2: json['idPlayer2'] as String,
-      idPlayerWinner: json['idPlayerWinner'] as String,
-      played: json['played'] as bool,
-      resultSet1: json['resultSet1'] as String,
-      resultSet2: json['resultSet2'] as String,
-      resultSet3: json['resultSet3'] as String,
-      week: json['week'] as int,
-      dateMatch: json['dateMatch'] == null ? null : DateTime.parse(json['dateMatch'] as String));
+  factory ModelMatch.fromJson(Map<String, dynamic> json) {
+    if (json== null){
+      throw StateError('Data cant be null');
+    }
+    return ModelMatch(
+        id: json['id'] as String,
+        idLeague: json['idLeague'] as String,
+        idPlayer1: json['idPlayer1'] as String,
+        idPlayer2: json['idPlayer2'] as String,
+        idPlayerWinner: json['idPlayerWinner'] as String,
+        played: json['played'] as bool,
+        resultSet1: json['resultSet1'] as String,
+        resultSet2: json['resultSet2'] as String,
+        resultSet3: json['resultSet3'] as String,
+        week: json['week'] as int,
+        dateMatch: json['dateMatch'] == null ? null : DateTime.parse(json['dateMatch'] as String));
 
+  }
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
       'id': this.id,

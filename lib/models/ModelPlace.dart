@@ -7,11 +7,16 @@ class ModelPlace extends Equatable {
 
   ModelPlace({@required this.id, @required this.name});
 
-  factory ModelPlace.fromJson(Map<String, dynamic> json) => ModelPlace(
-        id: json['id'] as String,
-        name: json['name'] as String,
-      );
+  factory ModelPlace.fromJson(Map<String, dynamic> json) {
+    if (json== null){
+      throw StateError('Data cant be null');
+    }
+    return ModelPlace(
+      id: json['id'] as String,
+      name: json['name'] as String,
+    );
 
+  }
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'id': this.id,

@@ -12,9 +12,9 @@ import 'package:tenisleague100/application/Auth/validators.dart';
 import 'package:tenisleague100/application/widgets/helpDecorations.dart';
 import 'package:tenisleague100/application/widgets/helpWidgets.dart';
 import 'package:tenisleague100/application/widgets/showAlertDialog.dart';
-import 'file:///C:/Projects/FlutterProjects/tenisleague100/lib/services/GlobalValues.dart';
 import 'package:tenisleague100/models/ModelUserLeague.dart';
 import 'package:tenisleague100/services/Database/Database.dart';
+import 'package:tenisleague100/services/GlobalValues.dart';
 
 import '../top_providers.dart';
 

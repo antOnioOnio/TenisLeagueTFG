@@ -16,14 +16,20 @@ class ModelComment extends Equatable {
       @required this.createdAt,
       @required this.userId});
 
-  factory ModelComment.fromJson(Map<String, dynamic> json) => ModelComment(
-        id: json['id'] as String,
-        comment: json['comment'] as String,
-        createdAt: json['createdAt'] == null ? null : DateTime.parse(json['createdAt'] as String),
-        userId: json['userId'] as String,
-        userName: json['userName'] as String,
-        userImage: json['userImage'] as String,
-      );
+  factory ModelComment.fromJson(Map<String, dynamic> json) {
+    if (json== null){
+      throw StateError('Data cant be null');
+    }
+    return ModelComment(
+      id: json['id'] as String,
+      comment: json['comment'] as String,
+      createdAt: json['createdAt'] == null ? null : DateTime.parse(json['createdAt'] as String),
+      userId: json['userId'] as String,
+      userName: json['userName'] as String,
+      userImage: json['userImage'] as String,
+    );
+
+  }
 
   Map<String, dynamic> toJson() {
     return <String, dynamic>{

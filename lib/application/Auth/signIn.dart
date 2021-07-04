@@ -7,7 +7,7 @@ import 'package:tenisleague100/application/Auth/validators.dart';
 import 'package:tenisleague100/application/widgets/helpDecorations.dart';
 import 'package:tenisleague100/application/widgets/helpWidgets.dart';
 import 'package:tenisleague100/application/widgets/showAlertDialog.dart';
-import 'file:///C:/Projects/FlutterProjects/tenisleague100/lib/services/GlobalValues.dart';
+import 'package:tenisleague100/services/GlobalValues.dart';
 
 import '../top_providers.dart';
 
@@ -66,7 +66,6 @@ class _SignInPageState extends State<SignInPage> {
     _focusPass.addListener(_onFocusChange);
     _focusUser.addListener(_onFocusChange);
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -166,9 +165,7 @@ class _SignInPageState extends State<SignInPage> {
                     child: TextFormField(
                       maxLines: 1,
                       focusNode: _focusUser,
-                      validator: (val) {
-                        return val.isEmpty || !validateEmailAddress(val) ? "Provide a valid email" : null;
-                      },
+                      validator: EmailFieldValidator.validate,
                       controller: userController,
                       keyboardType: TextInputType.emailAddress,
                       style: GoogleFonts.raleway(color: Color(GlobalValues.blackText), fontWeight: FontWeight.normal, fontSize: 14),
@@ -215,9 +212,7 @@ class _SignInPageState extends State<SignInPage> {
                     key: formKeyPassword,
                     child: TextFormField(
                       focusNode: _focusPass,
-                      validator: (val) {
-                        return val.isEmpty || val.length < 3 ? "Provide a valid password" : null;
-                      },
+                      validator: PasswordFieldValidator.validate,
                       obscureText: hidePassword,
                       controller: passwordController,
                       keyboardType: TextInputType.emailAddress,
@@ -261,10 +256,10 @@ class _SignInPageState extends State<SignInPage> {
     );
   }
 
-  void signIn() async{
+  void signIn() async {
     clickedSignInOnce = true;
     if (formKeyUser.currentState.validate() && formKeyPassword.currentState.validate()) {
-      await  widget.viewModel.signIn(this.userController.text, this.passwordController.text, context);
+      await widget.viewModel.signIn(this.userController.text, this.passwordController.text, context);
     }
   }
 
@@ -288,5 +283,4 @@ class _SignInPageState extends State<SignInPage> {
     _focusPass.dispose();
     super.dispose();
   }
-  
 }

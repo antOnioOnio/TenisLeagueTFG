@@ -1,13 +1,11 @@
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:tenisleague100/application/Calendario/MainCalendar.dart';
 import 'package:tenisleague100/application/Draw/MainDraw.dart';
 import 'package:tenisleague100/application/League/MainLeague.dart';
 import 'package:tenisleague100/application/Messages/chats_list.dart';
 import 'package:tenisleague100/application/Settings/settings.dart';
 import 'package:tenisleague100/application/Users/MainUsers.dart';
-import 'file:///C:/Projects/FlutterProjects/tenisleague100/lib/services/GlobalValues.dart';
+import 'package:tenisleague100/services/GlobalValues.dart';
 import 'package:tenisleague100/services/Notifications/FirebaseNotifications.dart';
 
 import 'Forum/MainForum.dart';

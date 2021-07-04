@@ -19,14 +19,20 @@ class ModelMessage extends Equatable{
 
 
 
-  factory ModelMessage.fromJson(Map<String, dynamic> json) => ModelMessage(
-        idUser: json['idUser'] as String,
-        idUserSendTo: json['idUserSendTo'] as String,
-        image: json['image'] as String,
-        userName: json['userName'] as String,
-        message: json['message'] as String,
-        createdAt: json['createdAt'] == null ? null : DateTime.parse(json['createdAt'] as String),
-      );
+  factory ModelMessage.fromJson(Map<String, dynamic> json) {
+    if (json== null){
+      throw StateError('Data cant be null');
+    }
+    return ModelMessage(
+      idUser: json['idUser'] as String,
+      idUserSendTo: json['idUserSendTo'] as String,
+      image: json['image'] as String,
+      userName: json['userName'] as String,
+      message: json['message'] as String,
+      createdAt: json['createdAt'] == null ? null : DateTime.parse(json['createdAt'] as String),
+    );
+
+  }
 
   Map<String, dynamic> toMap() => <String, dynamic>{
         'idUser': this.idUser,

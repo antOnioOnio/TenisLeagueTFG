@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'file:///C:/Projects/FlutterProjects/tenisleague100/lib/services/GlobalValues.dart';
+import 'package:tenisleague100/services/GlobalValues.dart';
 
 // ignore: must_be_immutable
 class ModelUserLeague extends Equatable {
@@ -19,19 +19,24 @@ class ModelUserLeague extends Equatable {
       {this.id, this.fullName, this.email, this.tlf, this.level, this.currentScore, this.image, this.role, this.matchLosses, this.matchPlayed, this.matchWins})
       : assert(level != GlobalValues.levelPrincipiante || level != GlobalValues.leveMedio || level != GlobalValues.levelAvanzado);
 
-  factory ModelUserLeague.fromJson(Map<String, dynamic> json) => ModelUserLeague(
-        id: json['id'] as String,
-        fullName: json['fullName'] as String,
-        email: json['email'] as String,
-        level: json['level'] as String,
-        tlf: json['tlf'] as String,
-        currentScore: json['currentScore'] as int,
-        matchPlayed: json['matchPlayed'] as int,
-        matchWins: json['matchWins'] as int,
-        matchLosses: json['matchLosses'] as int,
-        image: json['image'] as String,
-        role: json['role'] as String,
-      );
+  factory ModelUserLeague.fromJson(Map<String, dynamic> json) {
+    if (json== null){
+      throw StateError('Data cant be null');
+    }
+    return ModelUserLeague(
+      id: json['id'] as String,
+      fullName: json['fullName'] as String,
+      email: json['email'] as String,
+      level: json['level'] as String,
+      tlf: json['tlf'] as String,
+      currentScore: json['currentScore'] as int,
+      matchPlayed: json['matchPlayed'] as int,
+      matchWins: json['matchWins'] as int,
+      matchLosses: json['matchLosses'] as int,
+      image: json['image'] as String,
+      role: json['role'] as String,
+    );
+  }
 
   ModelUserLeague copyWithOneMoreMatch(bool win) {
     return ModelUserLeague(

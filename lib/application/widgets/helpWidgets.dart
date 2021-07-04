@@ -1,8 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'file:///C:/Projects/FlutterProjects/tenisleague100/lib/services/GlobalValues.dart';
-
+import 'package:tenisleague100/services/GlobalValues.dart';
 import 'helpDecorations.dart';
 
 Widget basicScreenColor() {

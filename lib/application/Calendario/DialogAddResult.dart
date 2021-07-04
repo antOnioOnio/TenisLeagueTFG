@@ -4,10 +4,11 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tenisleague100/application/Auth/validators.dart';
 import 'package:tenisleague100/application/widgets/helpDecorations.dart';
 import 'package:tenisleague100/application/widgets/helpWidgets.dart';
 import 'package:tenisleague100/application/widgets/showAlertDialog.dart';
-import 'file:///C:/Projects/FlutterProjects/tenisleague100/lib/services/GlobalValues.dart';
+import 'package:tenisleague100/services/GlobalValues.dart';
 import 'package:tenisleague100/models/ModelMatch.dart';
 import 'package:tenisleague100/models/ModelPost.dart';
 import 'package:tenisleague100/models/ModelUserLeague.dart';
@@ -365,30 +366,12 @@ class _AddResultDialogState extends State<AddResultDialog> {
   }
 
   void validationScore(String user1Result, String user2Result, int set) {
-    print("validation called");
-
-    if (user1Result == "6") {
-      if (user2Result == "0" || user2Result == "1" || user2Result == "2" || user2Result == "3" || user2Result == "4") {
-        //0 1 2 3 4 5 ==> gana 1
-        setWinner(set, 1);
-      } else if (user2Result == "7") {
-        // 7          ==> gana 2
-        setWinner(set, 2);
-      } else if (user2Result == "5" || user2Result == "6") {
-        // 6          ==> invalido
-        setWinnerNull(set);
-      }
-    } else if (user2Result == "6") {
-      if (user1Result == "0" || user1Result == "1" || user1Result == "2" || user1Result == "3" || user1Result == "4") {
-        //0 1 2 3 4 5 ==> gana 2
-        setWinner(set, 2);
-      } else if (user1Result == "7") {
-        // 7          ==> gana 1
-        setWinner(set, 1);
-      } else if (user1Result == "5" || user1Result == "6") {
-        // 6          ==> invalido
-        setWinnerNull(set);
-      }
+    print('validationScore');
+    String resultToValidate = user1Result + user2Result;
+    if (ValidateMatchResult.validateWinUser1(resultToValidate)) {
+      setWinner(set, 1);
+    } else if (ValidateMatchResult.validateWinUser2(resultToValidate)) {
+      setWinner(set, 2);
     } else {
       setWinnerNull(set);
     }
