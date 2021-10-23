@@ -239,6 +239,8 @@ class _AddResultDialogState extends State<AddResultDialog> {
         await database.sendMatch(match);
         await updatePlayers(idPlayerWinner);
       }
+      Navigator.of(context).pop();
+
       await database.sendPost(new ModelPost(
           id: generateUuid(),
           idUser: idPlayerWinner,
@@ -248,7 +250,6 @@ class _AddResultDialogState extends State<AddResultDialog> {
           postType: ModelPost.matchResult,
           createdAt: DateTime.now()));
 
-      Navigator.of(context).pop();
     } else {
       showAlertDialog(
         context: context,

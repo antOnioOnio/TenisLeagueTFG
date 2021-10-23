@@ -5,13 +5,9 @@ import 'package:tenisleague100/models/ModelMatch.dart';
 void main() {
   // From Json tests
   group('fromJson', () {
-
     test('ModelComment with null data', () {
       expect(() => ModelComment.fromJson(null), throwsA(isInstanceOf<StateError>()));
     });
-
-
-
     test('ModelComment with all properties', () {
       DateTime date = DateTime.now();
       String dateTime = date.toString();
@@ -26,16 +22,19 @@ void main() {
       expect(
         modelComment,
         ModelComment(
-            userImage: 'ssfsfsfsfsf', userName: 'antonio', id: 'idRandom', comment: 'this is a comment', createdAt: date, userId: 'randomId'),
+            userImage: 'ssfsfsfsfsf', userName: 'antonio',
+            id: 'idRandom', comment: 'this is a comment',
+            createdAt: date, userId: 'randomId'),
       );
     });
   });
-
   group('toMap', () {
     test('Valid json object', () {
       DateTime now = DateTime.now();
       DateTime _selectedDateIndate = DateTime(now.year, now.month, now.day);
-      var comment = ModelComment(userImage: 'userImage', userName: 'userName', id: 'id', comment: 'comment', createdAt: _selectedDateIndate, userId: 'userId');
+      var comment = ModelComment(userImage: 'userImage', userName: 'userName',
+          id: 'id', comment: 'comment', createdAt: _selectedDateIndate,
+          userId: 'userId');
       expect(comment.toJson(), {
         'id': 'id',
         'userId': 'userId',
@@ -48,7 +47,6 @@ void main() {
   });
 
   group('igualdad', () {
-
     test('Different properties == false', () {
       DateTime now = DateTime.now();
       DateTime _selectedDateIndate = DateTime(now.year, now.month, now.day);

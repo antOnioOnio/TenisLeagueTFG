@@ -91,7 +91,7 @@ class Database {
     );
     await _service.addData(path: FirestorePath.chats(idUser), data: newMessage.toMap());
     await _service.addData(path: FirestorePath.chats(currentUser.id), data: newMessage.toMap());
-    sendCustomNotification("Has recibido un mensaje nuevo", "Tenis 100 mensaje", idUser);
+    //sendCustomNotification("Has recibido un mensaje nuevo", "Tenis 100 mensaje", idUser);
   }
 
   //-------------------------------------------------------------
@@ -183,8 +183,8 @@ class Database {
       data: match.toJson(),
     );
 
-    sendCustomNotification("Se ha modificado un partido en el que participas", "Tenis 100 Match", match.idPlayer1);
-    sendCustomNotification("Se ha modificado un partido en el que participas", "Tenis 100 Match", match.idPlayer2);
+   // sendCustomNotification("Se ha modificado un partido en el que participas", "Tenis 100 Match", match.idPlayer1);
+   // sendCustomNotification("Se ha modificado un partido en el que participas", "Tenis 100 Match", match.idPlayer2);
   }
 
   Future<void> sendTournament(ModelLeague league) async {
@@ -199,8 +199,8 @@ class Database {
       path: FirestorePath.matchTournament(match.idLeague, match.id),
       data: match.toJson(),
     );
-    sendCustomNotification("Se ha modificado un partido en el que participas", "Tenis 100 Match", match.idPlayer1);
-    sendCustomNotification("Se ha modificado un partido en el que participas", "Tenis 100 Match", match.idPlayer2);
+   // sendCustomNotification("Se ha modificado un partido en el que participas", "Tenis 100 Match", match.idPlayer1);
+    // sendCustomNotification("Se ha modificado un partido en el que participas", "Tenis 100 Match", match.idPlayer2);
   }
 
   Future<List<ModelLeague>> getLeaguesCollection() async {

@@ -303,7 +303,7 @@ class _AddProPartidoDialogState extends State<AddProPartidoDialog> {
     }
   }
 
-  Future<Null> _selectTime(BuildContext context) async {
+  Future<Null> selectTime(BuildContext context) async {
     final TimeOfDay picked = await showTimePicker(
       context: context,
       initialTime: _selectedTime,
